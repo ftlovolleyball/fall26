@@ -590,7 +590,7 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
 <!-- ── SITE HEADER ── -->
 <header class="site-header" id="siteHeader">
   <div class="site-logo">
-    <div class="site-logo-mark">FTLO</div>
+    <img src="images/logo.svg" alt="FTLO Volleyball" style="height:36px;display:block;" />
     <div class="site-logo-sub">Volleyball Association</div>
   </div>
 </header>
@@ -612,6 +612,9 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
     </div>
   </div>
 </div>
+
+<!-- Swap images/hero-photo.svg for a real photo whenever you have one — same filename, no code changes needed -->
+<div style="width:100%;display:block;line-height:0;"><img src="images/hero-photo.svg" alt="FTLO Fall Clinics" style="width:100%;display:block;" /></div>
 
 <!-- ── STEP NAV ── -->
 <nav class="step-nav">
@@ -1253,8 +1256,10 @@ function collectData() {
   var heardFrom = [];
   for (var j = 0; j < hc.length; j++) heardFrom.push(hc[j].value);
 
+  // No client-side timestamp is sent — the Apps Script stamps each row with its
+  // own server-side time (America/Vancouver, YYYY-MM-DD HH:MM:SS) so the "Timestamp"
+  // column is consistent no matter what device, browser, or clock the applicant used.
   return {
-    timestamp:    (function() { var p = {}; new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Vancouver', year: 'numeric', month: '2-digit', day: '2-digit', hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true }).formatToParts(new Date()).forEach(function(x) { p[x.type] = x.value; }); return p.year + '-' + p.month + '-' + p.day + ', ' + p.hour + ':' + p.minute + ':' + p.second + ' ' + p.dayPeriod; })(),
     firstName:    getVal('firstName'),
     lastName:     getVal('lastName'),
     email:        getVal('email'),
