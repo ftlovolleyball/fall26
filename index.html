@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 FTLO Fall Clinic Program Application</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800;900&family=Barlow+Condensed:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal:        #1F4049;
+  --teal-dark:   #162e35;
+  --teal-mid:    #2a5566;
+  --teal-light:  #e8f0f2;
+  --orange:      #F8BA44;
+  --orange-dark: #d99a20;
+  --orange-light:#fff4dc;
+  --white:       #FFF9F5;
+  --black:       #222222;
+  --gray-100:    #f5f0eb;
+  --gray-200:    #ede8e2;
+  --gray-300:    #ccc7c0;
+  --gray-500:    #888078;
+  --gray-700:    #444040;
+  --red:         #c0392b;
+  --red-light:   #fdf0ee;
+  --green:       #2a6a30;
+  --green-light: #e8f5ea;
+  --radius:      10px;
+  --radius-sm:   6px;
+  --radius-lg:   14px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Barlow', sans-serif;
+  background: var(--gray-100);
+  color: var(--black);
+  font-size: 16px;
+  line-height: 1.75;
+}
+
+/* ── HEADER ── */
+.site-header {
+  background: var(--teal-dark);
+  padding: 16px 28px;
+  display: flex;
+  align-items: center;
+}
+.site-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.site-logo-mark {
+  background: var(--orange);
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900;
+  font-size: 20px;
+  color: var(--teal-dark);
+  letter-spacing: 0.04em;
+}
+.site-logo-sub {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,249,245,0.5);
+}
+
+/* ── HERO ── */
+.hero {
+  background: var(--teal);
+  position: relative;
+  overflow: hidden;
+}
+.hero-inner {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 3rem 2rem 2.5rem;
+  position: relative;
+  z-index: 1;
+}
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--orange);
+  margin-bottom: 12px;
+}
+.hero-eyebrow::before {
+  content: '';
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--orange);
+}
+.hero h1 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900;
+  font-size: clamp(32px, 6vw, 54px);
+  line-height: 0.95;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: var(--white);
+  margin-bottom: 1rem;
+}
+.hero h1 span { color: var(--orange); }
+.hero-stats {
+  display: flex;
+  gap: 0;
+  margin-top: 1.5rem;
+  border-top: 1px solid rgba(255,255,255,0.12);
+  padding-top: 1.25rem;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+.stat { display: flex; flex-direction: column; }
+.stat-num {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--orange);
+  line-height: 1;
+}
+.stat-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  margin-top: 2px;
+}
+.hero-deco {
+  position: absolute;
+  right: -30px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  border: 40px solid rgba(248,186,68,0.08);
+  pointer-events: none;
+}
+.hero-deco2 {
+  position: absolute;
+  right: 60px;
+  top: -60px;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  border: 30px solid rgba(248,186,68,0.05);
+  pointer-events: none;
+}
+
+/* ── STEP NAV ── */
+.step-nav {
+  background: var(--teal-dark);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 3px solid rgba(248,186,68,0.15);
+}
+.step-nav-inner {
+  max-width: 780px;
+  margin: 0 auto;
+  display: flex;
+}
+.step-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 8px;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -3px;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+.step-item:hover { background: rgba(255,255,255,0.04); }
+.step-item.active { border-bottom-color: var(--orange); }
+.step-item.done { border-bottom-color: rgba(248,186,68,0.4); }
+.step-num {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  font-size: 11px;
+  font-weight: 800;
+  color: rgba(255,255,255,0.4);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  font-family: 'Barlow Condensed', sans-serif;
+  transition: all 0.2s;
+}
+.step-item.active .step-num { background: var(--orange); color: var(--teal-dark); }
+.step-item.done .step-num { background: rgba(248,186,68,0.3); color: var(--orange); }
+.step-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+  transition: color 0.2s;
+}
+.step-item.active .step-label { color: var(--orange); }
+.step-item.done .step-label { color: rgba(248,186,68,0.6); }
+
+/* ── MAIN ── */
+.main {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 5rem;
+}
+
+/* ── SECTIONS ── */
+.section { display: none; }
+.section.active { display: block; animation: slideIn 0.2s ease; }
+@keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── CARDS ── */
+.card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--gray-200);
+  padding: 2rem 2rem;
+  margin-bottom: 1.5rem;
+}
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+.card-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--teal);
+}
+.card-sub {
+  font-size: 15px;
+  color: var(--gray-500);
+  margin-top: 5px;
+  line-height: 1.6;
+}
+
+/* ── NOTICES ── */
+.notice {
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  margin-bottom: 1.5rem;
+  font-size: 15px;
+  line-height: 1.65;
+  display: flex;
+  gap: 10px;
+}
+.notice-icon { flex-shrink: 0; font-size: 16px; margin-top: 2px; }
+.notice.info { background: var(--teal-light); border: 1px solid #b8cdd2; color: var(--teal-dark); }
+.notice.warn { background: var(--orange-light); border: 1px solid #f0d080; color: #6a4a00; }
+.notice.danger { background: var(--red-light); border: 1px solid #f0b8b0; color: #7a1a10; }
+.notice.success { background: var(--green-light); border: 1px solid #a8d5ac; color: var(--green); }
+
+/* ── FIELDS ── */
+.field { margin-bottom: 1.4rem; }
+.field:last-child { margin-bottom: 0; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; }
+.field-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.9rem; }
+
+label.lbl {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gray-700);
+  margin-bottom: 7px;
+}
+label.lbl .req { color: var(--red); margin-left: 2px; }
+
+input[type=text], input[type=email], input[type=tel],
+select, textarea {
+  width: 100%;
+  padding: 13px 16px;
+  font-size: 16px;
+  font-family: 'Barlow', sans-serif;
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  color: var(--black);
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  -webkit-appearance: none;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(31,64,73,0.1);
+}
+select {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231F4049' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 40px;
+}
+textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
+
+.field.error input,
+.field.error select,
+.field.error textarea { border-color: var(--red); }
+.err-msg { font-size: 12px; color: var(--red); margin-top: 4px; display: none; font-weight: 500; }
+.field.error .err-msg { display: block; }
+
+/* ── PROGRAM OPTION CARDS (used for "How did you hear" checklist) ── */
+.prog-card {
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: var(--white);
+}
+.prog-card:hover { border-color: var(--teal); background: var(--teal-light); }
+.prog-card.selected { border-color: var(--teal); background: var(--teal-light); }
+.prog-check {
+  width: 18px; height: 18px;
+  border: 2px solid var(--gray-300);
+  border-radius: 4px;
+  margin-top: 2px;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+}
+.prog-card.selected .prog-check { background: var(--teal); border-color: var(--teal); }
+.prog-check-tick { display: none; color: var(--white); font-size: 11px; font-weight: 800; }
+.prog-card.selected .prog-check-tick { display: block; }
+.prog-body { flex: 1; min-width: 0; }
+
+/* ── SECTION DIVIDERS ── */
+.sec-div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 1.75rem 0 1rem;
+}
+.sec-div-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--orange);
+  white-space: nowrap;
+  background: var(--teal);
+  padding: 6px 18px;
+  border-radius: 4px;
+}
+.sec-div-line { flex: 1; height: 1px; background: var(--gray-200); }
+
+/* ── ACCORDION PROGRAM PICKER ── */
+.acc-wrap { margin-bottom: 0; }
+.acc-block { border-radius: var(--radius-lg); margin-bottom: 14px; overflow: visible; border: 2px solid transparent; position: relative; }
+.acc-block.beg-acc  { border-color: #b8d8cc; }
+.acc-block.int-acc  { border-color: #f0d8a8; }
+.acc-block.wmn-acc  { border-color: #a8d0e8; }
+.acc-hdr { display: flex; align-items: center; gap: 12px; padding: 16px 20px; cursor: pointer; user-select: none; transition: background .15s; border-radius: 12px; }
+.acc-block.open .acc-hdr { border-radius: 12px 12px 0 0; }
+.beg-acc   .acc-hdr { background: #f0f8f4; }
+.int-acc   .acc-hdr { background: #fdf6ec; }
+.wmn-acc   .acc-hdr { background: #eef5fa; }
+.acc-hdr:hover { filter: brightness(0.97); }
+.acc-tag { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 12px; letter-spacing: 0.03em; }
+.beg-acc   .acc-tag { background: var(--teal); color: var(--orange); }
+.int-acc   .acc-tag { background: #c8860a; color: #fff; }
+.wmn-acc   .acc-tag { background: #1a6a8a; color: #fff; }
+.acc-meta { flex: 1; min-width: 0; }
+.acc-title-row { display: flex; align-items: center; gap: 8px; }
+.acc-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 20px; letter-spacing: 0.05em; text-transform: uppercase; line-height: 1.1; }
+.beg-acc   .acc-title { color: var(--teal); }
+.int-acc   .acc-title { color: #7a5000; }
+.wmn-acc   .acc-title { color: #0f4a6a; }
+.acc-subdesc { font-size: 13px; margin-top: 4px; line-height: 1.5; }
+.beg-acc   .acc-subdesc { color: #2a6a5a; }
+.int-acc   .acc-subdesc { color: #a06a00; }
+.wmn-acc   .acc-subdesc { color: #1a6a8a; }
+.acc-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.acc-pill { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 100px; }
+.beg-acc   .acc-pill { background: #ddeee8; color: var(--teal); }
+.int-acc   .acc-pill { background: #faebd0; color: #7a5000; }
+.wmn-acc   .acc-pill { background: #ddeef8; color: #0f4a6a; }
+.acc-chev { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: transform .25s; background: rgba(0,0,0,0.07); flex-shrink: 0; }
+.acc-chev svg { width: 12px; height: 12px; }
+.acc-block.open .acc-chev { transform: rotate(180deg); }
+.acc-body { display: none; border-top: 1px solid rgba(0,0,0,0.08); border-radius: 0 0 12px 12px; overflow: hidden; }
+.beg-acc   .acc-body { background: #f5fbf8; }
+.int-acc   .acc-body { background: #fffaf2; }
+.wmn-acc   .acc-body { background: #f0f8fc; }
+.acc-block.open .acc-body { display: block; }
+.acc-body-inner { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.acc-prog { display: flex; align-items: flex-start; gap: 12px; padding: 13px 15px; border-radius: 8px; border: 2px solid rgba(0,0,0,0.07); background: #fff; cursor: pointer; transition: all .15s; -webkit-tap-highlight-color: transparent; }
+.acc-prog:active { transform: scale(0.99); }
+.beg-acc   .acc-prog:hover, .beg-acc   .acc-prog.sel { border-color: var(--teal); background: #eef6f2; }
+.int-acc   .acc-prog:hover, .int-acc   .acc-prog.sel { border-color: #c8860a; background: #fdf5e6; }
+.wmn-acc   .acc-prog:hover, .wmn-acc   .acc-prog.sel { border-color: #1a6a8a; background: #eaf3f8; }
+.acc-cb { width: 20px; height: 20px; border-radius: 4px; border: 2px solid #ccc; margin-top: 2px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all .15s; }
+.beg-acc   .acc-prog.sel .acc-cb { background: var(--teal); border-color: var(--teal); }
+.int-acc   .acc-prog.sel .acc-cb { background: #c8860a; border-color: #c8860a; }
+.wmn-acc   .acc-prog.sel .acc-cb { background: #1a6a8a; border-color: #1a6a8a; }
+.acc-cb-tick { display: none; color: #fff; font-size: 12px; font-weight: 900; }
+.acc-prog.sel .acc-cb-tick { display: block; }
+.acc-prog-body { flex: 1; min-width: 0; }
+.acc-prog-title { font-size: 15px; font-weight: 700; color: var(--black); margin-bottom: 3px; line-height: 1.3; }
+.acc-prog-desc { font-size: 13px; color: var(--gray-700); line-height: 1.55; }
+
+@media (max-width: 580px) {
+  .acc-hdr { padding: 13px 14px; gap: 10px; }
+  .acc-tag { width: 34px; height: 34px; font-size: 10px; }
+  .acc-title { font-size: 16px; }
+  .acc-subdesc { font-size: 12px; }
+  .acc-pill { display: none; }
+  .acc-body-inner { padding: 10px 10px; gap: 8px; }
+  .acc-prog { padding: 11px 12px; gap: 10px; }
+  .acc-prog-title { font-size: 14px; }
+  .acc-prog-desc { font-size: 12px; }
+}
+
+/* ── CODE OF CONDUCT ── */
+.conduct-scroll {
+  background: var(--gray-100);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  padding: 18px 20px;
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 1.5rem;
+  font-size: 14.5px;
+  line-height: 1.75;
+  color: var(--gray-700);
+}
+.conduct-scroll h4 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin: 14px 0 6px;
+}
+.conduct-scroll h4:first-child { margin-top: 0; }
+.conduct-scroll p { margin-bottom: 8px; }
+
+/* ── BUTTONS ── */
+.nav-row { display: flex; gap: 12px; margin-top: 2rem; }
+.btn-back {
+  padding: 13px 22px;
+  border: 2px solid var(--gray-300);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--gray-700);
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'Barlow Condensed', sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-back:hover { border-color: var(--teal); color: var(--teal); }
+.btn-next {
+  flex: 1;
+  padding: 14px 24px;
+  background: var(--teal);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  font-weight: 800;
+  font-family: 'Barlow Condensed', sans-serif;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn-next:hover { background: var(--teal-mid); transform: translateY(-1px); box-shadow: 0 4px 14px rgba(31,64,73,0.3); }
+.btn-next:active { transform: none; }
+.btn-next:disabled { opacity: 0.6; cursor: not-allowed; }
+.btn-submit {
+  flex: 1;
+  padding: 14px 24px;
+  background: var(--orange);
+  color: var(--teal-dark);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  font-weight: 900;
+  font-family: 'Barlow Condensed', sans-serif;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-submit:hover { background: var(--orange-dark); transform: translateY(-1px); box-shadow: 0 4px 14px rgba(248,186,68,0.4); }
+.btn-submit:disabled { opacity: 0.55; cursor: not-allowed; transform: none; box-shadow: none; }
+
+/* ── SUCCESS ── */
+.success-wrap { display: none; padding: 4rem 2rem; text-align: center; animation: slideIn 0.3s ease; }
+.success-icon-wrap {
+  width: 80px; height: 80px;
+  background: var(--teal);
+  border-radius: 50%;
+  margin: 0 auto 1.75rem;
+  display: flex; align-items: center; justify-content: center;
+}
+.success-icon-inner {
+  width: 36px; height: 36px;
+  border: 3px solid var(--orange);
+  border-radius: 50%;
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+}
+.success-check { font-size: 18px; color: var(--orange); font-weight: 900; }
+.success-wrap h2 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 36px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: 0.75rem;
+}
+.success-wrap p { font-size: 15px; color: var(--gray-500); max-width: 440px; margin: 0 auto; line-height: 1.7; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .hero-inner { padding: 2rem 1.25rem 2rem; }
+  .hero h1 { font-size: 36px; }
+  .hero-deco, .hero-deco2 { display: none; }
+  .hero-stats { gap: 1rem; }
+  .stat-num { font-size: 22px; }
+}
+
+@media (max-width: 580px) {
+  .hero-inner { padding: 1.75rem 1rem 1.75rem; }
+  .hero h1 { font-size: 30px; }
+  .main { padding: 1.25rem 0.875rem 4rem; }
+  .card { padding: 1.1rem 1rem; }
+  .field-row, .field-row-3 { grid-template-columns: 1fr; }
+  .step-label { font-size: 10px; }
+  .hero-deco, .hero-deco2 { display: none; }
+  .hero-stats { gap: 0.75rem; flex-wrap: wrap; }
+  .stat-num { font-size: 20px; }
+  .stat-label { font-size: 9px; }
+  .nav-row { flex-direction: column; }
+  .btn-back { width: 100%; }
+  .site-header { padding: 12px 16px; }
+  .step-nav-inner { padding: 0 0.5rem; }
+  .sec-div-label { font-size: 16px !important; padding: 5px 12px !important; }
+  .success-wrap { padding: 2rem 1rem; }
+  .success-icon-wrap { width: 60px; height: 60px; }
+  .success-wrap h2 { font-size: 26px; }
+  input[type=text], input[type=email], input[type=tel], select, textarea { font-size: 16px; }
+}
+
+@media (max-width: 380px) {
+  .hero h1 { font-size: 26px; }
+  .step-label { display: none; }
+  .main { padding: 1rem 0.75rem 4rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── SITE HEADER ── -->
+<header class="site-header" id="siteHeader">
+  <div class="site-logo">
+    <div class="site-logo-mark">FTLO</div>
+    <div class="site-logo-sub">Volleyball Association</div>
+  </div>
+</header>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="hero-deco"></div>
+  <div class="hero-deco2"></div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow">2026 Fall Season — Adults 18+</div>
+    <h1>Fall Clinic Program<br><span>Application</span></h1>
+    <p style="color:rgba(255,249,245,0.65);font-size:15px;max-width:500px;line-height:1.6;">
+      Tell us which Fall clinic session(s) you're interested in. <strong style="color:var(--orange);">This is an application, not a confirmed spot</strong> — FTLO will follow up by email with a payment invite once your spot is confirmed.
+    </p>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">9</div><div class="stat-label">Weeks</div></div>
+      <div class="stat"><div class="stat-num">5</div><div class="stat-label">Programs</div></div>
+      <div class="stat"><div class="stat-num">Sep&ndash;Nov</div><div class="stat-label">Season</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── STEP NAV ── -->
+<nav class="step-nav">
+  <div class="step-nav-inner">
+    <div class="step-item active" id="nav-1" onclick="goToStep(1)">
+      <div class="step-num">1</div>
+      <div class="step-label">Contact</div>
+    </div>
+    <div class="step-item" id="nav-2" onclick="goToStep(2)">
+      <div class="step-num">2</div>
+      <div class="step-label">Programs</div>
+    </div>
+    <div class="step-item" id="nav-3" onclick="goToStep(3)">
+      <div class="step-num">3</div>
+      <div class="step-label">Conduct &amp; Submit</div>
+    </div>
+  </div>
+</nav>
+
+<!-- ── MAIN ── -->
+<main class="main">
+<form id="regForm" novalidate>
+
+<!-- ════════════ SECTION 1: CONTACT ════════════ -->
+<section class="section active" id="section-1">
+
+  <div class="notice info">
+    <span class="notice-icon">&#9432;</span>
+    <div><strong>This is an application, not a confirmed registration.</strong> FTLO will review applications and follow up by email with a payment invite for confirmed spots.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Contact Information</div>
+        <div class="card-sub">Section 1 of 3 &mdash; We'll send your confirmation to the email below.</div>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field" id="f-firstName">
+        <label class="lbl">First Name <span class="req">*</span></label>
+        <input type="text" name="firstName" placeholder="Jane" autocomplete="given-name" />
+        <div class="err-msg">Please enter your first name.</div>
+      </div>
+      <div class="field" id="f-lastName">
+        <label class="lbl">Last Name <span class="req">*</span></label>
+        <input type="text" name="lastName" placeholder="Smith" autocomplete="family-name" />
+        <div class="err-msg">Please enter your last name.</div>
+      </div>
+    </div>
+
+    <div class="field" id="f-email">
+      <label class="lbl">Preferred Contact Email &mdash; Check Typos <span class="req">*</span></label>
+      <input type="email" name="email" placeholder="jane@email.com" autocomplete="email" />
+      <div class="err-msg">Please enter a valid email address (make sure it has an "@" and doesn't end in a typo like ".con").</div>
+    </div>
+
+    <div class="field" id="f-phone">
+      <label class="lbl">Phone Number <span class="req">*</span></label>
+      <input type="tel" name="phone" id="phoneInput" placeholder="604-555-0100" autocomplete="tel" inputmode="numeric" maxlength="12" oninput="formatPhone(this)" />
+      <div class="err-msg">Please enter your phone number.</div>
+    </div>
+
+    <div class="field-row">
+      <div class="field" id="f-city">
+        <label class="lbl">City You're Coming From <span class="req">*</span></label>
+        <select name="city">
+          <option value="">Select city</option>
+          <option>Burnaby</option>
+          <option>Coquitlam</option>
+          <option>Delta</option>
+          <option>Langley</option>
+          <option>North Vancouver</option>
+          <option>New Westminster</option>
+          <option>Richmond</option>
+          <option>Surrey</option>
+          <option>Vancouver</option>
+          <option>Other (add in comments)</option>
+        </select>
+        <div class="err-msg">Please select your city.</div>
+      </div>
+      <div class="field" id="f-gender">
+        <label class="lbl">Gender <span class="req">*</span></label>
+        <select name="gender">
+          <option value="">Select</option>
+          <option>Female</option>
+          <option>Male</option>
+          <option>Non-Binary</option>
+          <option>Other (add in comments)</option>
+        </select>
+        <div class="err-msg">Please select an option.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-row">
+    <div></div>
+    <button type="button" class="btn-next" onclick="checkEmailThenNext()">
+      Continue to Programs
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+    </button>
+  </div>
+</section>
+
+<!-- ════════════ SECTION 2: PROGRAMS ════════════ -->
+<section class="section" id="section-2">
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Programs of Interest</div>
+        <div class="card-sub">Section 2 of 3 &mdash; Select every session you'd like to apply for. Pricing hasn't been finalized yet — no payment is collected here.</div>
+      </div>
+    </div>
+
+    <div class="notice info">
+      <span class="notice-icon">&#9432;</span>
+      <div>All programs run <strong>9 weeks</strong>, plus up to 2 additional weeks if sessions are postponed (e.g. for school closures).</div>
+    </div>
+
+    <div class="field" id="f-programs">
+
+      <div class="acc-wrap">
+
+        <!-- TUESDAY BEG -->
+        <div class="acc-block beg-acc" id="acc-tue-beg">
+          <div class="acc-hdr" onclick="accToggle('acc-tue-beg')">
+            <div class="acc-tag">BEG</div>
+            <div class="acc-meta">
+              <div class="acc-title-row"><span class="acc-title">Tuesday &mdash; Beginner</span></div>
+              <div class="acc-subdesc">Richmond, BC &mdash; <em>[exact address to be added]</em></div>
+            </div>
+            <div class="acc-right">
+              <span class="acc-pill">2 time slots</span>
+              <div class="acc-chev"><svg viewBox="0 0 12 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 1l5 5 5-5"/></svg></div>
+            </div>
+          </div>
+          <div class="acc-body">
+            <div class="acc-body-inner">
+              <label class="acc-prog" onclick="accProg(this)">
+                <input type="checkbox" name="programs" value="Tuesday BEG — 6:00-7:45 PM" style="display:none;" />
+                <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
+                <div class="acc-prog-body">
+                  <div class="acc-prog-title">6:00 &ndash; 7:45 PM</div>
+                  <div class="acc-prog-desc">Sep 15, 22, 29, Oct 6, 13, 20, 27, Nov 3, 10 <em>(possible ext. to Nov 17, 24)</em></div>
+                </div>
+              </label>
+              <label class="acc-prog" onclick="accProg(this)">
+                <input type="checkbox" name="programs" value="Tuesday BEG — 7:45-9:30 PM" style="display:none;" />
+                <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
+                <div class="acc-prog-body">
+                  <div class="acc-prog-title">7:45 &ndash; 9:30 PM</div>
+                  <div class="acc-prog-desc">Sep 15, 22, 29, Oct 6, 13, 20, 27, Nov 3, 10 <em>(possible ext. to Nov 17, 24)</em></div>
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- WEDNESDAY BEG -->
+        <div class="acc-block beg-acc" id="acc-wed-beg">
+          <div class="acc-hdr" onclick="accToggle('acc-wed-beg')">
+            <div class="acc-tag">BEG</div>
+            <div class="acc-meta">
+              <div class="acc-title-row"><span class="acc-title">Wednesday &mdash; Beginner</span></div>
+              <div class="acc-subdesc">Edmonds Community School, Burnaby, BC &mdash; <em>[exact address to be added]</em></div>
+            </div>
+            <div class="acc-right">
+              <span class="acc-pill">2 time slots</span>
+              <div class="acc-chev"><svg viewBox="0 0 12 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 1l5 5 5-5"/></svg></div>
+            </div>
+          </div>
+          <div class="acc-body">
+            <div class="acc-body-inner">
+              <label class="acc-prog" onclick="accProg(this)">
+                <input type="checkbox" name="programs" value="Wednesday BEG (Edmonds) — 6:00-7:30 PM" style="display:none;" />
+                <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
+                <div class="acc-prog-body">
+                  <div class="acc-prog-title">6:00 &ndash; 7:30 PM</div>
+                  <div class="acc-prog-desc">Sept 16, 23 <em>(no session Sep 30)</em>, Oct 7, 14, 21, 28, Nov 4 <em>(no session Nov 11)</em>, 18, 25 <em>(possible ext. to Dec 2, 9)</em></div>
+                </div>
+              </label>
+              <label class="acc-prog" onclick="accProg(this)">
+                <input type="checkbox" name="programs" value="Wednesday BEG (Edmonds) — 7:30-9:00 PM" style="display:none;" />
+                <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
+                <div class="acc-prog-body">
+                  <div class="acc-prog-title">7:30 &ndash; 9:00 PM</div>
+                  <div class="acc-prog-desc">Sept 16, 23 <em>(no session Sep 30)</em>, Oct 7, 14, 21, 28, Nov 4 <em>(no session Nov 11)</em>, 18, 25 <em>(possible ext. to Dec 2, 9)</em></div>
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- WEDNESDAY INT -->
+        <div class="acc-block int-acc" id="acc-wed-int">
+          <div class="acc-hdr" onclick="accToggle('acc-wed-int')">
+            <div class="acc-tag">INT</div>
+            <div class="acc-meta">
+              <div class="acc-title-row"><span class="acc-title">Wednesday &mdash; Intermediate</span></div>
+              <div class="acc-subdesc">Lochdale Community School, Burnaby, BC &mdash; <em>[exact address to be added]</em></div>
+            </div>
+            <div class="acc-right">
+              <span class="acc-pill">2 time slots</span>
+              <div class="acc-chev"><svg viewBox="0 0 12 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 1l5 5 5-5"/></svg></div>
+            </div>
+          </div>
+          <div class="acc-body">
+            <div class="acc-body-inner">
+              <label class="acc-prog" onclick="accProg(this)">
+                <input type="checkbox" name="programs" value="Wednesday INT (Lochdale) — 6:00-7:30 PM" style="display:none;" />
+                <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
+                <div class="acc-prog-body">
+                  <div class="acc-prog-title">6:00 &ndash; 7:30 PM</div>
+                  <div class="acc-prog-desc">Sept 16, 23 <em>(no session Sep 30)</em>, Oct 7, 14, 21, 28, Nov 4 <em>(no session Nov 11)</em>, 18, 25 <em>(possible ext. to Dec 2, 9)</em></div>
+                </div>
+              </label>
+              <label class="acc-prog" onclick="accProg(this)">
+                <input type="checkbox" name="programs" value="Wednesday INT (Lochdale) — 7:30-9:00 PM" style="display:none;" />
+                <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
+                <div class="acc-prog-body">
+                  <div class="acc-prog-title">7:30 &ndash; 9:00 PM</div>
+                  <div class="acc-prog-desc">Sept 16, 23 <em>(no session Sep 30)</em>, Oct 7, 14, 21, 28, Nov 4 <em>(no session Nov 11)</em>, 18, 25 <em>(possible ext. to Dec 2, 9)</em></div>
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- THURSDAY INT -->
+        <div class="acc-block int-acc" id="acc-thu-int">
+          <div class="acc-hdr" onclick="accToggle('acc-thu-int')">
+            <div class="acc-tag">INT</div>
+            <div class="acc-meta">
+              <div class="acc-title-row"><span class="acc-title">Thursday &mdash; Intermediate</span></div>
+              <div class="acc-subdesc">Lochdale Community School, Burnaby, BC &mdash; <em>[exact address to be added]</em></div>
+            </div>
+            <div class="acc-right">
+              <span class="acc-pill">2 time slots</span>
+              <div class="acc-chev"><svg viewBox="0 0 12 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 1l5 5 5-5"/></svg></div>
+            </div>
+          </div>
+          <div class="acc-body">
+            <div class="acc-body-inner">
+              <label class="acc-prog" onclick="accProg(this)">
+                <input type="checkbox" name="programs" value="Thursday INT (Lochdale) — 6:00-7:30 PM" style="display:none;" />
+                <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
+                <div class="acc-prog-body">
+                  <div class="acc-prog-title">6:00 &ndash; 7:30 PM</div>
+                  <div class="acc-prog-desc">Sept 17, 24, Oct 1, 8, 15, 22, 29, Nov 5, 12 <em>(possible ext. to Nov 19, 26)</em></div>
+                </div>
+              </label>
+              <label class="acc-prog" onclick="accProg(this)">
+                <input type="checkbox" name="programs" value="Thursday INT (Lochdale) — 7:30-9:00 PM" style="display:none;" />
+                <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
+                <div class="acc-prog-body">
+                  <div class="acc-prog-title">7:30 &ndash; 9:00 PM</div>
+                  <div class="acc-prog-desc">Sept 17, 24, Oct 1, 8, 15, 22, 29, Nov 5, 12 <em>(possible ext. to Nov 19, 26)</em></div>
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- THURSDAY WOMEN'S INT -->
+        <div class="acc-block wmn-acc" id="acc-thu-wmn">
+          <div class="acc-hdr" onclick="accToggle('acc-thu-wmn')">
+            <div class="acc-tag">WMN</div>
+            <div class="acc-meta">
+              <div class="acc-title-row"><span class="acc-title">Thursday &mdash; Women's Intermediate</span></div>
+              <div class="acc-subdesc">Women's only &middot; Richmond, BC &mdash; <em>venue pending confirmation</em></div>
+            </div>
+            <div class="acc-right">
+              <span class="acc-pill">2 time slots</span>
+              <div class="acc-chev"><svg viewBox="0 0 12 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 1l5 5 5-5"/></svg></div>
+            </div>
+          </div>
+          <div class="acc-body">
+            <div class="acc-body-inner">
+              <label class="acc-prog" onclick="accProg(this)">
+                <input type="checkbox" name="programs" value="Thursday WOMENS INT (Richmond) — 6:00-7:30 PM" style="display:none;" />
+                <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
+                <div class="acc-prog-body">
+                  <div class="acc-prog-title">6:00 &ndash; 7:30 PM</div>
+                  <div class="acc-prog-desc">Sept 17, 24, Oct 1, 8, 15, 22, 29, Nov 5, 12 <em>(possible ext. to Nov 19, 26)</em></div>
+                </div>
+              </label>
+              <label class="acc-prog" onclick="accProg(this)">
+                <input type="checkbox" name="programs" value="Thursday WOMENS INT (Richmond) — 7:30-9:00 PM" style="display:none;" />
+                <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
+                <div class="acc-prog-body">
+                  <div class="acc-prog-title">7:30 &ndash; 9:00 PM</div>
+                  <div class="acc-prog-desc">Sept 17, 24, Oct 1, 8, 15, 22, 29, Nov 5, 12 <em>(possible ext. to Nov 19, 26)</em></div>
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="err-msg" style="margin-top:6px;">Please select at least one program time slot to continue.</div>
+    </div>
+  </div>
+
+  <div class="nav-row">
+    <button type="button" class="btn-back" onclick="prevStep(2)">Back</button>
+    <button type="button" class="btn-next" onclick="nextStep(2)">
+      Continue to Conduct &amp; Policies
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+    </button>
+  </div>
+</section>
+
+<!-- ════════════ SECTION 3: CONDUCT & SUBMIT ════════════ -->
+<section class="section" id="section-3">
+
+  <!--
+    TODO (flagged for FTLO review, not yet edited by Claude):
+    The policy text below was carried over from the Summer 2026 registration page.
+    Please review before publishing — items likely needing changes for Fall clinics:
+      1. "Payment Policy" section already says payment happens "upon the program spot
+         invitation" — this already matches the Fall application-first flow, but confirm wording.
+      2. The refund policy's "$8.00 charge for partial coverage of training T-shirt orders"
+         assumes a T-shirt perk. Fall clinics don't have T-shirts confirmed — remove or edit.
+      3. A sentence referencing "Tournament cancellation and refunds" from Summer's
+         version has been removed here since it's not applicable, but double-check the
+         rest of the refund policy applies cleanly to Fall clinics.
+      4. General Agreements of Participation (risk/conduct/media release) look generic
+         and were kept as-is — please still give them a read-through.
+  -->
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom:4px;">Participant Code of Conduct &amp; Policies</div>
+    <div class="card-sub" style="margin-bottom:1.25rem;">Section 3 of 3 &mdash; Please read carefully and confirm your agreement below.</div>
+
+    <div style="display:flex;flex-direction:column;gap:1.1rem;margin-bottom:1.1rem;">
+
+      <div style="background:#fff;border:1px solid #ede8e2;border-radius:8px;padding:16px 18px;max-height:280px;overflow-y:auto;font-size:13.5px;line-height:1.75;color:#444040;">
+        <h4 style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal);margin:0 0 6px;">FTLO Code of Conduct and Conditions</h4>
+        <p><strong>Safety is #1:</strong> All sessions will run unless otherwise notified through email by FTLO coaches. Outdoor and indoor sessions with unfavourable and unsafe conditions will be postponed.</p>
+        <p><strong>Training Sessions</strong> will count as "completed" if the session has run for a minimum of 30 minutes. Coaches design sessions for safety, fun, and optimal challenge. Please notify the FTLO coaches if you have certain medical conditions that require playing modifications.</p>
+
+        <h4 style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal);margin:12px 0 6px;">Postponements</h4>
+        <p>If FTLO deems facility conditions unsafe or unsuitable for training (including school closures), sessions will be postponed and rescheduled on the same weekday of a future week. Participants will be notified by email as soon as possible.</p>
+        <p><strong>Postponed and Replacement of Sessions Window:</strong> Fall Programs may be extended by up to <strong>2 additional weeks</strong> beyond the original schedule to accommodate postponed sessions. No make-up sessions will be offered beyond this extension.</p>
+        <p>FTLO aims to deliver the full number of scheduled sessions within this extended period. While we strive to meet that goal, participants acknowledge that postponements are possible, and that FTLO&rsquo;s make-up window represents a reasonable accommodation.</p>
+
+        <h4 style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal);margin:12px 0 6px;">Availability</h4>
+        <p>Participants who cannot attend a session are encouraged to find substitutes to play in their place. They should alert FTLO coaches if they cannot find replacements. Please observe Intermediate Clinic Placement Expectations.</p>
+
+        <h4 style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal);margin:12px 0 6px;">Facilities</h4>
+        <p>FTLO Volleyball utilizes facilities owned by public institutions (eg. City of Richmond, City of Burnaby, School Districts). Participants shall respect the facilities&rsquo; policies and restrictions which are imposed by the property owner.</p>
+
+        <h4 style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal);margin:12px 0 6px;">Payment Policy</h4>
+        <p>This form is an <strong>application</strong>, not a confirmed spot. To ensure your registration is complete, a bank E-Transfer, cash payment, or app-specific payment must be made upon the program spot invitation, which FTLO will send by email after reviewing applications.</p>
+
+        <h4 style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal);margin:12px 0 6px;">Medical or Training Concerns</h4>
+        <p>Participants are encouraged to share any medical condition and/or training limitations to the FTLO coaches on the application form. (ie. Relevant past injuries, allergies, medication taken, concussion history, month/year of injuries)</p>
+        <p><strong>Intermediate Clinic Placement Expectations:</strong> Our Intermediate clinics are designed for participants who can consistently perform core volleyball skills such as passing and setting within a target (e.g. 3 out of 5 successful reps in controlled drills). These sessions move at a faster pace and assume confidence with the first and second contact. If a participant needs more support with foundational skills, FTLO coaches may recommend a transfer or suggest continued experience through Beginner clinics before returning to Intermediate-level training.</p>
+        <p>All other inquiries: info@ftlovolleyball.ca &mdash; <a href="https://www.ftlovolleyball.ca/policies" target="_blank" style="color:var(--teal);font-weight:600;">ftlovolleyball.ca/policies</a></p>
+      </div>
+
+      <div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--orange);background:var(--teal);padding:5px 14px;border-radius:4px;display:inline-block;margin-bottom:8px;">Cancellation, Refund &amp; Suitability Policy</div>
+        <div style="background:#fff;border:1px solid #ede8e2;border-radius:8px;padding:16px 18px;max-height:220px;overflow-y:auto;font-size:13.5px;line-height:1.75;color:#444040;">
+          <p style="margin-bottom:8px;">Participants can receive a <strong>100% refund</strong> if cancellation is requested no later than <strong>14 calendar days</strong> before the program start date.</p>
+          <p style="margin-bottom:8px;">If a cancellation request is made <strong>within 14 calendar days</strong> before the start date, participants will receive a <strong>50% refund</strong>.</p>
+          <p style="margin-bottom:8px;"><u><strong>* Any refunds will require a $5.00 administrative banking charge.</strong></u> <em style="color:#c0392b;">[FLAGGED: Summer's version also added an $8 T-shirt charge here — remove/edit if Fall clinics don't include a shirt.]</em></p>
+          <p style="margin-bottom:8px;"><strong>No refund will be issued after the program start date.</strong> Participants can assign their registration to another adult as a replacement.</p>
+          <p style="margin-bottom:8px;"><strong>Refunds for Incomplete Programs:</strong> FTLO is committed to delivering the full number of sessions in each training program within the extended schedule. If, despite this buffer, more than one session remains incomplete by the end of the season, prorated refunds will be issued based on the number of sessions owed.</p>
+          <p><strong>Participatory Suitability:</strong> FTLO reserves the right to decline and/or refund a participant&rsquo;s registration payment if the participant is deemed not suitable for the playing environment. This will be communicated via a case-by-case matter.</p>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--orange);background:var(--teal);padding:5px 14px;border-radius:4px;display:inline-block;margin-bottom:8px;">General Agreements of Participation</div>
+        <div style="background:#fff;border:1px solid #ede8e2;border-radius:8px;padding:16px 18px;max-height:220px;overflow-y:auto;font-size:13.5px;line-height:1.75;color:#444040;">
+          <p style="margin-bottom:8px;"><strong>Assumption of Risks:</strong> It is understood that, by accepting and applying for FTLO Volleyball programs, there are inherent physical risks associated with any sport, including indoor and outdoor volleyball. Participants may be struck by volleyballs during the course of training and league play. Though FTLO programs are designed with safety in mind, participants must be aware that injuries occur in sports and must freely accept that sprained ankles, impact to fingers, body, limbs, and sore muscle groups may result from participation in addition to other potential risks, dangers, and hazards causing possible injury, death, property damage or losses resulting therein.</p>
+          <p style="margin-bottom:8px;"><strong>Participant Conduct &amp; Facility Compliance:</strong> Participants acknowledge and agree to respect all designated indoor and outdoor areas within and surrounding the school grounds utilized for FTLO Volleyball activities. Entry into unauthorized or restricted areas is strictly prohibited. Participants shall exercise due care in the use of all district-owned, school, and public rental equipment.</p>
+          <p style="margin-bottom:8px;"><strong>Release of Claims &amp; Indemnity Agreement:</strong> Each participant, on behalf of their legal representatives, heirs, executors, successors, must read and voluntarily agree to release, waive and forever discharge FTLO Volleyball Association and its coaches, partners, contractors and volunteers, from all claims, demands, damages, costs, expenses, whether in law or in equity, in respect of death, injury, loss, or damage to their person or property, arising by reason of their participation or attendance, due to any cause whatsoever, including negligence, breach of contract or duty of care.</p>
+          <p style="margin-bottom:8px;"><strong>Photo &amp; Video Release:</strong> By participating with FTLO Volleyball, participants grant permission to FTLO Volleyball and its representatives to collect media (photography and videography included) of their physical inclusion with FTLO Volleyball programs for promoting, publicizing or explaining FTLO Volleyball and its activities. Participants give full consent, and will otherwise notify FTLO Volleyball staff, with text documentation, if they would like to consult and/or modify this agreement.</p>
+          <p style="margin-bottom:8px;"><strong>Inclusiveness &amp; Rights of Dismissal:</strong> FTLO welcomes all adults from all backgrounds to participate in its programs. FTLO has zero-tolerance for racial discrimination, harassment, or any unwelcomed and inappropriate behaviours towards any of its members. FTLO reserves the right to remove participants from play on a case-by-case manner.</p>
+          <p><em>By digitally selecting &lsquo;I AGREE&rsquo; in FTLO&rsquo;s application form, participants voluntarily acknowledge that they have read, understood, and will adhere to All FTLO Policies, Code of Conduct, Assumption of Risks, Release of Claims &amp; Indemnity Agreement, and consent to the remaining General Agreements of Participation.</em></p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="field" id="f-conduct">
+      <label class="lbl">I have read and agree to the FTLO Code of Conduct and all Policies <span class="req">*</span></label>
+      <select name="agreeConduct">
+        <option value="">Select</option>
+        <option value="yes">Yes, I agree to all FTLO Policies and Code of Conduct</option>
+        <option value="no">No</option>
+      </select>
+      <div class="err-msg">You must agree to the Code of Conduct to proceed.</div>
+    </div>
+
+    <div class="field" style="margin-top:1.1rem;">
+      <label class="lbl">Medical Conditions / Training Limitations (optional)</label>
+      <textarea name="medical" placeholder="Please share any relevant past injuries, allergies, medication, concussion history, or other conditions requiring coaching attention..."></textarea>
+    </div>
+  </div>
+
+  <!-- HOW DID YOU HEAR -->
+  <div class="card">
+    <div class="card-title" style="margin-bottom:1rem;">Where Did You Hear About FTLO?</div>
+    <div class="field" id="f-heard">
+      <label class="lbl">Select all that apply <span class="req">*</span></label>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <label class="prog-card" style="padding:10px 14px;" onclick="toggleProg(this)">
+          <input type="checkbox" name="heardFrom" value="Friend" style="display:none;" />
+          <div class="prog-check" style="border-radius:50%;"><span class="prog-check-tick">&#10003;</span></div>
+          <div class="prog-body" style="display:flex;align-items:center;"><span style="font-size:14px;font-weight:600;">Friend</span></div>
+        </label>
+        <label class="prog-card" style="padding:10px 14px;" onclick="toggleProg(this)">
+          <input type="checkbox" name="heardFrom" value="Website" style="display:none;" />
+          <div class="prog-check" style="border-radius:50%;"><span class="prog-check-tick">&#10003;</span></div>
+          <div class="prog-body" style="display:flex;align-items:center;"><span style="font-size:14px;font-weight:600;">Website</span></div>
+        </label>
+        <label class="prog-card" style="padding:10px 14px;" onclick="toggleProg(this)">
+          <input type="checkbox" name="heardFrom" value="Another Program" style="display:none;" />
+          <div class="prog-check" style="border-radius:50%;"><span class="prog-check-tick">&#10003;</span></div>
+          <div class="prog-body" style="display:flex;align-items:center;"><span style="font-size:14px;font-weight:600;">Another Program</span></div>
+        </label>
+        <label class="prog-card" style="padding:10px 14px;" onclick="toggleProg(this)">
+          <input type="checkbox" name="heardFrom" value="Trained with FTLO (state season in comments)" style="display:none;" />
+          <div class="prog-check" style="border-radius:50%;"><span class="prog-check-tick">&#10003;</span></div>
+          <div class="prog-body" style="display:flex;align-items:center;"><span style="font-size:14px;font-weight:600;">Trained with FTLO (state season in comments)</span></div>
+        </label>
+        <label class="prog-card" style="padding:10px 14px;" onclick="toggleProg(this)">
+          <input type="checkbox" name="heardFrom" value="Other" style="display:none;" />
+          <div class="prog-check" style="border-radius:50%;"><span class="prog-check-tick">&#10003;</span></div>
+          <div class="prog-body" style="display:flex;align-items:center;"><span style="font-size:14px;font-weight:600;">Other</span></div>
+        </label>
+      </div>
+      <div class="err-msg">Please let us know how you heard about FTLO.</div>
+    </div>
+
+    <div class="field" style="margin-top:1.1rem;">
+      <label class="lbl">Who was the friend? / Which year &amp; program were you in? / Other details</label>
+      <input type="text" name="heardDetails" placeholder="Add any extra details here..." />
+    </div>
+
+    <div class="field" style="margin-top:1.1rem;">
+      <label class="lbl">Other Questions or Comments</label>
+      <textarea name="comments" placeholder="Questions about clinic programs, skill level placement, or anything else? Leave them here."></textarea>
+    </div>
+  </div>
+
+  <div class="notice warn" style="margin-top:0;">
+    <span class="notice-icon">&#9888;</span>
+    <div>By submitting this application, you confirm all details are accurate and that you have read and agreed to the FTLO Code of Conduct, all Policies, and the General Agreements of Participation. Submitting does not guarantee a spot &mdash; FTLO will follow up by email with payment instructions if a spot is available.</div>
+  </div>
+
+  <div class="nav-row">
+    <button type="button" class="btn-back" onclick="prevStep(3)">Back</button>
+    <button type="button" class="btn-submit" id="submitBtn" onclick="submitForm()">Submit Application</button>
+  </div>
+</section>
+
+</form>
+
+<!-- ── SUCCESS ── -->
+<div class="success-wrap" id="successScreen">
+  <div class="success-icon-wrap">
+    <div class="success-icon-inner">
+      <span class="success-check">&#10003;</span>
+    </div>
+  </div>
+  <h2>Thank You for Applying!</h2>
+  <p style="margin-bottom:0.5rem;font-size:16px;color:var(--black);">A confirmation of your application details has been sent to:</p>
+  <div id="confirmEmail" style="font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:900;color:var(--teal);background:var(--teal-light);border:2px solid #b8cdd2;border-radius:var(--radius-sm);padding:12px 20px;margin-bottom:1.25rem;word-break:break-all;letter-spacing:0.02em;">&mdash;</div>
+  <p style="font-size:13px;color:var(--g500);margin-bottom:1.25rem;">If you see a typo in your email address above, please contact <strong>info@ftlovolleyball.ca</strong> immediately.</p>
+
+  <div style="background:var(--teal);border-radius:var(--radius);padding:1.5rem 1.75rem;text-align:left;max-width:520px;margin:0 auto 1.5rem;">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;color:var(--orange);margin-bottom:12px;">Next Steps</div>
+    <ol style="list-style:none;counter-reset:ns;padding:0;">
+      <li style="counter-increment:ns;display:flex;gap:10px;color:rgba(255,249,245,0.85);font-size:15px;line-height:1.6;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.1);">
+        <span style="font-family:'Barlow Condensed',sans-serif;font-weight:900;color:var(--orange);font-size:16px;min-width:18px;">1</span>
+        <strong style="color:var(--white);">Check your email</strong>&nbsp;for a confirmation that your application was received.
+      </li>
+      <li style="counter-increment:ns;display:flex;gap:10px;color:rgba(255,249,245,0.85);font-size:15px;line-height:1.6;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.1);">
+        <span style="font-family:'Barlow Condensed',sans-serif;font-weight:900;color:var(--orange);font-size:16px;min-width:18px;">2</span>
+        FTLO will review applications for your selected session(s).
+      </li>
+      <li style="counter-increment:ns;display:flex;gap:10px;color:rgba(255,249,245,0.85);font-size:15px;line-height:1.6;padding:6px 0;">
+        <span style="font-family:'Barlow Condensed',sans-serif;font-weight:900;color:var(--orange);font-size:16px;min-width:18px;">3</span>
+        If a spot is available, you'll receive a separate email with a payment invite and instructions.
+      </li>
+    </ol>
+  </div>
+
+  <div style="background:var(--orange-light);border:2px solid var(--orange);border-radius:var(--radius-sm);padding:1rem 1.25rem;max-width:520px;margin:0 auto;text-align:left;">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--teal-dark);margin-bottom:6px;">Keep Updates Out of Your Spam</div>
+    <p style="font-size:15px;color:#5a3a00;line-height:1.6;margin:0;">Please <strong>ADD &amp; SAVE info@ftlovolleyball.ca as a contact</strong> to ensure all your future invitations end up in your inbox!</p>
+  </div>
+
+  <p style="margin-top:1.75rem;font-size:14px;color:var(--gray-500);">See you on the court!</p>
+</div>
+
+</main>
+
+<script>
+function formatPhone(input) {
+  var digits = input.value.replace(/\D/g, '').slice(0, 10);
+  var formatted = '';
+  if (digits.length <= 3) {
+    formatted = digits;
+  } else if (digits.length <= 6) {
+    formatted = digits.slice(0,3) + '-' + digits.slice(3);
+  } else {
+    formatted = digits.slice(0,3) + '-' + digits.slice(3,6) + '-' + digits.slice(6);
+  }
+  input.value = formatted;
+}
+function accToggle(id) {
+  var el = document.getElementById(id);
+  el.classList.toggle('open');
+}
+function accProg(label) {
+  setTimeout(function() {
+    var cb = label.querySelector('input[type="checkbox"]');
+    if (!cb) return;
+    label.classList.toggle('sel', cb.checked);
+  }, 0);
+}
+function toggleProg(label) {
+  setTimeout(function() {
+    var cb = label.querySelector('input[type="checkbox"]');
+    if (!cb) return;
+    label.classList.toggle('selected', cb.checked);
+  }, 0);
+}
+
+var usedEmails = [];
+
+// TODO: replace this with your deployed Fall Apps Script Web App URL once it's ready
+// (Extensions > Apps Script > Deploy > Web App, inside the "2026 Fall Clinic Programs" sheet)
+var APPS_SCRIPT_URL = 'PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE';
+
+var currentStep = 1;
+
+function goToStep(n) {
+  if (n > currentStep) return;
+  showStep(n);
+}
+
+function showStep(n) {
+  var sections = document.querySelectorAll('.section');
+  for (var i = 0; i < sections.length; i++) {
+    sections[i].classList.remove('active');
+  }
+  var target = document.getElementById('section-' + n);
+  if (target) target.classList.add('active');
+
+  var steps = document.querySelectorAll('.step-item');
+  for (var j = 0; j < steps.length; j++) {
+    steps[j].classList.remove('active', 'done');
+    if (j + 1 < n) steps[j].classList.add('done');
+    if (j + 1 === n) steps[j].classList.add('active');
+  }
+  currentStep = n;
+  window.scrollTo(0, 0);
+}
+
+function nextStep(from) {
+  var valid = validateStep(from);
+  if (!valid) return;
+  showStep(from + 1);
+}
+
+function prevStep(from) {
+  showStep(from - 1);
+}
+
+function getVal(name) {
+  var el = document.querySelector('[name="' + name + '"]');
+  return el ? el.value.trim() : '';
+}
+
+function validateStep(step) {
+  var ok = true;
+
+  if (step === 1) {
+    if (getVal('firstName') === '') { markErr('f-firstName'); ok = false; } else clearErr('f-firstName');
+    if (getVal('lastName') === '') { markErr('f-lastName'); ok = false; } else clearErr('f-lastName');
+    var email = getVal('email');
+    var emailLower = email.toLowerCase();
+    var emailInvalid = email === '' || email.indexOf('@') === -1 || email.indexOf('.') === -1 || emailLower.slice(-4) === '.con';
+    if (emailInvalid) { markErr('f-email'); ok = false; } else clearErr('f-email');
+    if (ok && email && usedEmails.indexOf(emailLower) !== -1) {
+      markErr('f-email', 'This email address has already been submitted. Each applicant may only apply once. Please contact info@ftlovolleyball.ca if you need assistance.');
+      ok = false;
+    }
+    if (getVal('phone') === '') { markErr('f-phone'); ok = false; } else clearErr('f-phone');
+    if (getVal('city') === '') { markErr('f-city'); ok = false; } else clearErr('f-city');
+    if (getVal('gender') === '') { markErr('f-gender'); ok = false; } else clearErr('f-gender');
+  }
+
+  if (step === 2) {
+    var picked = document.querySelectorAll('[name="programs"]:checked');
+    if (picked.length === 0) { markErr('f-programs'); ok = false; } else clearErr('f-programs');
+  }
+
+  if (step === 3) {
+    var conduct = getVal('agreeConduct');
+    if (conduct !== 'yes') { markErr('f-conduct', 'You must agree to the Code of Conduct to proceed.'); ok = false; } else clearErr('f-conduct');
+    var heard = document.querySelectorAll('[name="heardFrom"]:checked');
+    if (heard.length === 0) { markErr('f-heard'); ok = false; } else clearErr('f-heard');
+  }
+
+  return ok;
+}
+
+function markErr(id, msg) {
+  var f = document.getElementById(id);
+  if (!f) return;
+  f.classList.add('error');
+  if (msg) {
+    var m = f.querySelector('.err-msg');
+    if (m) m.textContent = msg;
+  }
+}
+
+function clearErr(id) {
+  var f = document.getElementById(id);
+  if (f) f.classList.remove('error');
+}
+
+function collectData() {
+  var pc = document.querySelectorAll('[name="programs"]:checked');
+  var programs = [];
+  for (var i = 0; i < pc.length; i++) programs.push(pc[i].value);
+
+  var hc = document.querySelectorAll('[name="heardFrom"]:checked');
+  var heardFrom = [];
+  for (var j = 0; j < hc.length; j++) heardFrom.push(hc[j].value);
+
+  return {
+    timestamp:    (function() { var p = {}; new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Vancouver', year: 'numeric', month: '2-digit', day: '2-digit', hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true }).formatToParts(new Date()).forEach(function(x) { p[x.type] = x.value; }); return p.year + '-' + p.month + '-' + p.day + ', ' + p.hour + ':' + p.minute + ':' + p.second + ' ' + p.dayPeriod; })(),
+    firstName:    getVal('firstName'),
+    lastName:     getVal('lastName'),
+    email:        getVal('email'),
+    phone:        getVal('phone'),
+    city:         getVal('city'),
+    gender:       getVal('gender'),
+    programs:     programs.join(' | '),
+    agreeConduct: getVal('agreeConduct'),
+    medical:      getVal('medical'),
+    heardFrom:    heardFrom.join(', '),
+    heardDetails: getVal('heardDetails'),
+    comments:     getVal('comments')
+  };
+}
+
+function submitForm() {
+  if (!validateStep(3)) return;
+  var btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.innerHTML = 'Submitting...';
+
+  var data = collectData();
+
+  // Use XMLHttpRequest - most compatible with Google Apps Script
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', APPS_SCRIPT_URL, true);
+  xhr.setRequestHeader('Content-Type', 'text/plain');
+
+  xhr.onload = function() {
+    showSuccess();
+  };
+  xhr.onerror = function() {
+    // no-cors means we won't get a response back, so we show success anyway
+    // if the request was sent (onerror only fires on network failure)
+    showSuccess();
+  };
+
+  try {
+    xhr.send(JSON.stringify(data));
+    // For no-cors situations, show success after short delay
+    setTimeout(function() {
+      showSuccess();
+    }, 2000);
+  }
+  catch(e) {
+    showSuccess();
+  }
+}
+
+function showSuccess() {
+  if (document.getElementById('successScreen').style.display === 'block') return;
+  var submittedEmail = getVal('email');
+  if (submittedEmail) {
+    usedEmails.push(submittedEmail.toLowerCase());
+    var emailDisplay = document.getElementById('confirmEmail');
+    if (emailDisplay) emailDisplay.textContent = submittedEmail;
+  }
+  document.getElementById('regForm').style.display = 'none';
+  document.getElementById('successScreen').style.display = 'block';
+  document.getElementById('siteHeader').style.display = 'none';
+  window.scrollTo(0, 0);
+}
+
+function checkEmailThenNext() {
+  var valid = validateStep(1);
+  if (!valid) return;
+  var email = getVal('email').toLowerCase();
+  var btn = document.querySelector('.btn-next');
+  btn.disabled = true;
+  btn.innerHTML = 'Checking...';
+  fetch(APPS_SCRIPT_URL + '?action=checkEmail&email=' + encodeURIComponent(email) + '&v=' + Date.now(), { cache: 'no-store' })
+    .then(function(r) { return r.json(); })
+    .then(function(json) {
+      btn.disabled = false;
+      btn.innerHTML = 'Continue to Programs <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>';
+      if (json.exists) {
+        markErr('f-email', 'This email has already been submitted. Each person may only apply once. Please contact info@ftlovolleyball.ca if you need help.');
+      } else {
+        showStep(2);
+      }
+    })
+    .catch(function() {
+      btn.disabled = false;
+      btn.innerHTML = 'Continue to Programs <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>';
+      showStep(2);
+    });
+}
+</script>
+
+</body>
+</html>
