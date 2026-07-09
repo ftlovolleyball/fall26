@@ -5,8 +5,9 @@ Static registration/application page for FTLO Volleyball's Fall 2026 clinics, ho
 ## Status
 
 - [x] Application form built (`index.html`) — Contact → Programs → Conduct & Submit
-- [x] Apps Script written (`apps-script.js`) — not yet deployed/connected, see below
-- [ ] Google Apps Script not yet deployed — `APPS_SCRIPT_URL` in `index.html` is still a placeholder
+- [x] Apps Script written (`apps-script.js`) and deployed — writes to the "Applications" tab of
+      "2026 Fall Clinic Programs" and emails a confirmation
+- [x] `index.html` is wired up to the deployed Apps Script URL
 - [ ] GitHub Pages not yet enabled for this repo (Settings → Pages → Deploy from branch `main` / root)
 - [ ] Exact facility addresses not yet filled in (marked `[exact address to be added]` in Step 2)
 - [ ] Program pricing not yet finalized (not shown on the form)
@@ -14,15 +15,18 @@ Static registration/application page for FTLO Volleyball's Fall 2026 clinics, ho
       whenever you have them (upload a file with the same name via the GitHub website, no code
       changes needed — see "Replacing the placeholder images" below)
 
-## Connecting the Google Apps Script
+## The Google Apps Script
 
-`apps-script.js` in this repo is not itself run by GitHub — it's a copy of the code you paste into
-your Google Sheet. Full setup instructions are in the comment at the top of that file. Short version:
+`apps-script.js` in this repo is not itself run by GitHub — it's a copy of the code that's pasted
+into a Google Apps Script project and deployed as a web app. It targets the "2026 Fall Clinic
+Programs" sheet directly by ID (`SHEET_ID` near the top of the file), so it works whether the
+script lives inside the sheet (Extensions → Apps Script) or as its own separate project at
+script.google.com. Full setup instructions are in the comment at the top of that file.
 
-1. Open your "2026 Fall Clinic Programs" Google Sheet → Extensions → Apps Script.
-2. Paste in the contents of `apps-script.js`.
-3. Deploy → New deployment → Web app → Execute as "Me" → Who has access "Anyone" → Deploy.
-4. Send the resulting web app URL back so it can be pasted into `index.html`.
+If you ever edit `apps-script.js` again, the live copy in Google needs to be updated too: paste
+the new version into the Apps Script editor, then **Deploy → Manage deployments → pencil icon →
+Version: New version → Deploy** (this keeps the same URL — a brand new deployment would get a
+new URL and break the link from `index.html`).
 
 The "Timestamp" column this script writes is generated on Google's servers (not the applicant's
 device), formatted as `YYYY-MM-DD HH:MM:SS` in Pacific time — so it's consistent no matter what

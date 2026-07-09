@@ -4,23 +4,27 @@
 //
 // SETUP (do this once):
 //
-//  1. Open your "2026 Fall Clinic Programs" Google Sheet.
-//  2. Go to Extensions > Apps Script.
-//  3. Delete anything in the editor and paste this entire file in.
-//  4. Click Deploy > New deployment.
+//  1. This script targets your sheet directly by ID (SHEET_ID below), so it
+//     works whether it's pasted into Extensions > Apps Script on the sheet
+//     itself, or created as its own separate project at script.google.com.
+//  2. Paste this entire file into the Apps Script editor (replacing whatever
+//     is already there).
+//  3. Click Deploy > New deployment (or, if you already have a deployment,
+//     Deploy > Manage deployments > pencil icon > Version: New version, to
+//     update it without changing the URL).
 //       - Select type: "Web app"
 //       - Description: anything, e.g. "Fall 2026 applications"
 //       - Execute as: Me
 //       - Who has access: Anyone
 //     Click Deploy, and authorize the script when prompted (it needs permission
 //     to edit this spreadsheet and send email as you).
-//  5. Copy the "Web app URL" you're given (ends in /exec).
-//  6. Send that URL back — it needs to be pasted into index.html as APPS_SCRIPT_URL.
+//  4. Copy the "Web app URL" you're given (ends in /exec) and send it back —
+//     it needs to be pasted into index.html as APPS_SCRIPT_URL.
 //
 // WHAT THIS DOES:
 //  - doPost(e): runs when someone submits the application form. Writes a row to
-//    the "Applications" tab (created automatically the first time) and emails
-//    the applicant a confirmation.
+//    the "Applications" tab (created automatically if it doesn't exist yet) and
+//    emails the applicant a confirmation.
 //  - doGet(e): handles the "already applied?" duplicate-email check the form
 //    does before letting someone continue past Step 1.
 //
@@ -33,11 +37,12 @@
 //
 // ─────────────────────────────────────────────────────────────────────────────
 
+var SHEET_ID = '1QAXakjHOKh3pvCH7IXMXExRSrjYfWWnR0xcd-80zAkc'; // "2026 Fall Clinic Programs"
 var SHEET_NAME = 'Applications';
 var TIMEZONE = 'America/Vancouver';
 
 function doPost(e) {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var ss = SpreadsheetApp.openById(SHEET_ID);
   var data = JSON.parse(e.postData.contents);
   handleApplicationSubmit(data, ss);
   return ContentService.createTextOutput(JSON.stringify({ status: 'ok' }))
@@ -62,9 +67,14 @@ function doGet(e) {
 function handleApplicationSubmit(data, ss) {
   var sheet = ss.getSheetByName(SHEET_NAME);
 
-  // Create the sheet and header row the very first time
+  // Create the tab if it doesn't exist yet
   if (!sheet) {
     sheet = ss.insertSheet(SHEET_NAME);
+  }
+
+  // Add the header row if the tab is empty (covers both a brand-new tab and
+  // one you already created by hand, like the current "Applications" tab)
+  if (sheet.getLastRow() === 0) {
     sheet.appendRow([
       'Timestamp',
       'First Name', 'Last Name', 'Email', 'Phone',
@@ -105,7 +115,7 @@ function handleApplicationSubmit(data, ss) {
 // ── Checks the Applications sheet for a matching email (case-insensitive) ────
 function emailAlreadyApplied(email) {
   if (!email) return false;
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var ss = SpreadsheetApp.openById(SHEET_ID);
   var sheet = ss.getSheetByName(SHEET_NAME);
   if (!sheet) return false;
 
