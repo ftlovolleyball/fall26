@@ -42,8 +42,17 @@ var SHEET_NAME = 'Applications';
 var TIMEZONE = 'America/Vancouver';
 
 function doPost(e) {
-  var ss = SpreadsheetApp.openById(SHEET_ID);
   var data = JSON.parse(e.postData.contents);
+
+  // Honeypot: real applicants never see or fill this field. If it has a
+  // value, this is a bot — pretend it worked, but don't write a row or
+  // send an email.
+  if (data.website) {
+    return ContentService.createTextOutput(JSON.stringify({ status: 'ok' }))
+                          .setMimeType(ContentService.MimeType.JSON);
+  }
+
+  var ss = SpreadsheetApp.openById(SHEET_ID);
   handleApplicationSubmit(data, ss);
   return ContentService.createTextOutput(JSON.stringify({ status: 'ok' }))
                         .setMimeType(ContentService.MimeType.JSON);

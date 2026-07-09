@@ -638,6 +638,12 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
 <main class="main">
 <form id="regForm" novalidate>
 
+<!-- Honeypot — invisible to real applicants, catches basic spam bots that
+     auto-fill every field they find. Real users never see or touch this. -->
+<div style="position:absolute;left:-9999px;top:-9999px;height:0;width:0;overflow:hidden;" aria-hidden="true">
+  <label>Company Name<input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+</div>
+
 <!-- ════════════ SECTION 1: CONTACT ════════════ -->
 <section class="section active" id="section-1">
 
@@ -1258,6 +1264,7 @@ function collectData() {
   // own server-side time (America/Vancouver, YYYY-MM-DD HH:MM:SS) so the "Timestamp"
   // column is consistent no matter what device, browser, or clock the applicant used.
   return {
+    website:      getVal('website'), // honeypot — should always be empty for real applicants
     firstName:    getVal('firstName'),
     lastName:     getVal('lastName'),
     email:        getVal('email'),
