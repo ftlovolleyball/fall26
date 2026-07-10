@@ -602,8 +602,11 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
   <div class="hero-inner">
     <div class="hero-eyebrow">2026 Fall Season — Adults 18+</div>
     <h1>Fall Clinic Program<br><span>Application</span></h1>
-    <p style="color:rgba(255,249,245,0.65);font-size:15px;max-width:500px;line-height:1.6;">
-      Tell us which Fall clinic session(s) you're interested in. <strong style="color:var(--orange);">This is an application, not a confirmed spot</strong> — FTLO will follow up by email with a payment invite once your spot is confirmed.
+    <p style="color:rgba(255,249,245,0.65);font-size:15px;max-width:520px;line-height:1.6;">
+      FTLO is BACK for Fall 2026 with our flagship Beginner and Intermediate training sessions :) &mdash; and a NEW Women's Only Intermediate training session. Join us for 9 dedicated sessions of volleyball training indoors! Fall season facility reservations, especially during the week, have been challenging &mdash; please respond as soon as you know your availability. Those who know FTLO know what we're about when we get together.
+    </p>
+    <p style="color:rgba(255,249,245,0.65);font-size:15px;max-width:520px;line-height:1.6;margin-top:0.75rem;">
+      <strong style="color:var(--orange);">This is an application, not a confirmed spot</strong> — FTLO will follow up by email with a payment invite once your spot is confirmed.
     </p>
     <div class="hero-stats">
       <div class="stat"><div class="stat-num">9</div><div class="stat-label">Weeks</div></div>
@@ -652,6 +655,19 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
     <div><strong>This is an application, not a confirmed registration.</strong> FTLO will review applications and follow up by email with a payment invite for confirmed spots.</div>
   </div>
 
+  <div class="notice warn" id="registrationRoundsNotice">
+    <span class="notice-icon">&#128197;</span>
+    <div>
+      <strong>Registration Rounds:</strong>
+      <ul style="margin:6px 0 0 18px;padding:0;">
+        <li>First Round applicants will be contacted after <strong>July 20</strong> to pay and accept their training spot.</li>
+        <li>Public invitation to apply opens after <strong>July 23</strong>.</li>
+        <li>Second Round registration payment invites go out after <strong>July 24, 2026</strong>.</li>
+        <li>Waitlisted applicants will be contacted when a spot becomes available.</li>
+      </ul>
+    </div>
+  </div>
+
   <div class="card">
     <div class="card-header">
       <div>
@@ -676,7 +692,13 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
     <div class="field" id="f-email">
       <label class="lbl">Preferred Contact Email &mdash; Check Typos <span class="req">*</span></label>
       <input type="email" name="email" placeholder="jane@email.com" autocomplete="email" />
-      <div class="err-msg">Please enter a valid email address (make sure it has an "@" and doesn't end in a typo like ".con").</div>
+      <div class="err-msg">Please enter a valid email address (make sure it has an "@" and doesn't end in a typo like ".con" or ".co").</div>
+    </div>
+
+    <div class="field" id="f-emailConfirm">
+      <label class="lbl">Confirm Email <span class="req">*</span></label>
+      <input type="email" name="emailConfirm" placeholder="Re-type your email" autocomplete="off" />
+      <div class="err-msg">This doesn't match the email above &mdash; please re-type it.</div>
     </div>
 
     <div class="field" id="f-phone">
@@ -715,6 +737,11 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
         <div class="err-msg">Please select an option.</div>
       </div>
     </div>
+
+    <div class="field" style="margin-top:1.1rem;">
+      <label class="lbl">Most Recent FTLO Program(s) Involved <span style="text-transform:none;font-weight:500;color:var(--gray-500);">(optional, max 3)</span></label>
+      <input type="text" name="recentPrograms" placeholder="ie. Summer '26 BEG, Spring '26 Beg, BOBA 2026" />
+    </div>
   </div>
 
   <div class="nav-row">
@@ -739,7 +766,38 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
 
     <div class="notice info">
       <span class="notice-icon">&#9432;</span>
-      <div>All programs run <strong>9 weeks</strong>, plus up to 2 additional weeks if sessions are postponed (e.g. for school closures).</div>
+      <div>All programs run <strong>indoors</strong> in various schools for <strong>9 weeks</strong>, plus up to 2 additional weeks if a session needs to be postponed.</div>
+    </div>
+
+    <div class="card" style="background:var(--gray-100);border:1px solid var(--gray-200);box-shadow:none;margin-bottom:1.5rem;">
+      <div class="card-title" style="font-size:18px;margin-bottom:6px;">What's Your Skill Level?</div>
+      <div style="font-size:14px;color:var(--gray-700);line-height:1.6;margin-bottom:1.1rem;">FTLOers are encouraged to train at least 2&ndash;3 seasons of Beginner before registering for Intermediate, unless communicated with FTLO Coaches. Players who do not closely match the correct group training skill level will be asked to switch programs or be given a refund.</div>
+      <div class="skill-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div style="background:var(--teal-light);border:2px solid #b8cdd2;border-radius:var(--radius-sm);padding:14px 16px;">
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:900;letter-spacing:0.08em;text-transform:uppercase;color:var(--teal-dark);margin-bottom:8px;">Beginner &mdash; Train &amp; Play</div>
+          <ul style="list-style:none;padding:0;margin:0;">
+            <li style="font-size:13.5px;color:var(--gray-700);padding:2px 0;display:flex;gap:6px;"><span style="opacity:0.4;">&mdash;</span>New to little experience</li>
+            <li style="font-size:13.5px;color:var(--gray-700);padding:2px 0;display:flex;gap:6px;"><span style="opacity:0.4;">&mdash;</span>Fun, recreational, relaxed pace</li>
+            <li style="font-size:13.5px;color:var(--gray-700);padding:2px 0;display:flex;gap:6px;"><span style="opacity:0.4;">&mdash;</span>Develop solid fundamental skills</li>
+            <li style="font-size:13.5px;color:var(--gray-700);padding:2px 0;display:flex;gap:6px;"><span style="opacity:0.4;">&mdash;</span>Basic understanding of game/rules</li>
+            <li style="font-size:13.5px;color:var(--gray-700);padding:2px 0;display:flex;gap:6px;"><span style="opacity:0.4;">&mdash;</span>Get back to playing volleyball</li>
+            <li style="font-size:13.5px;color:var(--gray-700);padding:2px 0;display:flex;gap:6px;"><span style="opacity:0.4;">&mdash;</span>Learning to be Rally Ready</li>
+            <li style="font-size:13.5px;color:var(--gray-700);padding:2px 0;display:flex;gap:6px;"><span style="opacity:0.4;">&mdash;</span>B to BB level</li>
+          </ul>
+        </div>
+        <div style="background:var(--orange-light);border:2px solid #f0d080;border-radius:var(--radius-sm);padding:14px 16px;">
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:900;letter-spacing:0.08em;text-transform:uppercase;color:#7a5000;margin-bottom:8px;">Intermediate &mdash; Train &amp; Play</div>
+          <ul style="list-style:none;padding:0;margin:0;">
+            <li style="font-size:13.5px;color:var(--gray-700);padding:2px 0;display:flex;gap:6px;"><span style="opacity:0.4;">&mdash;</span>High school team or clinic experience</li>
+            <li style="font-size:13.5px;color:var(--gray-700);padding:2px 0;display:flex;gap:6px;"><span style="opacity:0.4;">&mdash;</span>Can perform all basic skills in a game</li>
+            <li style="font-size:13.5px;color:var(--gray-700);padding:2px 0;display:flex;gap:6px;"><span style="opacity:0.4;">&mdash;</span>Most-to-all times Rally Ready</li>
+            <li style="font-size:13.5px;color:var(--gray-700);padding:2px 0;display:flex;gap:6px;"><span style="opacity:0.4;">&mdash;</span>Play in competitive environment</li>
+            <li style="font-size:13.5px;color:var(--gray-700);padding:2px 0;display:flex;gap:6px;"><span style="opacity:0.4;">&mdash;</span>Interested in regimented training</li>
+            <li style="font-size:13.5px;color:var(--gray-700);padding:2px 0;display:flex;gap:6px;"><span style="opacity:0.4;">&mdash;</span>BB to A level</li>
+          </ul>
+        </div>
+      </div>
+      <div style="font-size:12.5px;color:var(--gray-500);margin-top:12px;line-height:1.6;">Not sure about your skill level? Check the FTLO detailed descriptions or contact FTLO Coaches before applying. Women's Intermediate follows the same skill expectations as Intermediate, restricted to women.</div>
     </div>
 
     <div class="field" id="f-programs">
@@ -766,7 +824,7 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
                 <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
                 <div class="acc-prog-body">
                   <div class="acc-prog-title">6:00 &ndash; 7:45 PM</div>
-                  <div class="acc-prog-desc">Sep 15, 22, 29, Oct 6, 13, 20, 27, Nov 3, 10 <em>(possible ext. to Nov 17, 24)</em></div>
+                  <div class="acc-prog-desc">9 sessions &middot; Sep 15, 22, 29, Oct 6, 13, 20, 27, Nov 3, 10 &middot; Ext. to Nov 17, 24 if needed</div>
                 </div>
               </label>
               <label class="acc-prog" onclick="accProg(this)">
@@ -774,7 +832,7 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
                 <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
                 <div class="acc-prog-body">
                   <div class="acc-prog-title">7:45 &ndash; 9:30 PM</div>
-                  <div class="acc-prog-desc">Sep 15, 22, 29, Oct 6, 13, 20, 27, Nov 3, 10 <em>(possible ext. to Nov 17, 24)</em></div>
+                  <div class="acc-prog-desc">9 sessions &middot; Sep 15, 22, 29, Oct 6, 13, 20, 27, Nov 3, 10 &middot; Ext. to Nov 17, 24 if needed</div>
                 </div>
               </label>
             </div>
@@ -801,7 +859,7 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
                 <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
                 <div class="acc-prog-body">
                   <div class="acc-prog-title">6:00 &ndash; 7:30 PM</div>
-                  <div class="acc-prog-desc">Sept 16, 23 <em>(no session Sep 30)</em>, Oct 7, 14, 21, 28, Nov 4 <em>(no session Nov 11)</em>, 18, 25 <em>(possible ext. to Dec 2, 9)</em></div>
+                  <div class="acc-prog-desc">9 sessions &middot; Sept 16, 23, NO Sep 30, Oct 7, 14, 21, 28, Nov 4, NO Nov 11, 18, 25 &middot; Ext. to Dec 2, 9 if needed</div>
                 </div>
               </label>
               <label class="acc-prog" onclick="accProg(this)">
@@ -809,7 +867,7 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
                 <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
                 <div class="acc-prog-body">
                   <div class="acc-prog-title">7:30 &ndash; 9:00 PM</div>
-                  <div class="acc-prog-desc">Sept 16, 23 <em>(no session Sep 30)</em>, Oct 7, 14, 21, 28, Nov 4 <em>(no session Nov 11)</em>, 18, 25 <em>(possible ext. to Dec 2, 9)</em></div>
+                  <div class="acc-prog-desc">9 sessions &middot; Sept 16, 23, NO Sep 30, Oct 7, 14, 21, 28, Nov 4, NO Nov 11, 18, 25 &middot; Ext. to Dec 2, 9 if needed</div>
                 </div>
               </label>
             </div>
@@ -831,12 +889,24 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
           </div>
           <div class="acc-body">
             <div class="acc-body-inner">
+              <div style="background:var(--orange-light);border:2px solid var(--orange);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:4px;">
+                <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:#7a5000;margin-bottom:6px;">&#9888; Intermediate Placement Expectations &mdash; Please Read</div>
+                <div style="font-size:13px;color:#5a3a00;line-height:1.6;">
+                  <p style="margin-bottom:8px;">Our Intermediate clinics are designed for participants who can consistently perform foundational first and second contact skills &mdash; passing and setting within a target (at least 3&ndash;4 out of 5 reps during controlled drills) &mdash; and developing rally-ready consistency.</p>
+                  <p style="margin-bottom:8px;">If a participant requires more support with basic first-contact skills, our coaches may recommend transitioning to the Beginner level. If a transfer is necessary or the Beginner level is full, FTLO will offer one of the following:</p>
+                  <ul style="margin:0 0 8px 18px;padding:0;">
+                    <li>A <strong>60% prorated refund</strong> of the remaining sessions, or</li>
+                    <li>A <strong>70% prorated credit</strong> valid for 1 year toward a future FTLO clinic.</li>
+                  </ul>
+                  <p style="margin:0;">This helps ensure a supportive and practical experience for all players in the program.</p>
+                </div>
+              </div>
               <label class="acc-prog" onclick="accProg(this)">
                 <input type="checkbox" name="programs" value="Wednesday INT (Lochdale) — 6:00-7:30 PM" style="display:none;" />
                 <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
                 <div class="acc-prog-body">
                   <div class="acc-prog-title">6:00 &ndash; 7:30 PM</div>
-                  <div class="acc-prog-desc">Sept 16, 23 <em>(no session Sep 30)</em>, Oct 7, 14, 21, 28, Nov 4 <em>(no session Nov 11)</em>, 18, 25 <em>(possible ext. to Dec 2, 9)</em></div>
+                  <div class="acc-prog-desc">9 sessions &middot; Sept 16, 23, NO Sep 30, Oct 7, 14, 21, 28, Nov 4, NO Nov 11, 18, 25 &middot; Ext. to Dec 2, 9 if needed</div>
                 </div>
               </label>
               <label class="acc-prog" onclick="accProg(this)">
@@ -844,7 +914,7 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
                 <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
                 <div class="acc-prog-body">
                   <div class="acc-prog-title">7:30 &ndash; 9:00 PM</div>
-                  <div class="acc-prog-desc">Sept 16, 23 <em>(no session Sep 30)</em>, Oct 7, 14, 21, 28, Nov 4 <em>(no session Nov 11)</em>, 18, 25 <em>(possible ext. to Dec 2, 9)</em></div>
+                  <div class="acc-prog-desc">9 sessions &middot; Sept 16, 23, NO Sep 30, Oct 7, 14, 21, 28, Nov 4, NO Nov 11, 18, 25 &middot; Ext. to Dec 2, 9 if needed</div>
                 </div>
               </label>
             </div>
@@ -866,12 +936,24 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
           </div>
           <div class="acc-body">
             <div class="acc-body-inner">
+              <div style="background:var(--orange-light);border:2px solid var(--orange);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:4px;">
+                <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:#7a5000;margin-bottom:6px;">&#9888; Intermediate Placement Expectations &mdash; Please Read</div>
+                <div style="font-size:13px;color:#5a3a00;line-height:1.6;">
+                  <p style="margin-bottom:8px;">Our Intermediate clinics are designed for participants who can consistently perform foundational first and second contact skills &mdash; passing and setting within a target (at least 3&ndash;4 out of 5 reps during controlled drills) &mdash; and developing rally-ready consistency.</p>
+                  <p style="margin-bottom:8px;">If a participant requires more support with basic first-contact skills, our coaches may recommend transitioning to the Beginner level. If a transfer is necessary or the Beginner level is full, FTLO will offer one of the following:</p>
+                  <ul style="margin:0 0 8px 18px;padding:0;">
+                    <li>A <strong>60% prorated refund</strong> of the remaining sessions, or</li>
+                    <li>A <strong>70% prorated credit</strong> valid for 1 year toward a future FTLO clinic.</li>
+                  </ul>
+                  <p style="margin:0;">This helps ensure a supportive and practical experience for all players in the program.</p>
+                </div>
+              </div>
               <label class="acc-prog" onclick="accProg(this)">
                 <input type="checkbox" name="programs" value="Thursday INT (Lochdale) — 6:00-7:30 PM" style="display:none;" />
                 <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
                 <div class="acc-prog-body">
                   <div class="acc-prog-title">6:00 &ndash; 7:30 PM</div>
-                  <div class="acc-prog-desc">Sept 17, 24, Oct 1, 8, 15, 22, 29, Nov 5, 12 <em>(possible ext. to Nov 19, 26)</em></div>
+                  <div class="acc-prog-desc">9 sessions &middot; Sept 17, 24, Oct 1, 8, 15, 22, 29, Nov 5, 12 &middot; Ext. to Nov 19, 26 if needed</div>
                 </div>
               </label>
               <label class="acc-prog" onclick="accProg(this)">
@@ -879,7 +961,7 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
                 <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
                 <div class="acc-prog-body">
                   <div class="acc-prog-title">7:30 &ndash; 9:00 PM</div>
-                  <div class="acc-prog-desc">Sept 17, 24, Oct 1, 8, 15, 22, 29, Nov 5, 12 <em>(possible ext. to Nov 19, 26)</em></div>
+                  <div class="acc-prog-desc">9 sessions &middot; Sept 17, 24, Oct 1, 8, 15, 22, 29, Nov 5, 12 &middot; Ext. to Nov 19, 26 if needed</div>
                 </div>
               </label>
             </div>
@@ -901,12 +983,24 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
           </div>
           <div class="acc-body">
             <div class="acc-body-inner">
+              <div style="background:var(--orange-light);border:2px solid var(--orange);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:4px;">
+                <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:#7a5000;margin-bottom:6px;">&#9888; Intermediate Placement Expectations &mdash; Please Read</div>
+                <div style="font-size:13px;color:#5a3a00;line-height:1.6;">
+                  <p style="margin-bottom:8px;">Our Intermediate clinics are designed for participants who can consistently perform foundational first and second contact skills &mdash; passing and setting within a target (at least 3&ndash;4 out of 5 reps during controlled drills) &mdash; and developing rally-ready consistency.</p>
+                  <p style="margin-bottom:8px;">If a participant requires more support with basic first-contact skills, our coaches may recommend transitioning to the Beginner level. If a transfer is necessary or the Beginner level is full, FTLO will offer one of the following:</p>
+                  <ul style="margin:0 0 8px 18px;padding:0;">
+                    <li>A <strong>60% prorated refund</strong> of the remaining sessions, or</li>
+                    <li>A <strong>70% prorated credit</strong> valid for 1 year toward a future FTLO clinic.</li>
+                  </ul>
+                  <p style="margin:0;">This helps ensure a supportive and practical experience for all players in the program.</p>
+                </div>
+              </div>
               <label class="acc-prog" onclick="accProg(this)">
                 <input type="checkbox" name="programs" value="Thursday WOMENS INT (Richmond) — 6:00-7:30 PM" style="display:none;" />
                 <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
                 <div class="acc-prog-body">
                   <div class="acc-prog-title">6:00 &ndash; 7:30 PM</div>
-                  <div class="acc-prog-desc">Sept 17, 24, Oct 1, 8, 15, 22, 29, Nov 5, 12 <em>(possible ext. to Nov 19, 26)</em></div>
+                  <div class="acc-prog-desc">9 sessions &middot; Sept 17, 24, Oct 1, 8, 15, 22, 29, Nov 5, 12 &middot; Ext. to Nov 19, 26 if needed</div>
                 </div>
               </label>
               <label class="acc-prog" onclick="accProg(this)">
@@ -914,7 +1008,7 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
                 <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
                 <div class="acc-prog-body">
                   <div class="acc-prog-title">7:30 &ndash; 9:00 PM</div>
-                  <div class="acc-prog-desc">Sept 17, 24, Oct 1, 8, 15, 22, 29, Nov 5, 12 <em>(possible ext. to Nov 19, 26)</em></div>
+                  <div class="acc-prog-desc">9 sessions &middot; Sept 17, 24, Oct 1, 8, 15, 22, 29, Nov 5, 12 &middot; Ext. to Nov 19, 26 if needed</div>
                 </div>
               </label>
             </div>
@@ -981,7 +1075,7 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
 
         <h4 style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal);margin:12px 0 6px;">Medical or Training Concerns</h4>
         <p>Participants are encouraged to share any medical condition and/or training limitations to the FTLO coaches on the application form. (ie. Relevant past injuries, allergies, medication taken, concussion history, month/year of injuries)</p>
-        <p><strong>Intermediate Clinic Placement Expectations:</strong> Our Intermediate clinics are designed for participants who can consistently perform core volleyball skills such as passing and setting within a target (e.g. 3 out of 5 successful reps in controlled drills). These sessions move at a faster pace and assume confidence with the first and second contact. If a participant needs more support with foundational skills, FTLO coaches may recommend a transfer or suggest continued experience through Beginner clinics before returning to Intermediate-level training.</p>
+        <p><strong>Intermediate Clinic Placement Expectations:</strong> See the full placement criteria and refund/credit options under each Intermediate program in Step 2 &mdash; Programs of Interest.</p>
         <p>All other inquiries: info@ftlovolleyball.ca &mdash; <a href="https://www.ftlovolleyball.ca/policies" target="_blank" style="color:var(--teal);font-weight:600;">ftlovolleyball.ca/policies</a></p>
       </div>
 
@@ -1121,6 +1215,16 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
     <p style="font-size:15px;color:#5a3a00;line-height:1.6;margin:0;">Please <strong>ADD &amp; SAVE info@ftlovolleyball.ca as a contact</strong> to ensure all your future invitations end up in your inbox!</p>
   </div>
 
+  <div style="background:#fff;border:2px solid var(--gray-300);border-radius:var(--radius-sm);padding:1rem 1.25rem;max-width:520px;margin:1.25rem auto 0;text-align:left;">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--teal);margin-bottom:8px;">Registration Rounds</div>
+    <ul style="margin:0 0 0 18px;padding:0;font-size:14px;color:var(--gray-700);line-height:1.7;">
+      <li>First Round applicants will be contacted after <strong>July 20</strong> to pay and accept their training spot.</li>
+      <li>Public invitation to apply opens after <strong>July 23</strong>.</li>
+      <li>Second Round registration payment invites go out after <strong>July 24, 2026</strong>.</li>
+      <li>Waitlisted applicants will be contacted when a spot becomes available.</li>
+    </ul>
+  </div>
+
   <p style="margin-top:1.75rem;font-size:14px;color:var(--gray-500);">See you on the court!</p>
 </div>
 
@@ -1210,12 +1314,14 @@ function validateStep(step) {
     if (getVal('lastName') === '') { markErr('f-lastName'); ok = false; } else clearErr('f-lastName');
     var email = getVal('email');
     var emailLower = email.toLowerCase();
-    var emailInvalid = email === '' || email.indexOf('@') === -1 || email.indexOf('.') === -1 || emailLower.slice(-4) === '.con';
+    var emailInvalid = email === '' || email.indexOf('@') === -1 || email.indexOf('.') === -1 || emailLower.slice(-4) === '.con' || emailLower.slice(-3) === '.co';
     if (emailInvalid) { markErr('f-email'); ok = false; } else clearErr('f-email');
     if (ok && email && usedEmails.indexOf(emailLower) !== -1) {
       markErr('f-email', 'This email address has already been submitted. Each applicant may only apply once. Please contact info@ftlovolleyball.ca if you need assistance.');
       ok = false;
     }
+    var emailConfirm = getVal('emailConfirm');
+    if (!emailInvalid && emailConfirm.toLowerCase() !== emailLower) { markErr('f-emailConfirm'); ok = false; } else clearErr('f-emailConfirm');
     if (getVal('phone') === '') { markErr('f-phone'); ok = false; } else clearErr('f-phone');
     if (getVal('city') === '') { markErr('f-city'); ok = false; } else clearErr('f-city');
     if (getVal('gender') === '') { markErr('f-gender'); ok = false; } else clearErr('f-gender');
@@ -1271,6 +1377,7 @@ function collectData() {
     phone:        getVal('phone'),
     city:         getVal('city'),
     gender:       getVal('gender'),
+    recentPrograms: getVal('recentPrograms'),
     programs:     programs.join(' | '),
     agreeConduct: getVal('agreeConduct'),
     medical:      getVal('medical'),

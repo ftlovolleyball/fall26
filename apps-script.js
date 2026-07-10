@@ -88,6 +88,7 @@ function handleApplicationSubmit(data, ss) {
       'Timestamp',
       'First Name', 'Last Name', 'Email', 'Phone',
       'City', 'Gender',
+      'Recent FTLO Program(s)',
       'Programs Applied For',
       'Conduct Agreed',
       'Medical / Training Notes',
@@ -107,6 +108,7 @@ function handleApplicationSubmit(data, ss) {
     data.phone        || '',
     data.city         || '',
     data.gender       || '',
+    data.recentPrograms || '',
     data.programs     || '',
     data.agreeConduct || '',
     data.medical      || '',
@@ -171,6 +173,7 @@ function sendApplicationConfirmationEmail(data, serverTimestamp) {
       _emailRow('Email',           data.email        || '—'),
       _emailRow('Phone',           data.phone        || '—'),
       _emailRow('City',            data.city         || '—'),
+      (data.recentPrograms ? _emailRow('Recent FTLO Program(s)', data.recentPrograms) : ''),
 
       '<div style="border-top:1px solid #ddd;margin:12px 0;"></div>',
 
