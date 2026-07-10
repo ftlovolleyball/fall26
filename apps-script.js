@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// FTLO APPS SCRIPT — FALL 2026 CLINIC APPLICATIONS
+// FTLO APPS SCRIPT: FALL 2026 CLINIC APPLICATIONS
 // ─────────────────────────────────────────────────────────────────────────────
 //
 // SETUP (do this once):
@@ -18,7 +18,7 @@
 //       - Who has access: Anyone
 //     Click Deploy, and authorize the script when prompted (it needs permission
 //     to edit this spreadsheet and send email as you).
-//  4. Copy the "Web app URL" you're given (ends in /exec) and send it back —
+//  4. Copy the "Web app URL" you're given (ends in /exec) and send it back,
 //     it needs to be pasted into index.html as APPS_SCRIPT_URL.
 //
 // WHAT THIS DOES:
@@ -30,7 +30,7 @@
 //
 // TIMESTAMPS:
 //  The "Timestamp" column is generated HERE, on Google's servers, using
-//  Utilities.formatDate() — NOT taken from the applicant's browser or device.
+//  Utilities.formatDate(), NOT taken from the applicant's browser or device.
 //  This means it's always in the same format and timezone (America/Vancouver)
 //  no matter what device, browser, or clock the applicant's phone/computer has:
 //  YYYY-MM-DD HH:MM:SS, 24-hour time.
@@ -45,7 +45,7 @@ function doPost(e) {
   var data = JSON.parse(e.postData.contents);
 
   // Honeypot: real applicants never see or fill this field. If it has a
-  // value, this is a bot — pretend it worked, but don't write a row or
+  // value, this is a bot. Pretend it worked, but don't write a row or
   // send an email.
   if (data.website) {
     return ContentService.createTextOutput(JSON.stringify({ status: 'ok' }))
@@ -95,7 +95,7 @@ function handleApplicationSubmit(data, ss) {
       'Medical / Training Notes',
       'Heard From', 'Heard Details',
       'Comments',
-      'Payment Invite Sent'   // left blank — fill in manually once you invite them to pay
+      'Payment Invite Sent'   // left blank, fill in manually once you invite them to pay
     ]);
   }
 
@@ -117,7 +117,7 @@ function handleApplicationSubmit(data, ss) {
     data.heardFrom    || '',
     data.heardDetails || '',
     data.comments     || '',
-    ''  // Payment Invite Sent — blank until you send it
+    ''  // Payment Invite Sent, blank until you send it
   ]);
 
   if (data.email) {
@@ -135,7 +135,7 @@ function emailAlreadyApplied(email) {
   var lastRow = sheet.getLastRow();
   if (lastRow < 2) return false;
 
-  // Email is column D (4th column) — see header row above
+  // Email is column D (4th column), see header row above
   var emails = sheet.getRange(2, 4, lastRow - 1, 1).getValues();
   for (var i = 0; i < emails.length; i++) {
     if (String(emails[i][0]).toLowerCase().trim() === email) return true;
@@ -167,22 +167,22 @@ function sendApplicationConfirmationEmail(data, serverTimestamp) {
         'FTLO will review applications and follow up by email with payment invite instructions if a spot is available.',
       '</p>',
       '<p style="margin:12px 0 0;font-size:12.5px;font-style:italic;line-height:1.6;color:#7a5a3a;">',
-        'FTLO clinics are built around a positive and community-driven training culture. Our coaches and admin team do our best, within our limits, to create enjoyable training environments with a healthy mix of returning and new FTLO participants. If you do not receive an invite immediately, we may later contact you via text/WhatsApp &mdash; we are hoping to train with you very soon!',
+        'FTLO clinics are built around a positive and community-driven training culture. Our coaches and admin team do our best, within our limits, to create enjoyable training environments with a healthy mix of returning and new FTLO participants. If you do not receive an invite immediately, we may later contact you via text/WhatsApp. We are hoping to train with you very soon!',
       '</p>',
     '</div>',
 
     '<div style="background:#f7f7f7;border:1px solid #e0e0e0;border-top:none;padding:22px 28px;">',
       '<p style="margin:0 0 14px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:#1F4049;">Application Summary</p>',
 
-      _emailRow('Name',            fullName          || '—'),
-      _emailRow('Email',           data.email        || '—'),
-      _emailRow('Phone',           data.phone        || '—'),
-      _emailRow('City',            data.city         || '—'),
+      _emailRow('Name',            fullName          || 'N/A'),
+      _emailRow('Email',           data.email        || 'N/A'),
+      _emailRow('Phone',           data.phone        || 'N/A'),
+      _emailRow('City',            data.city         || 'N/A'),
       (data.recentPrograms ? _emailRow('Recent FTLO Program(s)', data.recentPrograms) : ''),
 
       '<div style="border-top:1px solid #ddd;margin:12px 0;"></div>',
 
-      _emailRow('Programs Applied For', (data.programs || '—').split(' | ').join('<br>')),
+      _emailRow('Programs Applied For', (data.programs || 'N/A').split(' | ').join('<br>')),
       (data.programPriority ? _emailRow('Program Priority', data.programPriority) : ''),
 
       (data.medical ? _emailRow('Medical / Training Notes', data.medical) : ''),
@@ -205,7 +205,7 @@ function sendApplicationConfirmationEmail(data, serverTimestamp) {
 
     '<div style="background:#1F4049;padding:16px 28px;border-radius:0 0 8px 8px;text-align:center;">',
       '<p style="margin:0;font-size:12px;color:rgba(255,249,245,0.55);">',
-        'FTLO Volleyball Association &mdash; ',
+        'FTLO Volleyball Association &middot; ',
         '<a href="https://www.ftlovolleyball.ca" style="color:#F8BA44;text-decoration:none;">ftlovolleyball.ca</a>',
       '</p>',
     '</div>',
