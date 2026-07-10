@@ -1019,6 +1019,11 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
 
       <div class="err-msg" style="margin-top:6px;">Please select at least one program time slot to continue.</div>
     </div>
+
+    <div class="field" style="margin-top:1.1rem;">
+      <label class="lbl">Program Priority <span style="text-transform:none;font-weight:500;color:var(--gray-500);">(optional)</span></label>
+      <textarea name="programPriority" placeholder="If you selected more than one program above, let us know your order of preference &mdash; e.g. 1st choice: Tuesday BEG 6:00-7:45 PM, 2nd choice: Wednesday INT 6:00-7:30 PM"></textarea>
+    </div>
   </div>
 
   <div class="nav-row">
@@ -1379,6 +1384,7 @@ function collectData() {
     gender:       getVal('gender'),
     recentPrograms: getVal('recentPrograms'),
     programs:     programs.join(' | '),
+    programPriority: getVal('programPriority'),
     agreeConduct: getVal('agreeConduct'),
     medical:      getVal('medical'),
     heardFrom:    heardFrom.join(', '),

@@ -90,6 +90,7 @@ function handleApplicationSubmit(data, ss) {
       'City', 'Gender',
       'Recent FTLO Program(s)',
       'Programs Applied For',
+      'Program Priority',
       'Conduct Agreed',
       'Medical / Training Notes',
       'Heard From', 'Heard Details',
@@ -110,6 +111,7 @@ function handleApplicationSubmit(data, ss) {
     data.gender       || '',
     data.recentPrograms || '',
     data.programs     || '',
+    data.programPriority || '',
     data.agreeConduct || '',
     data.medical      || '',
     data.heardFrom    || '',
@@ -147,7 +149,7 @@ function sendApplicationConfirmationEmail(data, serverTimestamp) {
   var fullName = ((data.firstName || '') + ' ' + (data.lastName || '')).trim();
   var toEmail = data.email;
 
-  var subject = 'FTLO Fall Clinics — Application Received';
+  var subject = 'FTLO 2026 Fall Clinics - Application Received';
 
   var html = [
     '<div style="font-family:Arial,sans-serif;max-width:620px;margin:0 auto;color:#222;">',
@@ -161,8 +163,11 @@ function sendApplicationConfirmationEmail(data, serverTimestamp) {
       '<p style="margin:0;font-size:15px;line-height:1.65;color:#333;">',
         'Hi <strong>' + fullName + '</strong>,<br><br>',
         'Thanks for applying to FTLO\'s Fall 2026 clinic programs! ',
-        '<strong>This confirms we received your application &mdash; it does not confirm your spot.</strong>',
-        ' FTLO will review applications and follow up by email with a payment invite if a spot is available for the program(s) you selected.',
+        'This confirms we received your application, but it does not confirm your registered training spot. ',
+        'FTLO will review applications and follow up by email with payment invite instructions if a spot is available.',
+      '</p>',
+      '<p style="margin:12px 0 0;font-size:12.5px;font-style:italic;line-height:1.6;color:#7a5a3a;">',
+        'FTLO clinics are built around a positive and community-driven training culture. Our coaches and admin team do our best, within our limits, to create enjoyable training environments with a healthy mix of returning and new FTLO participants. If you do not receive an invite immediately, we may later contact you via text/WhatsApp &mdash; we are hoping to train with you very soon!',
       '</p>',
     '</div>',
 
@@ -178,12 +183,24 @@ function sendApplicationConfirmationEmail(data, serverTimestamp) {
       '<div style="border-top:1px solid #ddd;margin:12px 0;"></div>',
 
       _emailRow('Programs Applied For', (data.programs || '—').split(' | ').join('<br>')),
+      (data.programPriority ? _emailRow('Program Priority', data.programPriority) : ''),
 
       (data.medical ? _emailRow('Medical / Training Notes', data.medical) : ''),
       (data.comments ? _emailRow('Comments', data.comments) : ''),
 
       '<div style="border-top:1px solid #ddd;margin:12px 0;"></div>',
       _emailRow('Submitted', serverTimestamp + ' (Pacific time)'),
+    '</div>',
+
+    '<div style="background:#eef4fb;border:1px solid #b8cdd2;border-top:none;padding:18px 28px;">',
+      '<p style="margin:0;font-size:13.5px;line-height:1.6;color:#333;">',
+        '<strong>Need to modify your application, or have questions?</strong><br>',
+        'Email <a href="mailto:operations@ftlovolleyball.ca" style="color:#1F4049;font-weight:700;">operations@ftlovolleyball.ca</a>.',
+      '</p>',
+    '</div>',
+
+    '<div style="background:#fff;border:1px solid #e0e0e0;border-top:none;padding:20px 28px;text-align:center;">',
+      '<a href="https://www.instagram.com/ftlovolleyball/" target="_blank" style="display:inline-block;background:#1F4049;color:#F8BA44;font-weight:700;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;padding:11px 24px;border-radius:6px;text-decoration:none;">Follow @ftlovolleyball on Instagram</a>',
     '</div>',
 
     '<div style="background:#1F4049;padding:16px 28px;border-radius:0 0 8px 8px;text-align:center;">',
