@@ -34,11 +34,18 @@ browser, phone, or clock the applicant used to submit the form.
 
 ## Replacing the placeholder images
 
-`images/logo.svg` and `images/hero-photo.svg` are stand-ins. Easiest way to swap them:
+`images/logo.svg` and `images/hero-photo.svg` are stand-ins.
+
+`images/hero-photo.svg` is used as the hero section's background photo (behind the headline
+text), with a dark overlay and text shadow already applied so the text stays readable over any
+photo. Easiest way to swap it for a real photo:
 1. On github.com, open the `images` folder in this repo and click "Add file → Upload files".
-2. Upload your real photo (any normal filename, e.g. `hero-2026.jpg`).
+2. Upload your real photo, keeping its real file extension (e.g. `hero-2026.jpg`, not `.svg`,
+   since the extension has to match the actual image format or it won't render).
 3. Tell Claude the new filename. It's a one-line edit in `index.html` to point to it, then the
-   old placeholder file can be deleted.
+   old placeholder `hero-photo.svg` can be deleted.
+
+`images/logo.svg` (header logo) can be swapped the same way, or tell Claude the new filename.
 
 ## How this differs from the Summer 2026 site
 

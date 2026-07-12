@@ -73,7 +73,12 @@ body {
 
 /* ── HERO ── */
 .hero {
-  background: var(--teal);
+  background-color: var(--teal);
+  background-image:
+    linear-gradient(180deg, rgba(15,39,46,0.82) 0%, rgba(15,39,46,0.88) 60%, rgba(15,39,46,0.95) 100%),
+    url('images/hero-photo.svg');
+  background-size: cover;
+  background-position: center;
   position: relative;
   overflow: hidden;
 }
@@ -95,6 +100,7 @@ body {
   text-transform: uppercase;
   color: var(--orange);
   margin-bottom: 12px;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.5);
 }
 .hero-eyebrow::before {
   content: '';
@@ -112,8 +118,9 @@ body {
   text-transform: uppercase;
   color: var(--white);
   margin-bottom: 1rem;
+  text-shadow: 0 2px 16px rgba(0,0,0,0.55);
 }
-.hero h1 span { color: var(--orange); }
+.hero h1 span { color: var(--orange); text-shadow: 0 2px 16px rgba(0,0,0,0.55); }
 .hero-stats {
   display: flex;
   gap: 0;
@@ -130,6 +137,7 @@ body {
   font-weight: 900;
   color: var(--orange);
   line-height: 1;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.5);
 }
 .stat-label {
   font-size: 11px;
@@ -602,10 +610,10 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
   <div class="hero-inner">
     <div class="hero-eyebrow">2026 Fall Season &middot; Adults 18+</div>
     <h1>Fall Clinic Program<br><span>Application</span></h1>
-    <p style="color:rgba(255,249,245,0.65);font-size:15px;max-width:520px;line-height:1.6;">
+    <p style="color:rgba(255,249,245,0.65);font-size:15px;max-width:520px;line-height:1.6;text-shadow:0 1px 6px rgba(0,0,0,0.5);">
       FTLO is BACK for Fall 2026 with our flagship Beginner and Intermediate training sessions :) and a NEW Women's Only Intermediate training session. Join us for 9 dedicated sessions of volleyball training indoors! Fall season facility reservations, especially during the week, have been challenging, so please respond as soon as you know your availability. Those who know FTLO know what we're about when we get together.
     </p>
-    <p style="color:rgba(255,249,245,0.65);font-size:15px;max-width:520px;line-height:1.6;margin-top:0.75rem;">
+    <p style="color:rgba(255,249,245,0.65);font-size:15px;max-width:520px;line-height:1.6;margin-top:0.75rem;text-shadow:0 1px 6px rgba(0,0,0,0.5);">
       <strong style="color:var(--orange);">This is an application, not a confirmed spot.</strong> FTLO will follow up by email with a payment invite once your spot is confirmed.
     </p>
     <div class="hero-stats">
@@ -615,9 +623,6 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
     </div>
   </div>
 </div>
-
-<!-- Swap images/hero-photo.svg for a real photo whenever you have one, same filename, no code changes needed -->
-<div style="width:100%;display:block;line-height:0;"><img src="images/hero-photo.svg" alt="FTLO Fall Clinics" style="width:100%;display:block;" /></div>
 
 <!-- ── STEP NAV ── -->
 <nav class="step-nav">
