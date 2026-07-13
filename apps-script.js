@@ -39,6 +39,7 @@
 
 var SHEET_ID = '1QAXakjHOKh3pvCH7IXMXExRSrjYfWWnR0xcd-80zAkc'; // "2026 Fall Clinic Programs"
 var SHEET_NAME = 'Applications';
+var BACKUP_SHEET_NAME = 'Backup'; // mirror of every submission; never edited by hand
 var TIMEZONE = 'America/Vancouver';
 
 // ── PROGRAM CATALOG ───────────────────────────────────────────────────────
@@ -95,37 +96,27 @@ function doGet(e) {
                         .setMimeType(ContentService.MimeType.JSON);
 }
 
-// ── Writes the application row and sends the confirmation email ──────────────
+var HEADER_ROW = [
+  'Timestamp',
+  'First Name', 'Last Name', 'Email', 'Phone',
+  'City', 'Gender',
+  'Recent FTLO Program(s)',
+  'Clinic Recommendation'    // Skipped / BEG / BEG/FF / FF/INT / INT / INT/INT(W) — from the Section 2 self-assessment quiz
+].concat(PROGRAM_COLUMNS).concat([
+  'Applicant Expressed Preference',
+  'Conduct Agreed',
+  'Medical / Training Notes',
+  'Heard From', 'Heard Details',
+  'Comments',
+  'Payment Invite Sent'   // left blank, fill in manually once you invite them to pay
+]);
+
+// ── Writes the application row (to both Applications and its Backup mirror)
+//    and sends the confirmation email ────────────────────────────────────
 function handleApplicationSubmit(data, ss) {
-  var sheet = ss.getSheetByName(SHEET_NAME);
-
-  // Create the tab if it doesn't exist yet
-  if (!sheet) {
-    sheet = ss.insertSheet(SHEET_NAME);
-  }
-
-  // Add the header row if the tab is empty (covers both a brand-new tab and
-  // one you already created by hand, like the current "Applications" tab)
-  if (sheet.getLastRow() === 0) {
-    sheet.appendRow([
-      'Timestamp',
-      'First Name', 'Last Name', 'Email', 'Phone',
-      'City', 'Gender',
-      'Recent FTLO Program(s)',
-      'Clinic Recommendation'    // Skipped / BEG / BEG/FF / FF/INT / INT / INT/INT(W) — from the Section 2 self-assessment quiz
-    ].concat(PROGRAM_COLUMNS).concat([
-      'Applicant Expressed Preference',
-      'Conduct Agreed',
-      'Medical / Training Notes',
-      'Heard From', 'Heard Details',
-      'Comments',
-      'Payment Invite Sent'   // left blank, fill in manually once you invite them to pay
-    ]));
-  }
-
   var serverTimestamp = Utilities.formatDate(new Date(), TIMEZONE, 'yyyy-MM-dd HH:mm:ss');
 
-  sheet.appendRow([
+  var row = [
     serverTimestamp,
     data.firstName    || '',
     data.lastName     || '',
@@ -143,11 +134,27 @@ function handleApplicationSubmit(data, ss) {
     data.heardDetails || '',
     data.comments     || '',
     ''  // Payment Invite Sent, blank until you send it
-  ]));
+  ]);
+
+  appendRowToSheet(ss, SHEET_NAME, row);
+  appendRowToSheet(ss, BACKUP_SHEET_NAME, row);
 
   if (data.email) {
     sendApplicationConfirmationEmail(data, serverTimestamp);
   }
+}
+
+// Appends a row to the named tab, creating the tab and/or header row first
+// if needed (covers a brand-new tab and one you already created by hand).
+function appendRowToSheet(ss, sheetName, row) {
+  var sheet = ss.getSheetByName(sheetName);
+  if (!sheet) {
+    sheet = ss.insertSheet(sheetName);
+  }
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(HEADER_ROW);
+  }
+  sheet.appendRow(row);
 }
 
 // ── Checks the Applications sheet for a matching email (case-insensitive) ────
