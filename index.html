@@ -62,20 +62,11 @@ body {
   color: var(--teal-dark);
   letter-spacing: 0.04em;
 }
-.site-logo-sub {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: rgba(255,249,245,0.5);
-}
-
 /* ── HERO ── */
 .hero {
   background-color: var(--teal);
   background-image:
-    linear-gradient(180deg, rgba(15,39,46,0.82) 0%, rgba(15,39,46,0.88) 60%, rgba(15,39,46,0.95) 100%),
+    linear-gradient(180deg, rgba(15,39,46,0.3) 0%, rgba(15,39,46,0.38) 100%),
     url('images/hero-photo.jpg');
   background-size: cover;
   background-position: center;
@@ -89,6 +80,13 @@ body {
   position: relative;
   z-index: 1;
 }
+.hero-panel {
+  display: inline-block;
+  max-width: 560px;
+  background: rgba(15,39,46,0.86);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem 2rem;
+}
 .hero-eyebrow {
   display: inline-flex;
   align-items: center;
@@ -100,7 +98,6 @@ body {
   text-transform: uppercase;
   color: var(--orange);
   margin-bottom: 12px;
-  text-shadow: 0 1px 8px rgba(0,0,0,0.5);
 }
 .hero-eyebrow::before {
   content: '';
@@ -118,35 +115,8 @@ body {
   text-transform: uppercase;
   color: var(--white);
   margin-bottom: 1rem;
-  text-shadow: 0 2px 16px rgba(0,0,0,0.55);
 }
-.hero h1 span { color: var(--orange); text-shadow: 0 2px 16px rgba(0,0,0,0.55); }
-.hero-stats {
-  display: flex;
-  gap: 0;
-  margin-top: 1.5rem;
-  border-top: 1px solid rgba(255,255,255,0.12);
-  padding-top: 1.25rem;
-  flex-wrap: wrap;
-  gap: 1.5rem;
-}
-.stat { display: flex; flex-direction: column; }
-.stat-num {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 28px;
-  font-weight: 900;
-  color: var(--orange);
-  line-height: 1;
-  text-shadow: 0 1px 8px rgba(0,0,0,0.5);
-}
-.stat-label {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.5);
-  margin-top: 2px;
-}
+.hero h1 span { color: var(--orange); }
 .hero-deco {
   position: absolute;
   right: -30px;
@@ -316,6 +286,7 @@ input:focus, select:focus, textarea:focus {
   border-color: var(--teal);
   box-shadow: 0 0 0 3px rgba(31,64,73,0.1);
 }
+input::placeholder, textarea::placeholder { color: #c8c2ba; opacity: 1; }
 select {
   cursor: pointer;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231F4049' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
@@ -360,6 +331,51 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
 .prog-card.selected .prog-check-tick { display: block; }
 .prog-body { flex: 1; min-width: 0; }
 
+/* ── SKILL LEVEL CARDS ── */
+.skill-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.skill-card { border-radius: var(--radius-sm); padding: 14px 16px; }
+.skill-card-title { font-family: 'Barlow Condensed', sans-serif; font-size: 16px; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; }
+.skill-card ul { list-style: none; padding: 0; margin: 0; }
+.skill-card li { font-size: 13.5px; color: var(--gray-700); padding: 2px 0; display: flex; gap: 6px; }
+.skill-card li span { opacity: 0.4; }
+@media (max-width: 620px) {
+  .skill-grid { gap: 6px; }
+  .skill-card { padding: 8px 7px; }
+  .skill-card-title { font-size: 10.5px; letter-spacing: 0.01em; margin-bottom: 5px; line-height: 1.2; }
+  .skill-card li { font-size: 10px; gap: 3px; line-height: 1.3; }
+}
+
+/* ── PROGRAM PRIORITY (auto-populated, reorderable) ── */
+.priority-row { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 2px solid var(--gray-200); border-radius: var(--radius-sm); background: var(--white); }
+.priority-rank { width: 22px; height: 22px; border-radius: 50%; background: var(--teal); color: var(--white); font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.priority-label { flex: 1; font-size: 14px; font-weight: 600; color: var(--black); }
+.priority-controls { display: flex; gap: 4px; flex-shrink: 0; }
+.priority-btn { width: 28px; height: 28px; border: 2px solid var(--gray-300); border-radius: 6px; background: var(--white); color: var(--gray-700); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 13px; transition: all 0.15s; }
+.priority-btn:hover:not(:disabled) { border-color: var(--teal); color: var(--teal); }
+.priority-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+/* ── CHIP CHECKBOXES (condensed multi-select) ── */
+.chip-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 14px;
+  border: 2px solid var(--gray-200);
+  border-radius: 100px;
+  background: var(--white);
+  cursor: pointer;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--gray-700);
+  transition: all 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.chip:hover { border-color: var(--teal); background: var(--teal-light); }
+.chip.selected { border-color: var(--teal); background: var(--teal-light); color: var(--teal-dark); }
+.chip-tick { display: none; width: 14px; height: 14px; border-radius: 50%; background: var(--teal); color: var(--white); font-size: 9px; font-weight: 800; align-items: center; justify-content: center; flex-shrink: 0; }
+.chip.selected .chip-tick { display: inline-flex; }
+
 /* ── SECTION DIVIDERS ── */
 .sec-div {
   display: flex;
@@ -385,31 +401,37 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
 .acc-wrap { margin-bottom: 0; }
 .acc-block { border-radius: var(--radius-lg); margin-bottom: 14px; overflow: visible; border: 2px solid transparent; position: relative; }
 .acc-block.beg-acc  { border-color: #b8d8cc; }
+.acc-block.ff-acc   { border-color: #d8c8ec; }
 .acc-block.int-acc  { border-color: #f0d8a8; }
 .acc-block.wmn-acc  { border-color: #a8d0e8; }
 .acc-hdr { display: flex; align-items: center; gap: 12px; padding: 16px 20px; cursor: pointer; user-select: none; transition: background .15s; border-radius: 12px; }
 .acc-block.open .acc-hdr { border-radius: 12px 12px 0 0; }
 .beg-acc   .acc-hdr { background: #f0f8f4; }
+.ff-acc    .acc-hdr { background: #f5f0fb; }
 .int-acc   .acc-hdr { background: #fdf6ec; }
 .wmn-acc   .acc-hdr { background: #eef5fa; }
 .acc-hdr:hover { filter: brightness(0.97); }
 .acc-tag { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 12px; letter-spacing: 0.03em; }
 .beg-acc   .acc-tag { background: var(--teal); color: var(--orange); }
+.ff-acc    .acc-tag { background: #6a4a9c; color: #fff; }
 .int-acc   .acc-tag { background: #c8860a; color: #fff; }
 .wmn-acc   .acc-tag { background: #1a6a8a; color: #fff; }
 .acc-meta { flex: 1; min-width: 0; }
 .acc-title-row { display: flex; align-items: center; gap: 8px; }
 .acc-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 20px; letter-spacing: 0.05em; text-transform: uppercase; line-height: 1.1; }
 .beg-acc   .acc-title { color: var(--teal); }
+.ff-acc    .acc-title { color: #5a3a8c; }
 .int-acc   .acc-title { color: #7a5000; }
 .wmn-acc   .acc-title { color: #0f4a6a; }
 .acc-subdesc { font-size: 13px; margin-top: 4px; line-height: 1.5; }
 .beg-acc   .acc-subdesc { color: #2a6a5a; }
+.ff-acc    .acc-subdesc { color: #5a3a8c; }
 .int-acc   .acc-subdesc { color: #a06a00; }
 .wmn-acc   .acc-subdesc { color: #1a6a8a; }
 .acc-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 .acc-pill { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 100px; }
 .beg-acc   .acc-pill { background: #ddeee8; color: var(--teal); }
+.ff-acc    .acc-pill { background: #e8def5; color: #5a3a8c; }
 .int-acc   .acc-pill { background: #faebd0; color: #7a5000; }
 .wmn-acc   .acc-pill { background: #ddeef8; color: #0f4a6a; }
 .acc-chev { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: transform .25s; background: rgba(0,0,0,0.07); flex-shrink: 0; }
@@ -417,17 +439,21 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
 .acc-block.open .acc-chev { transform: rotate(180deg); }
 .acc-body { display: none; border-top: 1px solid rgba(0,0,0,0.08); border-radius: 0 0 12px 12px; overflow: hidden; }
 .beg-acc   .acc-body { background: #f5fbf8; }
+.ff-acc    .acc-body { background: #f9f6fd; }
 .int-acc   .acc-body { background: #fffaf2; }
 .wmn-acc   .acc-body { background: #f0f8fc; }
 .acc-block.open .acc-body { display: block; }
 .acc-body-inner { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.acc-desc { font-size: 13.5px; color: var(--gray-700); line-height: 1.6; margin-bottom: 4px; }
 .acc-prog { display: flex; align-items: flex-start; gap: 12px; padding: 13px 15px; border-radius: 8px; border: 2px solid rgba(0,0,0,0.07); background: #fff; cursor: pointer; transition: all .15s; -webkit-tap-highlight-color: transparent; }
 .acc-prog:active { transform: scale(0.99); }
 .beg-acc   .acc-prog:hover, .beg-acc   .acc-prog.sel { border-color: var(--teal); background: #eef6f2; }
+.ff-acc    .acc-prog:hover, .ff-acc    .acc-prog.sel { border-color: #6a4a9c; background: #f1eaf9; }
 .int-acc   .acc-prog:hover, .int-acc   .acc-prog.sel { border-color: #c8860a; background: #fdf5e6; }
 .wmn-acc   .acc-prog:hover, .wmn-acc   .acc-prog.sel { border-color: #1a6a8a; background: #eaf3f8; }
 .acc-cb { width: 20px; height: 20px; border-radius: 4px; border: 2px solid #ccc; margin-top: 2px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all .15s; }
 .beg-acc   .acc-prog.sel .acc-cb { background: var(--teal); border-color: var(--teal); }
+.ff-acc    .acc-prog.sel .acc-cb { background: #6a4a9c; border-color: #6a4a9c; }
 .int-acc   .acc-prog.sel .acc-cb { background: #c8860a; border-color: #c8860a; }
 .wmn-acc   .acc-prog.sel .acc-cb { background: #1a6a8a; border-color: #1a6a8a; }
 .acc-cb-tick { display: none; color: #fff; font-size: 12px; font-weight: 900; }
@@ -435,6 +461,7 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
 .acc-prog-body { flex: 1; min-width: 0; }
 .acc-prog-title { font-size: 15px; font-weight: 700; color: var(--black); margin-bottom: 3px; line-height: 1.3; }
 .acc-prog-desc { font-size: 13px; color: var(--gray-700); line-height: 1.55; }
+.acc-skip { color: var(--red); font-weight: 700; }
 
 @media (max-width: 580px) {
   .acc-hdr { padding: 13px 14px; gap: 10px; }
@@ -446,7 +473,68 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
   .acc-prog { padding: 11px 12px; gap: 10px; }
   .acc-prog-title { font-size: 14px; }
   .acc-prog-desc { font-size: 12px; }
+  .quiz-opt { padding: 11px 13px; }
+  .quiz-opt-text { font-size: 14px; }
 }
+
+.quiz-header-img {
+  width: 35%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--radius);
+  border: 2px solid var(--gray-200);
+  flex-shrink: 0;
+  margin-left: 16px;
+}
+@media (max-width: 580px) {
+  .quiz-header-img { width: 35%; margin-left: 10px; }
+}
+
+/* ── QUIZ RADIO OPTIONS ── */
+.quiz-q { margin-bottom: 1.5rem; padding: 16px 18px; border-radius: var(--radius); border: 1px solid rgba(0,0,0,0.06); }
+#f-q1 { background: #eef6f4; }
+#f-q2 { background: #eef3fa; }
+#f-q3 { background: #f5f0fb; }
+#f-q4 { background: #fdf6ea; }
+#f-q5 { background: #fdeef0; }
+.quiz-opt {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 13px 16px;
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius);
+  background: var(--white);
+  cursor: pointer;
+  margin-bottom: 8px;
+  transition: all 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.quiz-opt:hover { border-color: var(--teal); background: var(--teal-light); }
+.quiz-opt.selected { border-color: var(--teal); background: var(--teal-light); box-shadow: inset 0 0 0 1px var(--teal); }
+.quiz-radio { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--gray-300); margin-top: 2px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+.quiz-opt.selected .quiz-radio { border-color: var(--teal); }
+.quiz-radio-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--teal); display: none; }
+.quiz-opt.selected .quiz-radio-dot { display: block; }
+.quiz-opt-text { font-size: 15px; line-height: 1.5; color: var(--black); flex: 1; }
+.quiz-opt.selected .quiz-opt-text { font-weight: 700; color: var(--teal-dark); }
+.quiz-q.error .quiz-opt { border-color: var(--red); }
+
+.btn-skip {
+  padding: 13px 22px;
+  border: 2px dashed var(--gray-300);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--gray-500);
+  font-size: 13px;
+  font-weight: 700;
+  font-family: 'Barlow Condensed', sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-skip:hover { border-color: var(--gray-500); color: var(--gray-700); }
 
 /* ── CODE OF CONDUCT ── */
 .conduct-scroll {
@@ -560,23 +648,21 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
   .hero-inner { padding: 2rem 1.25rem 2rem; }
   .hero h1 { font-size: 36px; }
   .hero-deco, .hero-deco2 { display: none; }
-  .hero-stats { gap: 1rem; }
-  .stat-num { font-size: 22px; }
+  .hero-panel { padding: 1.4rem 1.5rem; }
 }
 
 @media (max-width: 580px) {
   .hero-inner { padding: 1.75rem 1rem 1.75rem; }
   .hero h1 { font-size: 30px; }
+  .hero-panel { padding: 1.1rem 1.25rem; }
   .main { padding: 1.25rem 0.875rem 4rem; }
   .card { padding: 1.1rem 1rem; }
   .field-row, .field-row-3 { grid-template-columns: 1fr; }
   .step-label { font-size: 10px; }
   .hero-deco, .hero-deco2 { display: none; }
-  .hero-stats { gap: 0.75rem; flex-wrap: wrap; }
-  .stat-num { font-size: 20px; }
-  .stat-label { font-size: 9px; }
   .nav-row { flex-direction: column; }
   .btn-back { width: 100%; }
+  .btn-skip { width: 100%; }
   .site-header { padding: 12px 16px; }
   .step-nav-inner { padding: 0 0.5rem; }
   .sec-div-label { font-size: 16px !important; padding: 5px 12px !important; }
@@ -598,8 +684,7 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
 <!-- ── SITE HEADER ── -->
 <header class="site-header" id="siteHeader">
   <div class="site-logo">
-    <img src="images/logo.svg" alt="FTLO Volleyball" style="height:36px;display:block;" />
-    <div class="site-logo-sub">Volleyball Association</div>
+    <img src="images/FTLO-Primary Logo-W.png" alt="FTLO Volleyball" style="height:36px;display:block;" />
   </div>
 </header>
 
@@ -608,18 +693,15 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
   <div class="hero-deco"></div>
   <div class="hero-deco2"></div>
   <div class="hero-inner">
-    <div class="hero-eyebrow">2026 Fall Season &middot; Adults 18+</div>
-    <h1>Fall Clinic Program<br><span>Application</span></h1>
-    <p style="color:rgba(255,249,245,0.65);font-size:15px;max-width:520px;line-height:1.6;text-shadow:0 1px 6px rgba(0,0,0,0.5);">
-      FTLO is BACK for Fall 2026 with our flagship Beginner and Intermediate training sessions :) and a NEW Women's Only Intermediate training session. Join us for 9 dedicated sessions of volleyball training indoors! Fall season facility reservations, especially during the week, have been challenging, so please respond as soon as you know your availability. Those who know FTLO know what we're about when we get together.
-    </p>
-    <p style="color:rgba(255,249,245,0.65);font-size:15px;max-width:520px;line-height:1.6;margin-top:0.75rem;text-shadow:0 1px 6px rgba(0,0,0,0.5);">
-      <strong style="color:var(--orange);">This is an application, not a confirmed spot.</strong> FTLO will follow up by email with a payment invite once your spot is confirmed.
-    </p>
-    <div class="hero-stats">
-      <div class="stat"><div class="stat-num">9</div><div class="stat-label">Weeks</div></div>
-      <div class="stat"><div class="stat-num">5</div><div class="stat-label">Programs</div></div>
-      <div class="stat"><div class="stat-num">Sep&ndash;Nov</div><div class="stat-label">Season</div></div>
+    <div class="hero-panel">
+      <div class="hero-eyebrow">2026 Fall Season &middot; Adults 18+</div>
+      <h1>Fall Clinic Program<br><span>Application</span></h1>
+      <p style="color:rgba(255,249,245,0.85);font-size:15px;max-width:520px;line-height:1.6;">
+        FTLO is BACK for Fall 2026 with our flagship Beginner and Intermediate training sessions :) and a NEW Women's Only Intermediate training session. Join us for 9 dedicated sessions of volleyball training indoors! Fall season facility reservations, especially during the week, have been challenging, so please respond as soon as you know your availability. Those who know FTLO know what we're about when we get together.
+      </p>
+      <p style="color:rgba(255,249,245,0.85);font-size:15px;max-width:520px;line-height:1.6;margin-top:0.75rem;">
+        <strong style="color:var(--orange);">This is an application, not a confirmed spot.</strong> FTLO will follow up by email with a payment invite once your spot is confirmed.
+      </p>
     </div>
   </div>
 </div>
@@ -633,10 +715,14 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
     </div>
     <div class="step-item" id="nav-2" onclick="goToStep(2)">
       <div class="step-num">2</div>
-      <div class="step-label">Programs</div>
+      <div class="step-label">Clinic Quiz</div>
     </div>
     <div class="step-item" id="nav-3" onclick="goToStep(3)">
       <div class="step-num">3</div>
+      <div class="step-label">Programs</div>
+    </div>
+    <div class="step-item" id="nav-4" onclick="goToStep(4)">
+      <div class="step-num">4</div>
       <div class="step-label">Conduct &amp; Submit</div>
     </div>
   </div>
@@ -677,7 +763,7 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
     <div class="card-header">
       <div>
         <div class="card-title">Contact Information</div>
-        <div class="card-sub">Section 1 of 3. We'll send your confirmation to the email below.</div>
+        <div class="card-sub">Section 1 of 4. We'll send your confirmation to the email below.</div>
       </div>
     </div>
 
@@ -744,7 +830,7 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
     </div>
 
     <div class="field" style="margin-top:1.1rem;">
-      <label class="lbl">Most Recent FTLO Program(s) Involved <span style="text-transform:none;font-weight:500;color:var(--gray-500);">(optional, max 3)</span></label>
+      <label class="lbl">Most Recent FTLO Program(s) Involved <span style="text-transform:none;font-weight:500;color:var(--gray-500);">(max 3)</span></label>
       <input type="text" name="recentPrograms" placeholder="ie. Summer '26 BEG, Spring '26 Beg, BOBA 2026" />
     </div>
   </div>
@@ -752,57 +838,219 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
   <div class="nav-row">
     <div></div>
     <button type="button" class="btn-next" onclick="checkEmailThenNext()">
-      Continue to Programs
+      Continue to Clinic Quiz
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
     </button>
   </div>
 </section>
 
-<!-- ════════════ SECTION 2: PROGRAMS ════════════ -->
+<!-- ════════════ SECTION 2: QUIZ SECTION ════════════ -->
 <section class="section" id="section-2">
 
   <div class="card">
     <div class="card-header">
       <div>
-        <div class="card-title">Programs of Interest</div>
-        <div class="card-sub">Section 2 of 3. Select every session you'd like to apply for. Pricing hasn't been finalized yet, and no payment is collected here.</div>
+        <div class="card-title">Which Clinic May Be Best Fit For You?</div>
+        <div class="card-sub">Section 2 of 4 &middot; 5 quick questions to help point you toward the right clinic. Prefer to skip it? You still can &mdash; use the button below.</div>
       </div>
+      <img src="images/indoor-coaching-collage.jpg" alt="FTLO indoor training collage" class="quiz-header-img" />
     </div>
 
     <div class="notice info">
       <span class="notice-icon">&#9432;</span>
+      <div>Please answer based on what you <strong>CAN</strong> currently do consistently, not the level you hope to reach. Your result is a recommendation only &mdash; you will still be able to view and apply for any available clinic.</div>
+    </div>
+
+    <div class="field quiz-q" id="f-q1">
+      <label class="lbl">1. Which best describes your current volleyball experience? <span class="req">*</span></label>
+      <label class="quiz-opt" onclick="quizOpt(this)">
+        <input type="radio" name="q1" value="A_NEW" style="display:none;" />
+        <div class="quiz-radio"><span class="quiz-radio-dot"></span></div>
+        <div class="quiz-opt-text">I am new to volleyball or have very limited playing experience.</div>
+      </label>
+      <label class="quiz-opt" onclick="quizOpt(this)">
+        <input type="radio" name="q1" value="B_PAST_EXPERIENCE" style="display:none;" />
+        <div class="quiz-radio"><span class="quiz-radio-dot"></span></div>
+        <div class="quiz-opt-text">I've played before and understand the basics, but I'm not currently playing regularly.</div>
+      </label>
+      <label class="quiz-opt" onclick="quizOpt(this)">
+        <input type="radio" name="q1" value="C_RECREATIONAL" style="display:none;" />
+        <div class="quiz-radio"><span class="quiz-radio-dot"></span></div>
+        <div class="quiz-opt-text">I currently play in recreational leagues or organized 6-on-6 games.</div>
+      </label>
+      <label class="quiz-opt" onclick="quizOpt(this)">
+        <input type="radio" name="q1" value="D_SEMI_COMPETITIVE" style="display:none;" />
+        <div class="quiz-radio"><span class="quiz-radio-dot"></span></div>
+        <div class="quiz-opt-text">I currently play in semi-competitive leagues at approximately BB+ or A level.</div>
+      </label>
+      <div class="err-msg">Please select an answer.</div>
+    </div>
+
+    <div class="field quiz-q" id="f-q2">
+      <label class="lbl">2. During a rally, how confident are you knowing where to move and what your responsibility is? <span class="req">*</span></label>
+      <label class="quiz-opt" onclick="quizOpt(this)">
+        <input type="radio" name="q2" value="A_LEARNING_FLOW" style="display:none;" />
+        <div class="quiz-radio"><span class="quiz-radio-dot"></span></div>
+        <div class="quiz-opt-text">I am still learning where to stand, rotate, and move after each contact.</div>
+      </label>
+      <label class="quiz-opt" onclick="quizOpt(this)">
+        <input type="radio" name="q2" value="B_BASIC_UNCERTAIN" style="display:none;" />
+        <div class="quiz-radio"><span class="quiz-radio-dot"></span></div>
+        <div class="quiz-opt-text">I understand the basic flow of the game, but sometimes am slower to execute or miss on passes.</div>
+      </label>
+      <label class="quiz-opt" onclick="quizOpt(this)">
+        <input type="radio" name="q2" value="C_TRANSITION_READING" style="display:none;" />
+        <div class="quiz-radio"><span class="quiz-radio-dot"></span></div>
+        <div class="quiz-opt-text">I have started working on transitions, coverage, and reading more developing play situations.</div>
+      </label>
+      <div class="err-msg">Please select an answer.</div>
+    </div>
+
+    <div class="field quiz-q" id="f-q3">
+      <label class="lbl">3. In a controlled drill, a coach tosses 10 balls in different directions around you. How many could you pass high to a target near the setter position? <span class="req">*</span></label>
+      <div style="font-size:12.5px;color:var(--gray-500);margin:-4px 0 10px;">In this scenario, assume to count only controlled, playable passes that reach the intended target area.</div>
+      <label class="quiz-opt" onclick="quizOpt(this)">
+        <input type="radio" name="q3" value="A_0_TO_3" style="display:none;" />
+        <div class="quiz-radio"><span class="quiz-radio-dot"></span></div>
+        <div class="quiz-opt-text">0&ndash;3</div>
+      </label>
+      <label class="quiz-opt" onclick="quizOpt(this)">
+        <input type="radio" name="q3" value="B_4_TO_6" style="display:none;" />
+        <div class="quiz-radio"><span class="quiz-radio-dot"></span></div>
+        <div class="quiz-opt-text">4&ndash;6</div>
+      </label>
+      <label class="quiz-opt" onclick="quizOpt(this)">
+        <input type="radio" name="q3" value="C_ABOUT_7" style="display:none;" />
+        <div class="quiz-radio"><span class="quiz-radio-dot"></span></div>
+        <div class="quiz-opt-text">About 7</div>
+      </label>
+      <label class="quiz-opt" onclick="quizOpt(this)">
+        <input type="radio" name="q3" value="D_8_TO_10" style="display:none;" />
+        <div class="quiz-radio"><span class="quiz-radio-dot"></span></div>
+        <div class="quiz-opt-text">8&ndash;10</div>
+      </label>
+      <div class="err-msg">Please select an answer.</div>
+    </div>
+
+    <div class="field quiz-q" id="f-q4">
+      <label class="lbl">4. Which area do you most need to develop? <span class="req">*</span></label>
+      <label class="quiz-opt" onclick="quizOpt(this)">
+        <input type="radio" name="q4" value="A_ALL_FUNDAMENTALS" style="display:none;" />
+        <div class="quiz-radio"><span class="quiz-radio-dot"></span></div>
+        <div class="quiz-opt-text">Developing all the basic fundamental skills and understanding when to use them.</div>
+      </label>
+      <label class="quiz-opt" onclick="quizOpt(this)">
+        <input type="radio" name="q4" value="B_CONTACT_CONSISTENCY" style="display:none;" />
+        <div class="quiz-radio"><span class="quiz-radio-dot"></span></div>
+        <div class="quiz-opt-text">Making more consistent passes and cleaner contacts.</div>
+      </label>
+      <label class="quiz-opt" onclick="quizOpt(this)">
+        <input type="radio" name="q4" value="C_FASTER_PLAY_STRATEGY" style="display:none;" />
+        <div class="quiz-radio"><span class="quiz-radio-dot"></span></div>
+        <div class="quiz-opt-text">Passing and defending faster spikes or serves, while developing more strategy beyond basic skill execution.</div>
+      </label>
+      <div class="err-msg">Please select an answer.</div>
+    </div>
+
+    <div class="field quiz-q" id="f-q5">
+      <label class="lbl">5. What type of training would help you most right now? <span class="req">*</span></label>
+      <label class="quiz-opt" onclick="quizOpt(this)">
+        <input type="radio" name="q5" value="A_FUNDAMENTAL_INSTRUCTION" style="display:none;" />
+        <div class="quiz-radio"><span class="quiz-radio-dot"></span></div>
+        <div class="quiz-opt-text">Learning all fundamental skills with clear explanations, so I can enter/continue gameplay and leagues confidently.</div>
+      </label>
+      <label class="quiz-opt" onclick="quizOpt(this)">
+        <input type="radio" name="q5" value="B_HIGH_VOLUME_CONTACTS" style="display:none;" />
+        <div class="quiz-radio"><span class="quiz-radio-dot"></span></div>
+        <div class="quiz-opt-text">High-volume passing, attacking, serving, and overhead-contact drills that build on my previous or current league play.</div>
+      </label>
+      <label class="quiz-opt" onclick="quizOpt(this)">
+        <input type="radio" name="q5" value="C_MULTI_TOUCH_SCENARIOS" style="display:none;" />
+        <div class="quiz-radio"><span class="quiz-radio-dot"></span></div>
+        <div class="quiz-opt-text">Multi-touch drills, rally-reading scenarios, and game-like training that strengthen my overall skills.</div>
+      </label>
+      <div class="err-msg">Please select an answer.</div>
+    </div>
+
+    <div class="notice danger" id="quizValidationMsg" style="display:none;">
+      <span class="notice-icon">&#9888;</span>
+      <div>Please answer all clinic-fit questions before continuing.</div>
+    </div>
+  </div>
+
+  <div class="nav-row">
+    <button type="button" class="btn-back" onclick="prevStep(2)">Back</button>
+    <button type="button" class="btn-skip" onclick="skipQuiz()">Skip This Quiz</button>
+    <button type="button" class="btn-next" onclick="nextFromQuiz()">
+      See My Recommendation
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+    </button>
+  </div>
+</section>
+
+<!-- ════════════ SECTION 3: PROGRAMS ════════════ -->
+<section class="section" id="section-3">
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Programs of Interest</div>
+        <div class="card-sub">Section 3 of 4. Select every session you'd like to apply for. Pricing hasn't been finalized yet, and no payment is collected here.</div>
+      </div>
+    </div>
+
+    <div class="notice info" id="recommendationBanner" style="display:none;">
+      <div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--teal-dark);margin-bottom:4px;">Your Clinic Recommendation</div>
+        <div id="recommendationTitle" style="font-family:'Barlow Condensed',sans-serif;font-size:19px;font-weight:900;letter-spacing:0.02em;color:var(--teal-dark);margin-bottom:6px;"></div>
+        <ul id="recommendationBullets" style="margin:0 0 8px 18px;padding:0;font-size:14px;line-height:1.6;"></ul>
+        <div style="font-size:12.5px;color:var(--teal-dark);opacity:0.75;">This recommendation is based on your answers and is not a final placement decision. You may still view and apply for any available clinic.</div>
+      </div>
+    </div>
+
+    <div class="notice info">
       <div>All programs run <strong>indoors</strong> in various schools for <strong>9 weeks</strong>, plus up to 2 additional weeks if a session needs to be postponed.</div>
     </div>
 
     <div class="card" style="background:var(--gray-100);border:1px solid var(--gray-200);box-shadow:none;margin-bottom:1.5rem;">
       <div class="card-title" style="font-size:18px;margin-bottom:6px;">What's Your Skill Level?</div>
       <div style="font-size:14px;color:var(--gray-700);line-height:1.6;margin-bottom:1.1rem;">FTLOers are encouraged to train at least 2&ndash;3 seasons of Beginner before registering for Intermediate, unless communicated with FTLO Coaches. Players who do not closely match the correct group training skill level will be asked to switch programs or be given a refund.</div>
-      <div class="skill-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-        <div style="background:var(--teal-light);border:2px solid #b8cdd2;border-radius:var(--radius-sm);padding:14px 16px;">
-          <div style="font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:900;letter-spacing:0.08em;text-transform:uppercase;color:var(--teal-dark);margin-bottom:8px;">Beginner Train &amp; Play</div>
-          <ul style="list-style:none;padding:0;margin:0;">
-            <li style="font-size:13.5px;color:var(--gray-700);padding:2px 0;display:flex;gap:6px;"><span style="opacity:0.4;">&bull;</span>New to little experience</li>
-            <li style="font-size:13.5px;color:var(--gray-700);padding:2px 0;display:flex;gap:6px;"><span style="opacity:0.4;">&bull;</span>Fun, recreational, relaxed pace</li>
-            <li style="font-size:13.5px;color:var(--gray-700);padding:2px 0;display:flex;gap:6px;"><span style="opacity:0.4;">&bull;</span>Develop solid fundamental skills</li>
-            <li style="font-size:13.5px;color:var(--gray-700);padding:2px 0;display:flex;gap:6px;"><span style="opacity:0.4;">&bull;</span>Basic understanding of game/rules</li>
-            <li style="font-size:13.5px;color:var(--gray-700);padding:2px 0;display:flex;gap:6px;"><span style="opacity:0.4;">&bull;</span>Get back to playing volleyball</li>
-            <li style="font-size:13.5px;color:var(--gray-700);padding:2px 0;display:flex;gap:6px;"><span style="opacity:0.4;">&bull;</span>Learning to be Rally Ready</li>
-            <li style="font-size:13.5px;color:var(--gray-700);padding:2px 0;display:flex;gap:6px;"><span style="opacity:0.4;">&bull;</span>B to BB level</li>
+      <div class="skill-grid">
+        <div class="skill-card" style="background:var(--teal-light);border:2px solid #b8cdd2;">
+          <div class="skill-card-title" style="color:var(--teal-dark);">Beginner Train &amp; Play</div>
+          <ul>
+            <li><span>&bull;</span>New to little experience</li>
+            <li><span>&bull;</span>Fun, recreational, relaxed pace</li>
+            <li><span>&bull;</span>Develop solid fundamental skills</li>
+            <li><span>&bull;</span>Basic understanding of game/rules</li>
+            <li><span>&bull;</span>Get back to playing volleyball</li>
+            <li><span>&bull;</span>Learning to be Rally Ready</li>
+            <li><span>&bull;</span>B to BB level</li>
           </ul>
         </div>
-        <div style="background:var(--orange-light);border:2px solid #f0d080;border-radius:var(--radius-sm);padding:14px 16px;">
-          <div style="font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:900;letter-spacing:0.08em;text-transform:uppercase;color:#7a5000;margin-bottom:8px;">Intermediate Train &amp; Play</div>
-          <ul style="list-style:none;padding:0;margin:0;">
-            <li style="font-size:13.5px;color:var(--gray-700);padding:2px 0;display:flex;gap:6px;"><span style="opacity:0.4;">&bull;</span>High school team or clinic experience</li>
-            <li style="font-size:13.5px;color:var(--gray-700);padding:2px 0;display:flex;gap:6px;"><span style="opacity:0.4;">&bull;</span>Can perform all basic skills in a game</li>
-            <li style="font-size:13.5px;color:var(--gray-700);padding:2px 0;display:flex;gap:6px;"><span style="opacity:0.4;">&bull;</span>Most-to-all times Rally Ready</li>
-            <li style="font-size:13.5px;color:var(--gray-700);padding:2px 0;display:flex;gap:6px;"><span style="opacity:0.4;">&bull;</span>Play in competitive environment</li>
-            <li style="font-size:13.5px;color:var(--gray-700);padding:2px 0;display:flex;gap:6px;"><span style="opacity:0.4;">&bull;</span>Interested in regimented training</li>
-            <li style="font-size:13.5px;color:var(--gray-700);padding:2px 0;display:flex;gap:6px;"><span style="opacity:0.4;">&bull;</span>BB to A level</li>
+        <div class="skill-card" style="background:#f5f0fb;border:2px solid #d8c8ec;">
+          <div class="skill-card-title" style="color:#5a3a8c;">Foundation Focus: Pass &amp; Attack</div>
+          <ul>
+            <li><span>&bull;</span>Understands basic gameplay flow</li>
+            <li><span>&bull;</span>Mainly needs cleaner, more consistent contacts</li>
+            <li><span>&bull;</span>High-volume passing, attacking &amp; serving reps</li>
+            <li><span>&bull;</span>Some past or current playing experience</li>
+            <li><span>&bull;</span>B to BB+ level</li>
+          </ul>
+        </div>
+        <div class="skill-card" style="background:var(--orange-light);border:2px solid #f0d080;">
+          <div class="skill-card-title" style="color:#7a5000;">Intermediate Train &amp; Play</div>
+          <ul>
+            <li><span>&bull;</span>High school team or clinic experience</li>
+            <li><span>&bull;</span>Can perform all basic skills in a game</li>
+            <li><span>&bull;</span>Most-to-all times Rally Ready</li>
+            <li><span>&bull;</span>Play in competitive environment</li>
+            <li><span>&bull;</span>Interested in regimented training</li>
+            <li><span>&bull;</span>BB to A level</li>
           </ul>
         </div>
       </div>
-      <div style="font-size:12.5px;color:var(--gray-500);margin-top:12px;line-height:1.6;">Not sure about your skill level? Check the FTLO detailed descriptions or contact FTLO Coaches before applying. Women's Intermediate follows the same skill expectations as Intermediate, restricted to women.</div>
+      <div style="font-size:12.5px;color:var(--gray-500);margin-top:12px;line-height:1.6;">Not sure about your skill level? Check the <a href="https://www.google.com/search?q=ftlo+volleyball+skill+level+descriptions&amp;rlz=1C1GCEA_enCA1127CA1128&amp;oq=ftlo+volleyball+skill+level+descriptions&amp;gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIGCAEQRRg80gEJMTA3OTRqMGo3qAIAsAIA&amp;sourceid=chrome&amp;ie=UTF-8" target="_blank" rel="noopener" style="color:var(--teal);font-weight:600;">FTLO detailed descriptions</a>, use the Clinic Quiz, or contact FTLO Coaches before applying. Women's Intermediate follows the same skill expectations as Intermediate, restricted to women.</div>
     </div>
 
     <div class="field" id="f-programs">
@@ -815,7 +1063,7 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
             <div class="acc-tag">BEG</div>
             <div class="acc-meta">
               <div class="acc-title-row"><span class="acc-title">Tuesday &middot; Beginner</span></div>
-              <div class="acc-subdesc">Richmond, BC &middot; <em>[exact address to be added]</em></div>
+              <div class="acc-subdesc">Richmond, BC</div>
             </div>
             <div class="acc-right">
               <span class="acc-pill">2 time slots</span>
@@ -824,20 +1072,21 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
           </div>
           <div class="acc-body">
             <div class="acc-body-inner">
+              <div class="acc-desc">Build rally-ready confidence through clear instruction in passing, setting, serving, attacking, movement, communication, and rally structure. Sessions emphasize high-volume repetition, confident first contacts, playable second contacts, and controlled game-like practice.</div>
               <label class="acc-prog" onclick="accProg(this)">
-                <input type="checkbox" name="programs" value="Tuesday BEG 6:00-7:45 PM" style="display:none;" />
+                <input type="checkbox" name="programs" value="Tuesday BEG 6:00-7:45 PM" data-code="Tue B 6" data-label="Tuesday &middot; Beginner &middot; 6:00&ndash;7:45 PM" style="display:none;" />
                 <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
                 <div class="acc-prog-body">
                   <div class="acc-prog-title">6:00 &ndash; 7:45 PM</div>
-                  <div class="acc-prog-desc">9 sessions &middot; Sep 15, 22, 29, Oct 6, 13, 20, 27, Nov 3, 10 &middot; Ext. to Nov 17, 24 if needed</div>
+                  <div class="acc-prog-desc">9 Tuesdays &middot; Sep 15 &ndash; Nov 10 &middot; Ext to Nov 24 if needed</div>
                 </div>
               </label>
               <label class="acc-prog" onclick="accProg(this)">
-                <input type="checkbox" name="programs" value="Tuesday BEG 7:45-9:30 PM" style="display:none;" />
+                <input type="checkbox" name="programs" value="Tuesday BEG 7:45-9:30 PM" data-code="Tue B 745" data-label="Tuesday &middot; Beginner &middot; 7:45&ndash;9:30 PM" style="display:none;" />
                 <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
                 <div class="acc-prog-body">
                   <div class="acc-prog-title">7:45 &ndash; 9:30 PM</div>
-                  <div class="acc-prog-desc">9 sessions &middot; Sep 15, 22, 29, Oct 6, 13, 20, 27, Nov 3, 10 &middot; Ext. to Nov 17, 24 if needed</div>
+                  <div class="acc-prog-desc">9 Tuesdays &middot; Sep 15 &ndash; Nov 10 &middot; Ext to Nov 24 if needed</div>
                 </div>
               </label>
             </div>
@@ -850,7 +1099,7 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
             <div class="acc-tag">BEG</div>
             <div class="acc-meta">
               <div class="acc-title-row"><span class="acc-title">Wednesday &middot; Beginner</span></div>
-              <div class="acc-subdesc">Edmonds Community School, Burnaby, BC &middot; <em>[exact address to be added]</em></div>
+              <div class="acc-subdesc">Edmonds Community School, Burnaby, BC</div>
             </div>
             <div class="acc-right">
               <span class="acc-pill">2 time slots</span>
@@ -859,20 +1108,57 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
           </div>
           <div class="acc-body">
             <div class="acc-body-inner">
+              <div class="acc-desc">Build rally-ready confidence through clear instruction in passing, setting, serving, attacking, movement, communication, and rally structure. Sessions emphasize high-volume repetition, confident first contacts, playable second contacts, and controlled game-like practice.</div>
               <label class="acc-prog" onclick="accProg(this)">
-                <input type="checkbox" name="programs" value="Wednesday BEG (Edmonds) 6:00-7:30 PM" style="display:none;" />
+                <input type="checkbox" name="programs" value="Wednesday BEG (Edmonds) 6:00-7:30 PM" data-code="Wed B 6" data-label="Wednesday &middot; Beginner &middot; 6:00&ndash;7:30 PM" style="display:none;" />
                 <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
                 <div class="acc-prog-body">
                   <div class="acc-prog-title">6:00 &ndash; 7:30 PM</div>
-                  <div class="acc-prog-desc">9 sessions &middot; Sept 16, 23, NO Sep 30, Oct 7, 14, 21, 28, Nov 4, NO Nov 11, 18, 25 &middot; Ext. to Dec 2, 9 if needed</div>
+                  <div class="acc-prog-desc">9 Wednesdays &middot; Sep 16 &ndash; Nov 25 &middot; <span class="acc-skip">No clinic Sep 30 &amp; Nov 11.</span> Ext to Dec 9 if needed</div>
                 </div>
               </label>
               <label class="acc-prog" onclick="accProg(this)">
-                <input type="checkbox" name="programs" value="Wednesday BEG (Edmonds) 7:30-9:00 PM" style="display:none;" />
+                <input type="checkbox" name="programs" value="Wednesday BEG (Edmonds) 7:30-9:00 PM" data-code="Wed B 730" data-label="Wednesday &middot; Beginner &middot; 7:30&ndash;9:00 PM" style="display:none;" />
                 <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
                 <div class="acc-prog-body">
                   <div class="acc-prog-title">7:30 &ndash; 9:00 PM</div>
-                  <div class="acc-prog-desc">9 sessions &middot; Sept 16, 23, NO Sep 30, Oct 7, 14, 21, 28, Nov 4, NO Nov 11, 18, 25 &middot; Ext. to Dec 2, 9 if needed</div>
+                  <div class="acc-prog-desc">9 Wednesdays &middot; Sep 16 &ndash; Nov 25 &middot; <span class="acc-skip">No clinic Sep 30 &amp; Nov 11.</span> Ext to Dec 9 if needed</div>
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- TUESDAY FOUNDATION FOCUS -->
+        <div class="acc-block ff-acc" id="acc-tue-ff">
+          <div class="acc-hdr" onclick="accToggle('acc-tue-ff')">
+            <div class="acc-tag">FF</div>
+            <div class="acc-meta">
+              <div class="acc-title-row"><span class="acc-title">Tuesday &middot; Foundation Focus: Pass &amp; Attack</span></div>
+              <div class="acc-subdesc">Richmond, BC or South Burnaby area &middot; <em>exact location to be confirmed</em></div>
+            </div>
+            <div class="acc-right">
+              <span class="acc-pill">2 time slots</span>
+              <div class="acc-chev"><svg viewBox="0 0 12 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 1l5 5 5-5"/></svg></div>
+            </div>
+          </div>
+          <div class="acc-body">
+            <div class="acc-body-inner">
+              <div class="acc-desc">Develop more consistent passing and attacking through high-volume technical drills, with less emphasis on extended gameplay. Training focuses on platform control, overhead contact, and adjusting to various speeds and ball trajectories.</div>
+              <label class="acc-prog" onclick="accProg(this)">
+                <input type="checkbox" name="programs" value="Tuesday FF (Location TBD) 6:00-7:45 PM" data-code="Tue FF 6" data-label="Tuesday &middot; Foundation Focus &middot; 6:00&ndash;7:45 PM" style="display:none;" />
+                <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
+                <div class="acc-prog-body">
+                  <div class="acc-prog-title">6:00 &ndash; 7:45 PM</div>
+                  <div class="acc-prog-desc">9 Tuesdays &middot; Sep 15 &ndash; Nov 10 &middot; Ext to Nov 24 if needed</div>
+                </div>
+              </label>
+              <label class="acc-prog" onclick="accProg(this)">
+                <input type="checkbox" name="programs" value="Tuesday FF (Location TBD) 7:45-9:30 PM" data-code="Tue FF 745" data-label="Tuesday &middot; Foundation Focus &middot; 7:45&ndash;9:30 PM" style="display:none;" />
+                <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
+                <div class="acc-prog-body">
+                  <div class="acc-prog-title">7:45 &ndash; 9:30 PM</div>
+                  <div class="acc-prog-desc">9 Tuesdays &middot; Sep 15 &ndash; Nov 10 &middot; Ext to Nov 24 if needed</div>
                 </div>
               </label>
             </div>
@@ -885,7 +1171,7 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
             <div class="acc-tag">INT</div>
             <div class="acc-meta">
               <div class="acc-title-row"><span class="acc-title">Wednesday &middot; Intermediate</span></div>
-              <div class="acc-subdesc">Lochdale Community School, Burnaby, BC &middot; <em>[exact address to be added]</em></div>
+              <div class="acc-subdesc">Lochdale Community School, Burnaby, BC</div>
             </div>
             <div class="acc-right">
               <span class="acc-pill">2 time slots</span>
@@ -894,6 +1180,7 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
           </div>
           <div class="acc-body">
             <div class="acc-body-inner">
+              <div class="acc-desc">Improve serving, passing, attacking, transitions, and all-position competency at a faster, more competitive pace. Sessions emphasize multi-touch drills, court spacing, role awareness, rally reading, and tactical decision-making.</div>
               <div style="background:var(--orange-light);border:2px solid var(--orange);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:4px;">
                 <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:#7a5000;margin-bottom:6px;">&#9888; Intermediate Placement Expectations (Please Read)</div>
                 <div style="font-size:13px;color:#5a3a00;line-height:1.6;">
@@ -907,19 +1194,19 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
                 </div>
               </div>
               <label class="acc-prog" onclick="accProg(this)">
-                <input type="checkbox" name="programs" value="Wednesday INT (Lochdale) 6:00-7:30 PM" style="display:none;" />
+                <input type="checkbox" name="programs" value="Wednesday INT (Lochdale) 6:00-7:30 PM" data-code="Wed I 6" data-label="Wednesday &middot; Intermediate &middot; 6:00&ndash;7:30 PM" style="display:none;" />
                 <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
                 <div class="acc-prog-body">
                   <div class="acc-prog-title">6:00 &ndash; 7:30 PM</div>
-                  <div class="acc-prog-desc">9 sessions &middot; Sept 16, 23, NO Sep 30, Oct 7, 14, 21, 28, Nov 4, NO Nov 11, 18, 25 &middot; Ext. to Dec 2, 9 if needed</div>
+                  <div class="acc-prog-desc">9 Wednesdays &middot; Sep 16 &ndash; Nov 25 &middot; <span class="acc-skip">No clinic Sep 30 &amp; Nov 11.</span> Ext to Dec 9 if needed</div>
                 </div>
               </label>
               <label class="acc-prog" onclick="accProg(this)">
-                <input type="checkbox" name="programs" value="Wednesday INT (Lochdale) 7:30-9:00 PM" style="display:none;" />
+                <input type="checkbox" name="programs" value="Wednesday INT (Lochdale) 7:30-9:00 PM" data-code="Wed I 730" data-label="Wednesday &middot; Intermediate &middot; 7:30&ndash;9:00 PM" style="display:none;" />
                 <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
                 <div class="acc-prog-body">
                   <div class="acc-prog-title">7:30 &ndash; 9:00 PM</div>
-                  <div class="acc-prog-desc">9 sessions &middot; Sept 16, 23, NO Sep 30, Oct 7, 14, 21, 28, Nov 4, NO Nov 11, 18, 25 &middot; Ext. to Dec 2, 9 if needed</div>
+                  <div class="acc-prog-desc">9 Wednesdays &middot; Sep 16 &ndash; Nov 25 &middot; <span class="acc-skip">No clinic Sep 30 &amp; Nov 11.</span> Ext to Dec 9 if needed</div>
                 </div>
               </label>
             </div>
@@ -932,7 +1219,7 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
             <div class="acc-tag">INT</div>
             <div class="acc-meta">
               <div class="acc-title-row"><span class="acc-title">Thursday &middot; Intermediate</span></div>
-              <div class="acc-subdesc">Lochdale Community School, Burnaby, BC &middot; <em>[exact address to be added]</em></div>
+              <div class="acc-subdesc">Lochdale Community School, Burnaby, BC</div>
             </div>
             <div class="acc-right">
               <span class="acc-pill">2 time slots</span>
@@ -941,6 +1228,7 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
           </div>
           <div class="acc-body">
             <div class="acc-body-inner">
+              <div class="acc-desc">Improve serving, passing, attacking, transitions, and all-position competency at a faster, more competitive pace. Sessions emphasize multi-touch drills, court spacing, role awareness, rally reading, and tactical decision-making.</div>
               <div style="background:var(--orange-light);border:2px solid var(--orange);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:4px;">
                 <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:#7a5000;margin-bottom:6px;">&#9888; Intermediate Placement Expectations (Please Read)</div>
                 <div style="font-size:13px;color:#5a3a00;line-height:1.6;">
@@ -954,19 +1242,19 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
                 </div>
               </div>
               <label class="acc-prog" onclick="accProg(this)">
-                <input type="checkbox" name="programs" value="Thursday INT (Lochdale) 6:00-7:30 PM" style="display:none;" />
+                <input type="checkbox" name="programs" value="Thursday INT (Lochdale) 6:00-7:30 PM" data-code="Thu I 6" data-label="Thursday &middot; Intermediate &middot; 6:00&ndash;7:30 PM" style="display:none;" />
                 <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
                 <div class="acc-prog-body">
                   <div class="acc-prog-title">6:00 &ndash; 7:30 PM</div>
-                  <div class="acc-prog-desc">9 sessions &middot; Sept 17, 24, Oct 1, 8, 15, 22, 29, Nov 5, 12 &middot; Ext. to Nov 19, 26 if needed</div>
+                  <div class="acc-prog-desc">9 Thursdays &middot; Sep 17 &ndash; Nov 12 &middot; Ext to Nov 26 if needed</div>
                 </div>
               </label>
               <label class="acc-prog" onclick="accProg(this)">
-                <input type="checkbox" name="programs" value="Thursday INT (Lochdale) 7:30-9:00 PM" style="display:none;" />
+                <input type="checkbox" name="programs" value="Thursday INT (Lochdale) 7:30-9:00 PM" data-code="Thu I 730" data-label="Thursday &middot; Intermediate &middot; 7:30&ndash;9:00 PM" style="display:none;" />
                 <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
                 <div class="acc-prog-body">
                   <div class="acc-prog-title">7:30 &ndash; 9:00 PM</div>
-                  <div class="acc-prog-desc">9 sessions &middot; Sept 17, 24, Oct 1, 8, 15, 22, 29, Nov 5, 12 &middot; Ext. to Nov 19, 26 if needed</div>
+                  <div class="acc-prog-desc">9 Thursdays &middot; Sep 17 &ndash; Nov 12 &middot; Ext to Nov 26 if needed</div>
                 </div>
               </label>
             </div>
@@ -979,7 +1267,7 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
             <div class="acc-tag">WMN</div>
             <div class="acc-meta">
               <div class="acc-title-row"><span class="acc-title">Thursday &middot; Women's Intermediate</span></div>
-              <div class="acc-subdesc">Women's only &middot; Richmond, BC &middot; <em>venue pending confirmation</em></div>
+              <div class="acc-subdesc">Women's only &middot; Richmond, BC</div>
             </div>
             <div class="acc-right">
               <span class="acc-pill">2 time slots</span>
@@ -988,6 +1276,7 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
           </div>
           <div class="acc-body">
             <div class="acc-body-inner">
+              <div class="acc-desc">Improve serving, passing, attacking, transitions, and all-position competency at a faster, more competitive pace. Sessions emphasize multi-touch drills, court spacing, role awareness, rally reading, and tactical decision-making.</div>
               <div style="background:var(--orange-light);border:2px solid var(--orange);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:4px;">
                 <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:#7a5000;margin-bottom:6px;">&#9888; Intermediate Placement Expectations (Please Read)</div>
                 <div style="font-size:13px;color:#5a3a00;line-height:1.6;">
@@ -1001,19 +1290,19 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
                 </div>
               </div>
               <label class="acc-prog" onclick="accProg(this)">
-                <input type="checkbox" name="programs" value="Thursday WOMENS INT (Richmond) 6:00-7:30 PM" style="display:none;" />
+                <input type="checkbox" name="programs" value="Thursday WOMENS INT (Richmond) 6:00-7:30 PM" data-code="Thu IW 6" data-label="Thursday &middot; Women's Intermediate &middot; 6:00&ndash;7:30 PM" style="display:none;" />
                 <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
                 <div class="acc-prog-body">
                   <div class="acc-prog-title">6:00 &ndash; 7:30 PM</div>
-                  <div class="acc-prog-desc">9 sessions &middot; Sept 17, 24, Oct 1, 8, 15, 22, 29, Nov 5, 12 &middot; Ext. to Nov 19, 26 if needed</div>
+                  <div class="acc-prog-desc">9 Thursdays &middot; Sep 17 &ndash; Nov 12 &middot; Ext to Nov 26 if needed</div>
                 </div>
               </label>
               <label class="acc-prog" onclick="accProg(this)">
-                <input type="checkbox" name="programs" value="Thursday WOMENS INT (Richmond) 7:30-9:00 PM" style="display:none;" />
+                <input type="checkbox" name="programs" value="Thursday WOMENS INT (Richmond) 7:30-9:00 PM" data-code="Thu IW 730" data-label="Thursday &middot; Women's Intermediate &middot; 7:30&ndash;9:00 PM" style="display:none;" />
                 <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
                 <div class="acc-prog-body">
                   <div class="acc-prog-title">7:30 &ndash; 9:00 PM</div>
-                  <div class="acc-prog-desc">9 sessions &middot; Sept 17, 24, Oct 1, 8, 15, 22, 29, Nov 5, 12 &middot; Ext. to Nov 19, 26 if needed</div>
+                  <div class="acc-prog-desc">9 Thursdays &middot; Sep 17 &ndash; Nov 12 &middot; Ext to Nov 26 if needed</div>
                 </div>
               </label>
             </div>
@@ -1026,22 +1315,24 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
     </div>
 
     <div class="field" style="margin-top:1.1rem;">
-      <label class="lbl">Program Priority <span style="text-transform:none;font-weight:500;color:var(--gray-500);">(optional)</span></label>
-      <textarea name="programPriority" placeholder="If you selected more than one program above, let us know your order of preference, e.g. 1st choice: Tuesday BEG 6:00-7:45 PM, 2nd choice: Wednesday INT 6:00-7:30 PM"></textarea>
+      <label class="lbl">Program Priority <span style="text-transform:none;font-weight:500;color:var(--gray-500);">(auto-filled from your selections above)</span></label>
+      <div id="priorityEmpty" style="font-size:13.5px;color:var(--gray-500);padding:4px 0;">Select a program above and it'll show up here so you can rank your preference.</div>
+      <div id="priorityListWrap" style="display:none;flex-direction:column;gap:8px;"></div>
+      <input type="hidden" name="programPriority" id="programPriorityInput" />
     </div>
   </div>
 
   <div class="nav-row">
-    <button type="button" class="btn-back" onclick="prevStep(2)">Back</button>
-    <button type="button" class="btn-next" onclick="nextStep(2)">
+    <button type="button" class="btn-back" onclick="prevStep(3)">Back</button>
+    <button type="button" class="btn-next" onclick="nextStep(3)">
       Continue to Conduct &amp; Policies
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
     </button>
   </div>
 </section>
 
-<!-- ════════════ SECTION 3: CONDUCT & SUBMIT ════════════ -->
-<section class="section" id="section-3">
+<!-- ════════════ SECTION 4: CONDUCT & SUBMIT ════════════ -->
+<section class="section" id="section-4">
 
   <!--
     TODO (flagged for FTLO review, not yet edited by Claude):
@@ -1049,18 +1340,16 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
     Please review before publishing. Items likely needing changes for Fall clinics:
       1. "Payment Policy" section already says payment happens "upon the program spot
          invitation." This already matches the Fall application-first flow, but confirm wording.
-      2. The refund policy's "$8.00 charge for partial coverage of training T-shirt orders"
-         assumes a T-shirt perk. Fall clinics don't have T-shirts confirmed, so remove or edit.
-      3. A sentence referencing "Tournament cancellation and refunds" from Summer's
+      2. A sentence referencing "Tournament cancellation and refunds" from Summer's
          version has been removed here since it's not applicable, but double-check the
          rest of the refund policy applies cleanly to Fall clinics.
-      4. General Agreements of Participation (risk/conduct/media release) look generic
+      3. General Agreements of Participation (risk/conduct/media release) look generic
          and were kept as-is. Please still give them a read-through.
   -->
 
   <div class="card">
     <div class="card-title" style="margin-bottom:4px;">Participant Code of Conduct &amp; Policies</div>
-    <div class="card-sub" style="margin-bottom:1.25rem;">Section 3 of 3. Please read carefully and confirm your agreement below.</div>
+    <div class="card-sub" style="margin-bottom:1.25rem;">Section 4 of 4. Please read carefully and confirm your agreement below.</div>
 
     <div style="display:flex;flex-direction:column;gap:1.1rem;margin-bottom:1.1rem;">
 
@@ -1085,7 +1374,7 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
 
         <h4 style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal);margin:12px 0 6px;">Medical or Training Concerns</h4>
         <p>Participants are encouraged to share any medical condition and/or training limitations to the FTLO coaches on the application form. (ie. Relevant past injuries, allergies, medication taken, concussion history, month/year of injuries)</p>
-        <p><strong>Intermediate Clinic Placement Expectations:</strong> See the full placement criteria and refund/credit options under each Intermediate program in Step 2, Programs of Interest.</p>
+        <p><strong>Intermediate Clinic Placement Expectations:</strong> See the full placement criteria and refund/credit options under each Intermediate program in Step 3, Programs of Interest.</p>
         <p>All other inquiries: info@ftlovolleyball.ca or <a href="https://www.ftlovolleyball.ca/policies" target="_blank" style="color:var(--teal);font-weight:600;">ftlovolleyball.ca/policies</a></p>
       </div>
 
@@ -1094,7 +1383,7 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
         <div style="background:#fff;border:1px solid #ede8e2;border-radius:8px;padding:16px 18px;max-height:220px;overflow-y:auto;font-size:13.5px;line-height:1.75;color:#444040;">
           <p style="margin-bottom:8px;">Participants can receive a <strong>100% refund</strong> if cancellation is requested no later than <strong>14 calendar days</strong> before the program start date.</p>
           <p style="margin-bottom:8px;">If a cancellation request is made <strong>within 14 calendar days</strong> before the start date, participants will receive a <strong>50% refund</strong>.</p>
-          <p style="margin-bottom:8px;"><u><strong>* Any refunds will require a $5.00 administrative banking charge.</strong></u> <em style="color:#c0392b;">[FLAGGED: Summer's version also added an $8 T-shirt charge here. Remove/edit if Fall clinics don't include a shirt.]</em></p>
+          <p style="margin-bottom:8px;"><u><strong>* Any refunds will require a $5.00 administrative banking charge.</strong></u></p>
           <p style="margin-bottom:8px;"><strong>No refund will be issued after the program start date.</strong> Participants can assign their registration to another adult as a replacement.</p>
           <p style="margin-bottom:8px;"><strong>Refunds for Incomplete Programs:</strong> FTLO is committed to delivering the full number of sessions in each training program within the extended schedule. If, despite this buffer, more than one session remains incomplete by the end of the season, prorated refunds will be issued based on the number of sessions owed.</p>
           <p><strong>Participatory Suitability:</strong> FTLO reserves the right to decline and/or refund a participant&rsquo;s registration payment if the participant is deemed not suitable for the playing environment. This will be communicated via a case-by-case matter.</p>
@@ -1133,34 +1422,29 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
 
   <!-- HOW DID YOU HEAR -->
   <div class="card">
-    <div class="card-title" style="margin-bottom:1rem;">Where Did You Hear About FTLO?</div>
+    <div class="card-title" style="margin-bottom:0.6rem;">Where Did You Hear About FTLO?</div>
     <div class="field" id="f-heard">
       <label class="lbl">Select all that apply <span class="req">*</span></label>
-      <div style="display:flex;flex-direction:column;gap:8px;">
-        <label class="prog-card" style="padding:10px 14px;" onclick="toggleProg(this)">
+      <div class="chip-wrap">
+        <label class="chip" onclick="toggleProg(this)">
           <input type="checkbox" name="heardFrom" value="Friend" style="display:none;" />
-          <div class="prog-check" style="border-radius:50%;"><span class="prog-check-tick">&#10003;</span></div>
-          <div class="prog-body" style="display:flex;align-items:center;"><span style="font-size:14px;font-weight:600;">Friend</span></div>
+          <span class="chip-tick">&#10003;</span>Friend
         </label>
-        <label class="prog-card" style="padding:10px 14px;" onclick="toggleProg(this)">
+        <label class="chip" onclick="toggleProg(this)">
           <input type="checkbox" name="heardFrom" value="Website" style="display:none;" />
-          <div class="prog-check" style="border-radius:50%;"><span class="prog-check-tick">&#10003;</span></div>
-          <div class="prog-body" style="display:flex;align-items:center;"><span style="font-size:14px;font-weight:600;">Website</span></div>
+          <span class="chip-tick">&#10003;</span>Website
         </label>
-        <label class="prog-card" style="padding:10px 14px;" onclick="toggleProg(this)">
+        <label class="chip" onclick="toggleProg(this)">
           <input type="checkbox" name="heardFrom" value="Another Program" style="display:none;" />
-          <div class="prog-check" style="border-radius:50%;"><span class="prog-check-tick">&#10003;</span></div>
-          <div class="prog-body" style="display:flex;align-items:center;"><span style="font-size:14px;font-weight:600;">Another Program</span></div>
+          <span class="chip-tick">&#10003;</span>Another Program
         </label>
-        <label class="prog-card" style="padding:10px 14px;" onclick="toggleProg(this)">
+        <label class="chip" onclick="toggleProg(this)">
           <input type="checkbox" name="heardFrom" value="Trained with FTLO (state season in comments)" style="display:none;" />
-          <div class="prog-check" style="border-radius:50%;"><span class="prog-check-tick">&#10003;</span></div>
-          <div class="prog-body" style="display:flex;align-items:center;"><span style="font-size:14px;font-weight:600;">Trained with FTLO (state season in comments)</span></div>
+          <span class="chip-tick">&#10003;</span>Trained with FTLO
         </label>
-        <label class="prog-card" style="padding:10px 14px;" onclick="toggleProg(this)">
+        <label class="chip" onclick="toggleProg(this)">
           <input type="checkbox" name="heardFrom" value="Other" style="display:none;" />
-          <div class="prog-check" style="border-radius:50%;"><span class="prog-check-tick">&#10003;</span></div>
-          <div class="prog-body" style="display:flex;align-items:center;"><span style="font-size:14px;font-weight:600;">Other</span></div>
+          <span class="chip-tick">&#10003;</span>Other
         </label>
       </div>
       <div class="err-msg">Please let us know how you heard about FTLO.</div>
@@ -1183,7 +1467,7 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
   </div>
 
   <div class="nav-row">
-    <button type="button" class="btn-back" onclick="prevStep(3)">Back</button>
+    <button type="button" class="btn-back" onclick="prevStep(4)">Back</button>
     <button type="button" class="btn-submit" id="submitBtn" onclick="submitForm()">Submit Application</button>
   </div>
 </section>
@@ -1236,6 +1520,7 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
   </div>
 
   <p style="margin-top:1.75rem;font-size:14px;color:var(--gray-500);">See you on the court!</p>
+  <p style="margin-top:0.5rem;font-size:14px;"><a href="https://www.instagram.com/ftlovolleyball/?hl=en" target="_blank" rel="noopener" style="color:var(--teal);font-weight:700;">Follow us on Instagram</a></p>
 </div>
 
 </main>
@@ -1262,7 +1547,68 @@ function accProg(label) {
     var cb = label.querySelector('input[type="checkbox"]');
     if (!cb) return;
     label.classList.toggle('sel', cb.checked);
+    syncPriorityFromCheckbox(cb);
   }, 0);
+}
+
+/* ── PROGRAM PRIORITY: auto-populated from checked programs, reorderable ── */
+var priorityOrder = []; // array of checkbox DOM elements, in priority order (top = first choice)
+
+function syncPriorityFromCheckbox(cb) {
+  var idx = priorityOrder.indexOf(cb);
+  if (cb.checked && idx === -1) {
+    priorityOrder.push(cb);
+  } else if (!cb.checked && idx !== -1) {
+    priorityOrder.splice(idx, 1);
+  }
+  renderPriorityList();
+}
+
+function movePriority(cb, dir) {
+  var idx = priorityOrder.indexOf(cb);
+  var newIdx = idx + dir;
+  if (idx === -1 || newIdx < 0 || newIdx >= priorityOrder.length) return;
+  var tmp = priorityOrder[idx];
+  priorityOrder[idx] = priorityOrder[newIdx];
+  priorityOrder[newIdx] = tmp;
+  renderPriorityList();
+}
+
+function renderPriorityList() {
+  var wrap = document.getElementById('priorityListWrap');
+  var empty = document.getElementById('priorityEmpty');
+  wrap.innerHTML = '';
+
+  if (priorityOrder.length === 0) {
+    wrap.style.display = 'none';
+    empty.style.display = 'block';
+    document.getElementById('programPriorityInput').value = '';
+    return;
+  }
+
+  empty.style.display = 'none';
+  wrap.style.display = 'flex';
+
+  for (var i = 0; i < priorityOrder.length; i++) {
+    var cb = priorityOrder[i];
+    var row = document.createElement('div');
+    row.className = 'priority-row';
+    row.innerHTML =
+      '<div class="priority-rank">' + (i + 1) + '</div>' +
+      '<div class="priority-label">' + cb.getAttribute('data-label') + '</div>' +
+      '<div class="priority-controls">' +
+        '<button type="button" class="priority-btn" ' + (i === 0 ? 'disabled' : '') + ' aria-label="Move up in priority">&uarr;</button>' +
+        '<button type="button" class="priority-btn" ' + (i === priorityOrder.length - 1 ? 'disabled' : '') + ' aria-label="Move down in priority">&darr;</button>' +
+      '</div>';
+    var btns = row.querySelectorAll('.priority-btn');
+    btns[0].onclick = (function(c) { return function() { movePriority(c, -1); }; })(cb);
+    btns[1].onclick = (function(c) { return function() { movePriority(c, 1); }; })(cb);
+    wrap.appendChild(row);
+  }
+
+  var codes = [];
+  for (var j = 0; j < priorityOrder.length; j++) codes.push(priorityOrder[j].getAttribute('data-code'));
+  document.getElementById('programPriorityInput').value = codes.join(', ');
 }
 function toggleProg(label) {
   setTimeout(function() {
@@ -1338,11 +1684,22 @@ function validateStep(step) {
   }
 
   if (step === 2) {
+    var quizFields = ['q1', 'q2', 'q3', 'q4', 'q5'];
+    for (var qi = 0; qi < quizFields.length; qi++) {
+      var qn = quizFields[qi];
+      if (!document.querySelector('[name="' + qn + '"]:checked')) { markErr('f-' + qn); ok = false; }
+      else clearErr('f-' + qn);
+    }
+    var quizMsg = document.getElementById('quizValidationMsg');
+    if (quizMsg) quizMsg.style.display = ok ? 'none' : 'flex';
+  }
+
+  if (step === 3) {
     var picked = document.querySelectorAll('[name="programs"]:checked');
     if (picked.length === 0) { markErr('f-programs'); ok = false; } else clearErr('f-programs');
   }
 
-  if (step === 3) {
+  if (step === 4) {
     var conduct = getVal('agreeConduct');
     if (conduct !== 'yes') { markErr('f-conduct', 'You must agree to the Code of Conduct to proceed.'); ok = false; } else clearErr('f-conduct');
     var heard = document.querySelectorAll('[name="heardFrom"]:checked');
@@ -1350,6 +1707,158 @@ function validateStep(step) {
   }
 
   return ok;
+}
+
+/* ── QUIZ: recommendation logic (single source of truth, easy to tune later) ── */
+function calculateClinicRecommendation(a) {
+  if (a.q1 === 'A_NEW') return 'BEG';
+
+  var currentOrganized = (a.q1 === 'C_RECREATIONAL' || a.q1 === 'D_SEMI_COMPETITIVE');
+  var anyExperience = (a.q1 === 'B_PAST_EXPERIENCE' || a.q1 === 'C_RECREATIONAL' || a.q1 === 'D_SEMI_COMPETITIVE');
+
+  // INT: current organized play + confident rally movement + strong passing + faster-play focus + multi-touch preference
+  if (currentOrganized &&
+      a.q2 === 'C_TRANSITION_READING' &&
+      (a.q3 === 'C_ABOUT_7' || a.q3 === 'D_8_TO_10') &&
+      a.q4 === 'C_FASTER_PLAY_STRATEGY' &&
+      a.q5 === 'C_MULTI_TOUCH_SCENARIOS') {
+    return 'INT';
+  }
+
+  // FF/INT: meaningful experience + understands rally flow + near-Intermediate passing + consistency-or-faster-play need
+  if (anyExperience &&
+      (a.q2 === 'B_BASIC_UNCERTAIN' || a.q2 === 'C_TRANSITION_READING') &&
+      (a.q3 === 'B_4_TO_6' || a.q3 === 'C_ABOUT_7') &&
+      (a.q4 === 'B_CONTACT_CONSISTENCY' || a.q4 === 'C_FASTER_PLAY_STRATEGY')) {
+    return 'FF/INT';
+  }
+
+  // BEG: strong signals of still learning flow/fundamentals, even with some past experience
+  if (a.q2 === 'A_LEARNING_FLOW' && a.q3 === 'A_0_TO_3' &&
+      (a.q4 === 'A_ALL_FUNDAMENTALS' || a.q5 === 'A_FUNDAMENTAL_INSTRUCTION')) {
+    return 'BEG';
+  }
+
+  // Safer default for any remaining mixed/ambiguous combination of answers
+  return 'BEG/FF';
+}
+
+function getRecommendationDisplay(rec, gender) {
+  var eligibleWomens = (gender === 'Female');
+
+  if (rec === 'BEG') {
+    return {
+      title: 'Recommended: Beginner Skills Clinic',
+      bullets: [
+        'Best for players still learning volleyball flow, positioning, and fundamental skills',
+        'Clear instruction across passing, setting, serving, and attacking',
+        'Supportive gameplay to build confidence and become rally-ready'
+      ]
+    };
+  }
+  if (rec === 'BEG/FF') {
+    return {
+      title: 'Best-fit options: Beginner or Foundation Focus',
+      bullets: [
+        'Choose Beginner for broader instruction across all fundamental skills',
+        'Choose Foundation Focus if you understand gameplay but mainly need cleaner passing and overhead contacts',
+        'Beginner includes more rally learning; Foundation Focus includes more repetitive technical drills'
+      ]
+    };
+  }
+  if (rec === 'FF/INT') {
+    return {
+      title: 'Best-fit options: Foundation Focus or Intermediate',
+      bullets: [
+        'Choose Foundation Focus if contact consistency is still your main limitation',
+        'Choose Intermediate if you can pass about 7 out of 10 controlled coach tosses to the target',
+        'Intermediate relies more on multi-touch drills, transitions, defence, and rally reading'
+      ]
+    };
+  }
+  if (rec === 'INT') {
+    if (eligibleWomens) {
+      return {
+        title: "Best-fit options: Intermediate or Intermediate Women's",
+        bullets: [
+          'Both programs use the same Intermediate readiness expectations',
+          'Both focus on multi-touch drills, transitions, coverage, and tactical play',
+          'Choose based on your preferred training environment and schedule'
+        ]
+      };
+    }
+    return {
+      title: 'Recommended: Intermediate Skills Training',
+      bullets: [
+        'Designed for rally-ready players who can maintain multi-touch drills',
+        'Focuses on faster defence, transitions, coverage, and rally reading',
+        'Applicants should pass about 7 out of 10 controlled coach tosses to the target'
+      ]
+    };
+  }
+  return null;
+}
+
+var clinicRecommendationValue = ''; // exported value: Skipped | BEG | BEG/FF | FF/INT | INT | INT/INT(W)
+
+function quizOpt(label) {
+  var input = label.querySelector('input[type="radio"]');
+  if (!input) return;
+  setTimeout(function() {
+    var group = document.getElementsByName(input.name);
+    for (var i = 0; i < group.length; i++) {
+      var lbl = group[i].closest('.quiz-opt');
+      if (lbl) lbl.classList.toggle('selected', group[i].checked);
+    }
+    clearErr('f-' + input.name);
+  }, 0);
+}
+
+function getQuizAnswers() {
+  return {
+    q1: (document.querySelector('[name="q1"]:checked') || {}).value || '',
+    q2: (document.querySelector('[name="q2"]:checked') || {}).value || '',
+    q3: (document.querySelector('[name="q3"]:checked') || {}).value || '',
+    q4: (document.querySelector('[name="q4"]:checked') || {}).value || '',
+    q5: (document.querySelector('[name="q5"]:checked') || {}).value || ''
+  };
+}
+
+function renderRecommendationBanner(rec) {
+  var banner = document.getElementById('recommendationBanner');
+  if (!rec) { banner.style.display = 'none'; return; }
+
+  var gender = getVal('gender');
+  var display = getRecommendationDisplay(rec, gender);
+  if (!display) { banner.style.display = 'none'; return; }
+
+  document.getElementById('recommendationTitle').textContent = display.title;
+  var list = document.getElementById('recommendationBullets');
+  list.innerHTML = '';
+  for (var i = 0; i < display.bullets.length; i++) {
+    var li = document.createElement('li');
+    li.textContent = display.bullets[i];
+    list.appendChild(li);
+  }
+  banner.style.display = 'flex';
+
+  // Exported value: dynamic INT/INT(W) label when the applicant is eligible for Women's
+  clinicRecommendationValue = (rec === 'INT' && gender === 'Female') ? 'INT/INT(W)' : rec;
+}
+
+function nextFromQuiz() {
+  var valid = validateStep(2);
+  if (!valid) return;
+  var rec = calculateClinicRecommendation(getQuizAnswers());
+  renderRecommendationBanner(rec);
+  showStep(3);
+}
+
+function skipQuiz() {
+  clinicRecommendationValue = 'Skipped';
+  var banner = document.getElementById('recommendationBanner');
+  if (banner) banner.style.display = 'none';
+  showStep(3);
 }
 
 function markErr(id, msg) {
@@ -1394,12 +1903,13 @@ function collectData() {
     medical:      getVal('medical'),
     heardFrom:    heardFrom.join(', '),
     heardDetails: getVal('heardDetails'),
-    comments:     getVal('comments')
+    comments:     getVal('comments'),
+    clinicRecommendation: clinicRecommendationValue
   };
 }
 
 function submitForm() {
-  if (!validateStep(3)) return;
+  if (!validateStep(4)) return;
   var btn = document.getElementById('submitBtn');
   btn.disabled = true;
   btn.innerHTML = 'Submitting...';
@@ -1457,7 +1967,7 @@ function checkEmailThenNext() {
     .then(function(r) { return r.json(); })
     .then(function(json) {
       btn.disabled = false;
-      btn.innerHTML = 'Continue to Programs <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>';
+      btn.innerHTML = 'Continue to Clinic Quiz <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>';
       if (json.exists) {
         markErr('f-email', 'This email has already been submitted. Each person may only apply once. Please contact info@ftlovolleyball.ca if you need help.');
       } else {
@@ -1466,7 +1976,7 @@ function checkEmailThenNext() {
     })
     .catch(function() {
       btn.disabled = false;
-      btn.innerHTML = 'Continue to Programs <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>';
+      btn.innerHTML = 'Continue to Clinic Quiz <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>';
       showStep(2);
     });
 }
