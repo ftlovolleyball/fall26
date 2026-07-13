@@ -1994,14 +1994,30 @@ function checkEmailThenNext() {
       if (json.exists) {
         markErr('f-email', 'This email has already been submitted. Each person may only apply once. Please contact info@ftlovolleyball.ca if you need help.');
       } else {
+        markApplicationStarted();
         showStep(2);
       }
     })
     .catch(function() {
       btn.disabled = false;
       btn.innerHTML = 'Continue to Clinic Quiz <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>';
+      markApplicationStarted();
       showStep(2);
     });
+}
+
+// Fire-and-forget: lets Apps Script know this applicant got past Contact Info,
+// so it can send a reminder if they never come back to actually submit.
+// Failure here should never block the applicant from proceeding.
+function markApplicationStarted() {
+  var email = getVal('email').toLowerCase();
+  var firstName = getVal('firstName');
+  var lastName = getVal('lastName');
+  fetch(APPS_SCRIPT_URL + '?action=markStarted' +
+    '&email=' + encodeURIComponent(email) +
+    '&firstName=' + encodeURIComponent(firstName) +
+    '&lastName=' + encodeURIComponent(lastName) +
+    '&v=' + Date.now(), { cache: 'no-store' }).catch(function() {});
 }
 
 /* ── EMBED SUPPORT ──────────────────────────────────────────────────────
