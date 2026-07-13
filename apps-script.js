@@ -41,6 +41,26 @@ var SHEET_ID = '1QAXakjHOKh3pvCH7IXMXExRSrjYfWWnR0xcd-80zAkc'; // "2026 Fall Cli
 var SHEET_NAME = 'Applications';
 var TIMEZONE = 'America/Vancouver';
 
+// ── PROGRAM CATALOG ───────────────────────────────────────────────────────
+// One entry per selectable time slot (matches the `data-code` / checkbox
+// `value` pairs in index.html). Used to look up price + training dates for
+// the confirmation email, and to resolve the applicant's priority codes
+// back into full program details.
+var PROGRAM_CATALOG = [
+  { code: 'Tue B 6',    value: 'Tuesday BEG 6:00-7:45 PM',                   label: 'Tuesday · Beginner · 6:00–7:45 PM',                 price: '$295 GST Included', dates: '9 Tuesdays · Sep 15 – Nov 10 (ext. to Nov 24 if needed)' },
+  { code: 'Tue B 745',  value: 'Tuesday BEG 7:45-9:30 PM',                   label: 'Tuesday · Beginner · 7:45–9:30 PM',                 price: '$295 GST Included', dates: '9 Tuesdays · Sep 15 – Nov 10 (ext. to Nov 24 if needed)' },
+  { code: 'Wed B 6',    value: 'Wednesday BEG (Edmonds) 6:00-7:30 PM',       label: 'Wednesday · Beginner · 6:00–7:30 PM',               price: '$255 GST Included', dates: '9 Wednesdays · Sep 16 – Nov 25 (no clinic Sep 30 & Nov 11; ext. to Dec 9 if needed)' },
+  { code: 'Wed B 730',  value: 'Wednesday BEG (Edmonds) 7:30-9:00 PM',       label: 'Wednesday · Beginner · 7:30–9:00 PM',               price: '$255 GST Included', dates: '9 Wednesdays · Sep 16 – Nov 25 (no clinic Sep 30 & Nov 11; ext. to Dec 9 if needed)' },
+  { code: 'Tue FF 6',   value: 'Tuesday FF (Location TBD) 6:00-7:45 PM',     label: 'Tuesday · Foundation Focus · 6:00–7:45 PM',         price: '$295 GST Included', dates: '9 Tuesdays · Sep 15 – Nov 10 (ext. to Nov 24 if needed)' },
+  { code: 'Tue FF 745', value: 'Tuesday FF (Location TBD) 7:45-9:30 PM',     label: 'Tuesday · Foundation Focus · 7:45–9:30 PM',         price: '$295 GST Included', dates: '9 Tuesdays · Sep 15 – Nov 10 (ext. to Nov 24 if needed)' },
+  { code: 'Wed I 6',    value: 'Wednesday INT (Lochdale) 6:00-7:30 PM',      label: 'Wednesday · Intermediate · 6:00–7:30 PM',           price: '$255 GST Included', dates: '9 Wednesdays · Sep 16 – Nov 25 (no clinic Sep 30 & Nov 11; ext. to Dec 9 if needed)' },
+  { code: 'Wed I 730',  value: 'Wednesday INT (Lochdale) 7:30-9:00 PM',      label: 'Wednesday · Intermediate · 7:30–9:00 PM',           price: '$255 GST Included', dates: '9 Wednesdays · Sep 16 – Nov 25 (no clinic Sep 30 & Nov 11; ext. to Dec 9 if needed)' },
+  { code: 'Thu I 6',    value: 'Thursday INT (Lochdale) 6:00-7:30 PM',       label: 'Thursday · Intermediate · 6:00–7:30 PM',            price: '$255 GST Included', dates: '9 Thursdays · Sep 17 – Nov 12 (ext. to Nov 26 if needed)' },
+  { code: 'Thu I 730',  value: 'Thursday INT (Lochdale) 7:30-9:00 PM',       label: 'Thursday · Intermediate · 7:30–9:00 PM',            price: '$255 GST Included', dates: '9 Thursdays · Sep 17 – Nov 12 (ext. to Nov 26 if needed)' },
+  { code: 'Thu IW 6',   value: 'Thursday WOMENS INT (Richmond) 6:00-7:45 PM', label: 'Thursday · Women\'s Intermediate · 6:00–7:45 PM', price: '$295 GST Included', dates: '9 Thursdays · Sep 17 – Nov 12 (ext. to Nov 26 if needed)' },
+  { code: 'Thu IW 745', value: 'Thursday WOMENS INT (Richmond) 7:45-9:30 PM', label: 'Thursday · Women\'s Intermediate · 7:45–9:30 PM', price: '$295 GST Included', dates: '9 Thursdays · Sep 17 – Nov 12 (ext. to Nov 26 if needed)' }
+];
+
 function doPost(e) {
   var data = JSON.parse(e.postData.contents);
 
@@ -146,12 +166,10 @@ function emailAlreadyApplied(email) {
 }
 
 function sendApplicationConfirmationEmail(data, serverTimestamp) {
-  var CC = 'info@ftlovolleyball.ca';
-
   var fullName = ((data.firstName || '') + ' ' + (data.lastName || '')).trim();
   var toEmail = data.email;
 
-  var subject = 'FTLO 2026 Fall Clinics - Application Received';
+  var subject = "FTLO '26 Fall Clinics - " + fullName + ' Application Received';
 
   var html = [
     '<div style="font-family:Arial,sans-serif;max-width:620px;margin:0 auto;color:#222;">',
@@ -184,8 +202,7 @@ function sendApplicationConfirmationEmail(data, serverTimestamp) {
 
       '<div style="border-top:1px solid #ddd;margin:12px 0;"></div>',
 
-      _emailRow('Programs Applied For', (data.programs || 'N/A').split(' | ').join('<br>')),
-      (data.programPriority ? _emailRow('Program Priority', data.programPriority) : ''),
+      _emailRow('Programs Applied For (in order of preference)', buildProgramsHtml(data)),
 
       (data.medical ? _emailRow('Medical / Training Notes', data.medical) : ''),
       (data.comments ? _emailRow('Comments', data.comments) : ''),
@@ -215,11 +232,64 @@ function sendApplicationConfirmationEmail(data, serverTimestamp) {
     '</div>'
   ].join('');
 
+  // No `cc` here on purpose: GmailApp.sendEmail() runs as the account that
+  // authorized the deployment ("Execute as: Me" at Deploy time). Every email
+  // it sends is automatically saved to that account's Sent folder, so
+  // info@ftlovolleyball.ca gets a record without also getting an inbox
+  // notification for every single application.
   GmailApp.sendEmail(toEmail, subject, '', {
     htmlBody: html,
-    cc: CC,
     name: 'FTLO Volleyball'
   });
+}
+
+// ── Resolves the applicant's checked programs + priority codes into an
+//    ordered (most- to least-preferred) list of { label, price, dates } ──
+function getOrderedProgramEntries(data) {
+  var appliedValues = (data.programs || '').split(' | ').filter(function (v) { return v; });
+  var priorityCodes = (data.programPriority || '').split(',').map(function (s) { return s.trim(); }).filter(function (s) { return s; });
+
+  var byValue = {}, byCode = {};
+  for (var i = 0; i < PROGRAM_CATALOG.length; i++) {
+    byValue[PROGRAM_CATALOG[i].value] = PROGRAM_CATALOG[i];
+    byCode[PROGRAM_CATALOG[i].code] = PROGRAM_CATALOG[i];
+  }
+
+  var ordered = [];
+  var used = {};
+
+  // Applicant's stated order of preference first
+  for (var p = 0; p < priorityCodes.length; p++) {
+    var entry = byCode[priorityCodes[p]];
+    if (entry && appliedValues.indexOf(entry.value) !== -1 && !used[entry.value]) {
+      ordered.push(entry);
+      used[entry.value] = true;
+    }
+  }
+  // Safety net: include any applied program the priority list didn't cover
+  for (var a = 0; a < appliedValues.length; a++) {
+    var val = appliedValues[a];
+    if (used[val]) continue;
+    ordered.push(byValue[val] || { label: val, price: '', dates: '' });
+    used[val] = true;
+  }
+  return ordered;
+}
+
+// Builds the "Programs Applied For" HTML block: numbered by preference,
+// each with its price and training dates.
+function buildProgramsHtml(data) {
+  var ordered = getOrderedProgramEntries(data);
+  if (ordered.length === 0) return 'N/A';
+
+  var lines = [];
+  for (var i = 0; i < ordered.length; i++) {
+    var e = ordered[i];
+    var priceStr = e.price ? ' &mdash; ' + e.price : '';
+    var datesStr = e.dates ? '<br><span style="font-size:12.5px;color:#666;">' + e.dates + '</span>' : '';
+    lines.push((i + 1) + '. ' + e.label + priceStr + datesStr);
+  }
+  return lines.join('<br><br>');
 }
 
 // Helper: one labelled row in the summary block
