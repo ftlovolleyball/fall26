@@ -89,6 +89,7 @@ function handleApplicationSubmit(data, ss) {
       'First Name', 'Last Name', 'Email', 'Phone',
       'City', 'Gender',
       'Recent FTLO Program(s)',
+      'Clinic Recommendation',   // Skipped / BEG / BEG/FF / FF/INT / INT / INT/INT(W) — from the Section 2 self-assessment quiz
       'Programs Applied For',
       'Program Priority',
       'Conduct Agreed',
@@ -110,6 +111,7 @@ function handleApplicationSubmit(data, ss) {
     data.city         || '',
     data.gender       || '',
     data.recentPrograms || '',
+    data.clinicRecommendation || '',
     data.programs     || '',
     data.programPriority || '',
     data.agreeConduct || '',
