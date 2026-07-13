@@ -39,7 +39,7 @@
 
 var SHEET_ID = '1QAXakjHOKh3pvCH7IXMXExRSrjYfWWnR0xcd-80zAkc'; // "2026 Fall Clinic Programs"
 var SHEET_NAME = 'Applications';
-var BACKUP_SHEET_NAME = 'Backup'; // mirror of every submission; never edited by hand
+var BACKUP_SHEET_NAME = 'backup'; // mirror of every submission; never edited by hand
 var TIMEZONE = 'America/Vancouver';
 
 // ── PROGRAM CATALOG ───────────────────────────────────────────────────────
