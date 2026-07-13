@@ -62,20 +62,11 @@ body {
   color: var(--teal-dark);
   letter-spacing: 0.04em;
 }
-.site-logo-sub {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: rgba(255,249,245,0.5);
-}
-
 /* ── HERO ── */
 .hero {
   background-color: var(--teal);
   background-image:
-    linear-gradient(180deg, rgba(15,39,46,0.82) 0%, rgba(15,39,46,0.88) 60%, rgba(15,39,46,0.95) 100%),
+    linear-gradient(180deg, rgba(15,39,46,0.3) 0%, rgba(15,39,46,0.38) 100%),
     url('images/hero-photo.jpg');
   background-size: cover;
   background-position: center;
@@ -89,6 +80,13 @@ body {
   position: relative;
   z-index: 1;
 }
+.hero-panel {
+  display: inline-block;
+  max-width: 560px;
+  background: rgba(15,39,46,0.86);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem 2rem;
+}
 .hero-eyebrow {
   display: inline-flex;
   align-items: center;
@@ -100,7 +98,6 @@ body {
   text-transform: uppercase;
   color: var(--orange);
   margin-bottom: 12px;
-  text-shadow: 0 1px 8px rgba(0,0,0,0.5);
 }
 .hero-eyebrow::before {
   content: '';
@@ -118,35 +115,8 @@ body {
   text-transform: uppercase;
   color: var(--white);
   margin-bottom: 1rem;
-  text-shadow: 0 2px 16px rgba(0,0,0,0.55);
 }
-.hero h1 span { color: var(--orange); text-shadow: 0 2px 16px rgba(0,0,0,0.55); }
-.hero-stats {
-  display: flex;
-  gap: 0;
-  margin-top: 1.5rem;
-  border-top: 1px solid rgba(255,255,255,0.12);
-  padding-top: 1.25rem;
-  flex-wrap: wrap;
-  gap: 1.5rem;
-}
-.stat { display: flex; flex-direction: column; }
-.stat-num {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 28px;
-  font-weight: 900;
-  color: var(--orange);
-  line-height: 1;
-  text-shadow: 0 1px 8px rgba(0,0,0,0.5);
-}
-.stat-label {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.5);
-  margin-top: 2px;
-}
+.hero h1 span { color: var(--orange); }
 .hero-deco {
   position: absolute;
   right: -30px;
@@ -678,21 +648,18 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
   .hero-inner { padding: 2rem 1.25rem 2rem; }
   .hero h1 { font-size: 36px; }
   .hero-deco, .hero-deco2 { display: none; }
-  .hero-stats { gap: 1rem; }
-  .stat-num { font-size: 22px; }
+  .hero-panel { padding: 1.4rem 1.5rem; }
 }
 
 @media (max-width: 580px) {
   .hero-inner { padding: 1.75rem 1rem 1.75rem; }
   .hero h1 { font-size: 30px; }
+  .hero-panel { padding: 1.1rem 1.25rem; }
   .main { padding: 1.25rem 0.875rem 4rem; }
   .card { padding: 1.1rem 1rem; }
   .field-row, .field-row-3 { grid-template-columns: 1fr; }
   .step-label { font-size: 10px; }
   .hero-deco, .hero-deco2 { display: none; }
-  .hero-stats { gap: 0.75rem; flex-wrap: wrap; }
-  .stat-num { font-size: 20px; }
-  .stat-label { font-size: 9px; }
   .nav-row { flex-direction: column; }
   .btn-back { width: 100%; }
   .btn-skip { width: 100%; }
@@ -718,7 +685,6 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
 <header class="site-header" id="siteHeader">
   <div class="site-logo">
     <img src="images/FTLO-Primary Logo-W.png" alt="FTLO Volleyball" style="height:36px;display:block;" />
-    <div class="site-logo-sub">Volleyball Association</div>
   </div>
 </header>
 
@@ -727,18 +693,15 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
   <div class="hero-deco"></div>
   <div class="hero-deco2"></div>
   <div class="hero-inner">
-    <div class="hero-eyebrow">2026 Fall Season &middot; Adults 18+</div>
-    <h1>Fall Clinic Program<br><span>Application</span></h1>
-    <p style="color:rgba(255,249,245,0.65);font-size:15px;max-width:520px;line-height:1.6;text-shadow:0 1px 6px rgba(0,0,0,0.5);">
-      FTLO is BACK for Fall 2026 with our flagship Beginner and Intermediate training sessions :) and a NEW Women's Only Intermediate training session. Join us for 9 dedicated sessions of volleyball training indoors! Fall season facility reservations, especially during the week, have been challenging, so please respond as soon as you know your availability. Those who know FTLO know what we're about when we get together.
-    </p>
-    <p style="color:rgba(255,249,245,0.65);font-size:15px;max-width:520px;line-height:1.6;margin-top:0.75rem;text-shadow:0 1px 6px rgba(0,0,0,0.5);">
-      <strong style="color:var(--orange);">This is an application, not a confirmed spot.</strong> FTLO will follow up by email with a payment invite once your spot is confirmed.
-    </p>
-    <div class="hero-stats">
-      <div class="stat"><div class="stat-num">9</div><div class="stat-label">Weeks</div></div>
-      <div class="stat"><div class="stat-num">6</div><div class="stat-label">Programs</div></div>
-      <div class="stat"><div class="stat-num">Sep&ndash;Nov</div><div class="stat-label">Season</div></div>
+    <div class="hero-panel">
+      <div class="hero-eyebrow">2026 Fall Season &middot; Adults 18+</div>
+      <h1>Fall Clinic Program<br><span>Application</span></h1>
+      <p style="color:rgba(255,249,245,0.85);font-size:15px;max-width:520px;line-height:1.6;">
+        FTLO is BACK for Fall 2026 with our flagship Beginner and Intermediate training sessions :) and a NEW Women's Only Intermediate training session. Join us for 9 dedicated sessions of volleyball training indoors! Fall season facility reservations, especially during the week, have been challenging, so please respond as soon as you know your availability. Those who know FTLO know what we're about when we get together.
+      </p>
+      <p style="color:rgba(255,249,245,0.85);font-size:15px;max-width:520px;line-height:1.6;margin-top:0.75rem;">
+        <strong style="color:var(--orange);">This is an application, not a confirmed spot.</strong> FTLO will follow up by email with a payment invite once your spot is confirmed.
+      </p>
     </div>
   </div>
 </div>
