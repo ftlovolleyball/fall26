@@ -47,19 +47,22 @@ var TIMEZONE = 'America/Vancouver';
 // the confirmation email, and to resolve the applicant's priority codes
 // back into full program details.
 var PROGRAM_CATALOG = [
-  { code: 'Tue B 6',    value: 'Tuesday BEG 6:00-7:45 PM',                   label: 'Tuesday · Beginner · 6:00–7:45 PM',                 price: '$295 GST Included', dates: '9 Tuesdays · Sep 15 – Nov 10 (ext. to Nov 24 if needed)' },
-  { code: 'Tue B 745',  value: 'Tuesday BEG 7:45-9:30 PM',                   label: 'Tuesday · Beginner · 7:45–9:30 PM',                 price: '$295 GST Included', dates: '9 Tuesdays · Sep 15 – Nov 10 (ext. to Nov 24 if needed)' },
-  { code: 'Wed B 6',    value: 'Wednesday BEG (Edmonds) 6:00-7:30 PM',       label: 'Wednesday · Beginner · 6:00–7:30 PM',               price: '$255 GST Included', dates: '9 Wednesdays · Sep 16 – Nov 25 (no clinic Sep 30 & Nov 11; ext. to Dec 9 if needed)' },
-  { code: 'Wed B 730',  value: 'Wednesday BEG (Edmonds) 7:30-9:00 PM',       label: 'Wednesday · Beginner · 7:30–9:00 PM',               price: '$255 GST Included', dates: '9 Wednesdays · Sep 16 – Nov 25 (no clinic Sep 30 & Nov 11; ext. to Dec 9 if needed)' },
-  { code: 'Tue FF 6',   value: 'Tuesday FF (Location TBD) 6:00-7:45 PM',     label: 'Tuesday · Foundation Focus · 6:00–7:45 PM',         price: '$295 GST Included', dates: '9 Tuesdays · Sep 15 – Nov 10 (ext. to Nov 24 if needed)' },
-  { code: 'Tue FF 745', value: 'Tuesday FF (Location TBD) 7:45-9:30 PM',     label: 'Tuesday · Foundation Focus · 7:45–9:30 PM',         price: '$295 GST Included', dates: '9 Tuesdays · Sep 15 – Nov 10 (ext. to Nov 24 if needed)' },
-  { code: 'Wed I 6',    value: 'Wednesday INT (Lochdale) 6:00-7:30 PM',      label: 'Wednesday · Intermediate · 6:00–7:30 PM',           price: '$255 GST Included', dates: '9 Wednesdays · Sep 16 – Nov 25 (no clinic Sep 30 & Nov 11; ext. to Dec 9 if needed)' },
-  { code: 'Wed I 730',  value: 'Wednesday INT (Lochdale) 7:30-9:00 PM',      label: 'Wednesday · Intermediate · 7:30–9:00 PM',           price: '$255 GST Included', dates: '9 Wednesdays · Sep 16 – Nov 25 (no clinic Sep 30 & Nov 11; ext. to Dec 9 if needed)' },
-  { code: 'Thu I 6',    value: 'Thursday INT (Lochdale) 6:00-7:30 PM',       label: 'Thursday · Intermediate · 6:00–7:30 PM',            price: '$255 GST Included', dates: '9 Thursdays · Sep 17 – Nov 12 (ext. to Nov 26 if needed)' },
-  { code: 'Thu I 730',  value: 'Thursday INT (Lochdale) 7:30-9:00 PM',       label: 'Thursday · Intermediate · 7:30–9:00 PM',            price: '$255 GST Included', dates: '9 Thursdays · Sep 17 – Nov 12 (ext. to Nov 26 if needed)' },
-  { code: 'Thu IW 6',   value: 'Thursday WOMENS INT (Richmond) 6:00-7:45 PM', label: 'Thursday · Women\'s Intermediate · 6:00–7:45 PM', price: '$295 GST Included', dates: '9 Thursdays · Sep 17 – Nov 12 (ext. to Nov 26 if needed)' },
-  { code: 'Thu IW 745', value: 'Thursday WOMENS INT (Richmond) 7:45-9:30 PM', label: 'Thursday · Women\'s Intermediate · 7:45–9:30 PM', price: '$295 GST Included', dates: '9 Thursdays · Sep 17 – Nov 12 (ext. to Nov 26 if needed)' }
+  { code: 'Tue B 6',    value: 'Tuesday BEG 6:00-7:45 PM',                   label: 'Tuesday · Beginner · 6:00–7:45 PM',                 price: '$295 GST Included', dates: '9 Tuesdays · Sep 15 – Nov 10 (ext. to Nov 24 if needed)',                                       column: 'Tue Beg',        shortLabel: 'Tue Beg 6-745' },
+  { code: 'Tue B 745',  value: 'Tuesday BEG 7:45-9:30 PM',                   label: 'Tuesday · Beginner · 7:45–9:30 PM',                 price: '$295 GST Included', dates: '9 Tuesdays · Sep 15 – Nov 10 (ext. to Nov 24 if needed)',                                       column: 'Tue Beg',        shortLabel: 'Tue Beg 745-930' },
+  { code: 'Wed B 6',    value: 'Wednesday BEG (Edmonds) 6:00-7:30 PM',       label: 'Wednesday · Beginner · 6:00–7:30 PM',               price: '$255 GST Included', dates: '9 Wednesdays · Sep 16 – Nov 25 (no clinic Sep 30 & Nov 11; ext. to Dec 9 if needed)',           column: 'Wed Beg',        shortLabel: 'Wed Beg 6-730' },
+  { code: 'Wed B 730',  value: 'Wednesday BEG (Edmonds) 7:30-9:00 PM',       label: 'Wednesday · Beginner · 7:30–9:00 PM',               price: '$255 GST Included', dates: '9 Wednesdays · Sep 16 – Nov 25 (no clinic Sep 30 & Nov 11; ext. to Dec 9 if needed)',           column: 'Wed Beg',        shortLabel: 'Wed Beg 730-9' },
+  { code: 'Tue FF 6',   value: 'Tuesday FF (Location TBD) 6:00-7:45 PM',     label: 'Tuesday · Foundation Focus · 6:00–7:45 PM',         price: '$295 GST Included', dates: '9 Tuesdays · Sep 15 – Nov 10 (ext. to Nov 24 if needed)',                                       column: 'Tue FF',         shortLabel: 'Tue FF 6-745' },
+  { code: 'Tue FF 745', value: 'Tuesday FF (Location TBD) 7:45-9:30 PM',     label: 'Tuesday · Foundation Focus · 7:45–9:30 PM',         price: '$295 GST Included', dates: '9 Tuesdays · Sep 15 – Nov 10 (ext. to Nov 24 if needed)',                                       column: 'Tue FF',         shortLabel: 'Tue FF 745-930' },
+  { code: 'Wed I 6',    value: 'Wednesday INT (Lochdale) 6:00-7:30 PM',      label: 'Wednesday · Intermediate · 6:00–7:30 PM',           price: '$255 GST Included', dates: '9 Wednesdays · Sep 16 – Nov 25 (no clinic Sep 30 & Nov 11; ext. to Dec 9 if needed)',           column: 'Wed Int',        shortLabel: 'Wed Int 6-730' },
+  { code: 'Wed I 730',  value: 'Wednesday INT (Lochdale) 7:30-9:00 PM',      label: 'Wednesday · Intermediate · 7:30–9:00 PM',           price: '$255 GST Included', dates: '9 Wednesdays · Sep 16 – Nov 25 (no clinic Sep 30 & Nov 11; ext. to Dec 9 if needed)',           column: 'Wed Int',        shortLabel: 'Wed Int 730-9' },
+  { code: 'Thu I 6',    value: 'Thursday INT (Lochdale) 6:00-7:30 PM',       label: 'Thursday · Intermediate · 6:00–7:30 PM',            price: '$255 GST Included', dates: '9 Thursdays · Sep 17 – Nov 12 (ext. to Nov 26 if needed)',                                     column: 'Thu Int',        shortLabel: 'Thu Int 6-730' },
+  { code: 'Thu I 730',  value: 'Thursday INT (Lochdale) 7:30-9:00 PM',       label: 'Thursday · Intermediate · 7:30–9:00 PM',            price: '$255 GST Included', dates: '9 Thursdays · Sep 17 – Nov 12 (ext. to Nov 26 if needed)',                                     column: 'Thu Int',        shortLabel: 'Thu Int 730-9' },
+  { code: 'Thu IW 6',   value: 'Thursday WOMENS INT (Richmond) 6:00-7:45 PM', label: 'Thursday · Women\'s Intermediate · 6:00–7:45 PM', price: '$295 GST Included', dates: '9 Thursdays · Sep 17 – Nov 12 (ext. to Nov 26 if needed)',                                     column: "Thu Women's Int", shortLabel: 'Thu Wmn Int 6-745' },
+  { code: 'Thu IW 745', value: 'Thursday WOMENS INT (Richmond) 7:45-9:30 PM', label: 'Thursday · Women\'s Intermediate · 7:45–9:30 PM', price: '$295 GST Included', dates: '9 Thursdays · Sep 17 – Nov 12 (ext. to Nov 26 if needed)',                                     column: "Thu Women's Int", shortLabel: 'Thu Wmn Int 745-930' }
 ];
+
+// The 6 sheet columns, one per program card, in the order they should appear.
+var PROGRAM_COLUMNS = ['Tue Beg', 'Wed Beg', 'Tue FF', 'Wed Int', 'Thu Int', "Thu Women's Int"];
 
 function doPost(e) {
   var data = JSON.parse(e.postData.contents);
@@ -109,15 +112,15 @@ function handleApplicationSubmit(data, ss) {
       'First Name', 'Last Name', 'Email', 'Phone',
       'City', 'Gender',
       'Recent FTLO Program(s)',
-      'Clinic Recommendation',   // Skipped / BEG / BEG/FF / FF/INT / INT / INT/INT(W) — from the Section 2 self-assessment quiz
-      'Programs Applied For',
-      'Program Priority',
+      'Clinic Recommendation'    // Skipped / BEG / BEG/FF / FF/INT / INT / INT/INT(W) — from the Section 2 self-assessment quiz
+    ].concat(PROGRAM_COLUMNS).concat([
+      'Applicant Expressed Preference',
       'Conduct Agreed',
       'Medical / Training Notes',
       'Heard From', 'Heard Details',
       'Comments',
       'Payment Invite Sent'   // left blank, fill in manually once you invite them to pay
-    ]);
+    ]));
   }
 
   var serverTimestamp = Utilities.formatDate(new Date(), TIMEZONE, 'yyyy-MM-dd HH:mm:ss');
@@ -131,16 +134,16 @@ function handleApplicationSubmit(data, ss) {
     data.city         || '',
     data.gender       || '',
     data.recentPrograms || '',
-    data.clinicRecommendation || '',
-    data.programs     || '',
-    data.programPriority || '',
+    data.clinicRecommendation || ''
+  ].concat(buildProgramColumnValues(data)).concat([
+    buildPreferenceCell(data),
     data.agreeConduct || '',
     data.medical      || '',
     data.heardFrom    || '',
     data.heardDetails || '',
     data.comments     || '',
     ''  // Payment Invite Sent, blank until you send it
-  ]);
+  ]));
 
   if (data.email) {
     sendApplicationConfirmationEmail(data, serverTimestamp);
@@ -274,6 +277,37 @@ function getOrderedProgramEntries(data) {
     used[val] = true;
   }
   return ordered;
+}
+
+// Builds the 6 program-card sheet columns (see PROGRAM_COLUMNS), each
+// containing the short slot label(s) applied for in that card, e.g.
+// "Tue Beg 6-745, Tue Beg 745-930" if both time slots were picked.
+function buildProgramColumnValues(data) {
+  var appliedValues = (data.programs || '').split(' | ').filter(function (v) { return v; });
+
+  var byValue = {};
+  for (var i = 0; i < PROGRAM_CATALOG.length; i++) byValue[PROGRAM_CATALOG[i].value] = PROGRAM_CATALOG[i];
+
+  var byColumn = {};
+  for (var c = 0; c < PROGRAM_COLUMNS.length; c++) byColumn[PROGRAM_COLUMNS[c]] = [];
+
+  for (var a = 0; a < appliedValues.length; a++) {
+    var entry = byValue[appliedValues[a]];
+    if (entry) byColumn[entry.column].push(entry.shortLabel);
+  }
+
+  var out = [];
+  for (var c2 = 0; c2 < PROGRAM_COLUMNS.length; c2++) out.push(byColumn[PROGRAM_COLUMNS[c2]].join(', '));
+  return out;
+}
+
+// Builds the "Applicant Expressed Preference" sheet cell: short slot labels
+// in the applicant's ranked order, e.g. "Wed Beg 6-730, Wed Beg 730-9, Tue FF 6-745".
+function buildPreferenceCell(data) {
+  var ordered = getOrderedProgramEntries(data);
+  var labels = [];
+  for (var i = 0; i < ordered.length; i++) labels.push(ordered[i].shortLabel || ordered[i].label);
+  return labels.join(', ');
 }
 
 // Builds the "Programs Applied For" HTML block: numbered by preference,
