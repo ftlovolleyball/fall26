@@ -375,6 +375,15 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
   .skill-card li { font-size: 10px; gap: 3px; line-height: 1.3; }
 }
 
+/* ── PROGRAM PRIORITY (auto-populated, reorderable) ── */
+.priority-row { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 2px solid var(--gray-200); border-radius: var(--radius-sm); background: var(--white); }
+.priority-rank { width: 22px; height: 22px; border-radius: 50%; background: var(--teal); color: var(--white); font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.priority-label { flex: 1; font-size: 14px; font-weight: 600; color: var(--black); }
+.priority-controls { display: flex; gap: 4px; flex-shrink: 0; }
+.priority-btn { width: 28px; height: 28px; border: 2px solid var(--gray-300); border-radius: 6px; background: var(--white); color: var(--gray-700); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 13px; transition: all 0.15s; }
+.priority-btn:hover:not(:disabled) { border-color: var(--teal); color: var(--teal); }
+.priority-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
 /* ── CHIP CHECKBOXES (condensed multi-select) ── */
 .chip-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
 .chip {
@@ -482,6 +491,7 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
 .acc-prog-body { flex: 1; min-width: 0; }
 .acc-prog-title { font-size: 15px; font-weight: 700; color: var(--black); margin-bottom: 3px; line-height: 1.3; }
 .acc-prog-desc { font-size: 13px; color: var(--gray-700); line-height: 1.55; }
+.acc-skip { color: var(--red); font-weight: 700; }
 
 @media (max-width: 580px) {
   .acc-hdr { padding: 13px 14px; gap: 10px; }
@@ -1101,19 +1111,19 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
             <div class="acc-body-inner">
               <div class="acc-desc">Build rally-ready confidence through clear instruction in passing, setting, serving, attacking, movement, communication, and rally structure. Sessions emphasize high-volume repetition, confident first contacts, playable second contacts, and controlled game-like practice.</div>
               <label class="acc-prog" onclick="accProg(this)">
-                <input type="checkbox" name="programs" value="Tuesday BEG 6:00-7:45 PM" style="display:none;" />
+                <input type="checkbox" name="programs" value="Tuesday BEG 6:00-7:45 PM" data-code="Tue B 6" data-label="Tuesday &middot; Beginner &middot; 6:00&ndash;7:45 PM" style="display:none;" />
                 <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
                 <div class="acc-prog-body">
                   <div class="acc-prog-title">6:00 &ndash; 7:45 PM</div>
-                  <div class="acc-prog-desc">9 sessions &middot; Sep 15, 22, 29, Oct 6, 13, 20, 27, Nov 3, 10 &middot; Ext. to Nov 17, 24 if needed</div>
+                  <div class="acc-prog-desc">9 Tuesdays &middot; Sep 15 &ndash; Nov 10 &middot; Ext. to Nov 17, 24 if needed</div>
                 </div>
               </label>
               <label class="acc-prog" onclick="accProg(this)">
-                <input type="checkbox" name="programs" value="Tuesday BEG 7:45-9:30 PM" style="display:none;" />
+                <input type="checkbox" name="programs" value="Tuesday BEG 7:45-9:30 PM" data-code="Tue B 745" data-label="Tuesday &middot; Beginner &middot; 7:45&ndash;9:30 PM" style="display:none;" />
                 <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
                 <div class="acc-prog-body">
                   <div class="acc-prog-title">7:45 &ndash; 9:30 PM</div>
-                  <div class="acc-prog-desc">9 sessions &middot; Sep 15, 22, 29, Oct 6, 13, 20, 27, Nov 3, 10 &middot; Ext. to Nov 17, 24 if needed</div>
+                  <div class="acc-prog-desc">9 Tuesdays &middot; Sep 15 &ndash; Nov 10 &middot; Ext. to Nov 17, 24 if needed</div>
                 </div>
               </label>
             </div>
@@ -1137,19 +1147,19 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
             <div class="acc-body-inner">
               <div class="acc-desc">Build rally-ready confidence through clear instruction in passing, setting, serving, attacking, movement, communication, and rally structure. Sessions emphasize high-volume repetition, confident first contacts, playable second contacts, and controlled game-like practice.</div>
               <label class="acc-prog" onclick="accProg(this)">
-                <input type="checkbox" name="programs" value="Wednesday BEG (Edmonds) 6:00-7:30 PM" style="display:none;" />
+                <input type="checkbox" name="programs" value="Wednesday BEG (Edmonds) 6:00-7:30 PM" data-code="Wed B 6" data-label="Wednesday &middot; Beginner &middot; 6:00&ndash;7:30 PM" style="display:none;" />
                 <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
                 <div class="acc-prog-body">
                   <div class="acc-prog-title">6:00 &ndash; 7:30 PM</div>
-                  <div class="acc-prog-desc">9 sessions &middot; Sept 16, 23, NO Sep 30, Oct 7, 14, 21, 28, Nov 4, NO Nov 11, 18, 25 &middot; Ext. to Dec 2, 9 if needed</div>
+                  <div class="acc-prog-desc">9 Wednesdays &middot; Sep 16 &ndash; Nov 25 &middot; <span class="acc-skip">No clinic Sep 30, No clinic Nov 11</span> &middot; Ext. to Dec 2, 9 if needed</div>
                 </div>
               </label>
               <label class="acc-prog" onclick="accProg(this)">
-                <input type="checkbox" name="programs" value="Wednesday BEG (Edmonds) 7:30-9:00 PM" style="display:none;" />
+                <input type="checkbox" name="programs" value="Wednesday BEG (Edmonds) 7:30-9:00 PM" data-code="Wed B 730" data-label="Wednesday &middot; Beginner &middot; 7:30&ndash;9:00 PM" style="display:none;" />
                 <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
                 <div class="acc-prog-body">
                   <div class="acc-prog-title">7:30 &ndash; 9:00 PM</div>
-                  <div class="acc-prog-desc">9 sessions &middot; Sept 16, 23, NO Sep 30, Oct 7, 14, 21, 28, Nov 4, NO Nov 11, 18, 25 &middot; Ext. to Dec 2, 9 if needed</div>
+                  <div class="acc-prog-desc">9 Wednesdays &middot; Sep 16 &ndash; Nov 25 &middot; <span class="acc-skip">No clinic Sep 30, No clinic Nov 11</span> &middot; Ext. to Dec 2, 9 if needed</div>
                 </div>
               </label>
             </div>
@@ -1173,19 +1183,19 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
             <div class="acc-body-inner">
               <div class="acc-desc">Develop more consistent passing and attacking through high-volume technical drills, with less emphasis on extended gameplay. Training focuses on platform control, overhead contact, and adjusting to various speeds and ball trajectories.</div>
               <label class="acc-prog" onclick="accProg(this)">
-                <input type="checkbox" name="programs" value="Tuesday FF (Location TBD) 6:00-7:45 PM" style="display:none;" />
+                <input type="checkbox" name="programs" value="Tuesday FF (Location TBD) 6:00-7:45 PM" data-code="Tue FF 6" data-label="Tuesday &middot; Foundation Focus &middot; 6:00&ndash;7:45 PM" style="display:none;" />
                 <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
                 <div class="acc-prog-body">
                   <div class="acc-prog-title">6:00 &ndash; 7:45 PM</div>
-                  <div class="acc-prog-desc">9 sessions &middot; Sep 15, 22, 29, Oct 6, 13, 20, 27, Nov 3, 10 &middot; Ext. to Nov 17, 24 if needed</div>
+                  <div class="acc-prog-desc">9 Tuesdays &middot; Sep 15 &ndash; Nov 10 &middot; Ext. to Nov 17, 24 if needed</div>
                 </div>
               </label>
               <label class="acc-prog" onclick="accProg(this)">
-                <input type="checkbox" name="programs" value="Tuesday FF (Location TBD) 7:45-9:30 PM" style="display:none;" />
+                <input type="checkbox" name="programs" value="Tuesday FF (Location TBD) 7:45-9:30 PM" data-code="Tue FF 745" data-label="Tuesday &middot; Foundation Focus &middot; 7:45&ndash;9:30 PM" style="display:none;" />
                 <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
                 <div class="acc-prog-body">
                   <div class="acc-prog-title">7:45 &ndash; 9:30 PM</div>
-                  <div class="acc-prog-desc">9 sessions &middot; Sep 15, 22, 29, Oct 6, 13, 20, 27, Nov 3, 10 &middot; Ext. to Nov 17, 24 if needed</div>
+                  <div class="acc-prog-desc">9 Tuesdays &middot; Sep 15 &ndash; Nov 10 &middot; Ext. to Nov 17, 24 if needed</div>
                 </div>
               </label>
             </div>
@@ -1221,19 +1231,19 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
                 </div>
               </div>
               <label class="acc-prog" onclick="accProg(this)">
-                <input type="checkbox" name="programs" value="Wednesday INT (Lochdale) 6:00-7:30 PM" style="display:none;" />
+                <input type="checkbox" name="programs" value="Wednesday INT (Lochdale) 6:00-7:30 PM" data-code="Wed I 6" data-label="Wednesday &middot; Intermediate &middot; 6:00&ndash;7:30 PM" style="display:none;" />
                 <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
                 <div class="acc-prog-body">
                   <div class="acc-prog-title">6:00 &ndash; 7:30 PM</div>
-                  <div class="acc-prog-desc">9 sessions &middot; Sept 16, 23, NO Sep 30, Oct 7, 14, 21, 28, Nov 4, NO Nov 11, 18, 25 &middot; Ext. to Dec 2, 9 if needed</div>
+                  <div class="acc-prog-desc">9 Wednesdays &middot; Sep 16 &ndash; Nov 25 &middot; <span class="acc-skip">No clinic Sep 30, No clinic Nov 11</span> &middot; Ext. to Dec 2, 9 if needed</div>
                 </div>
               </label>
               <label class="acc-prog" onclick="accProg(this)">
-                <input type="checkbox" name="programs" value="Wednesday INT (Lochdale) 7:30-9:00 PM" style="display:none;" />
+                <input type="checkbox" name="programs" value="Wednesday INT (Lochdale) 7:30-9:00 PM" data-code="Wed I 730" data-label="Wednesday &middot; Intermediate &middot; 7:30&ndash;9:00 PM" style="display:none;" />
                 <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
                 <div class="acc-prog-body">
                   <div class="acc-prog-title">7:30 &ndash; 9:00 PM</div>
-                  <div class="acc-prog-desc">9 sessions &middot; Sept 16, 23, NO Sep 30, Oct 7, 14, 21, 28, Nov 4, NO Nov 11, 18, 25 &middot; Ext. to Dec 2, 9 if needed</div>
+                  <div class="acc-prog-desc">9 Wednesdays &middot; Sep 16 &ndash; Nov 25 &middot; <span class="acc-skip">No clinic Sep 30, No clinic Nov 11</span> &middot; Ext. to Dec 2, 9 if needed</div>
                 </div>
               </label>
             </div>
@@ -1269,19 +1279,19 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
                 </div>
               </div>
               <label class="acc-prog" onclick="accProg(this)">
-                <input type="checkbox" name="programs" value="Thursday INT (Lochdale) 6:00-7:30 PM" style="display:none;" />
+                <input type="checkbox" name="programs" value="Thursday INT (Lochdale) 6:00-7:30 PM" data-code="Thu I 6" data-label="Thursday &middot; Intermediate &middot; 6:00&ndash;7:30 PM" style="display:none;" />
                 <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
                 <div class="acc-prog-body">
                   <div class="acc-prog-title">6:00 &ndash; 7:30 PM</div>
-                  <div class="acc-prog-desc">9 sessions &middot; Sept 17, 24, Oct 1, 8, 15, 22, 29, Nov 5, 12 &middot; Ext. to Nov 19, 26 if needed</div>
+                  <div class="acc-prog-desc">9 Thursdays &middot; Sep 17 &ndash; Nov 12 &middot; Ext. to Nov 19, 26 if needed</div>
                 </div>
               </label>
               <label class="acc-prog" onclick="accProg(this)">
-                <input type="checkbox" name="programs" value="Thursday INT (Lochdale) 7:30-9:00 PM" style="display:none;" />
+                <input type="checkbox" name="programs" value="Thursday INT (Lochdale) 7:30-9:00 PM" data-code="Thu I 730" data-label="Thursday &middot; Intermediate &middot; 7:30&ndash;9:00 PM" style="display:none;" />
                 <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
                 <div class="acc-prog-body">
                   <div class="acc-prog-title">7:30 &ndash; 9:00 PM</div>
-                  <div class="acc-prog-desc">9 sessions &middot; Sept 17, 24, Oct 1, 8, 15, 22, 29, Nov 5, 12 &middot; Ext. to Nov 19, 26 if needed</div>
+                  <div class="acc-prog-desc">9 Thursdays &middot; Sep 17 &ndash; Nov 12 &middot; Ext. to Nov 19, 26 if needed</div>
                 </div>
               </label>
             </div>
@@ -1317,19 +1327,19 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
                 </div>
               </div>
               <label class="acc-prog" onclick="accProg(this)">
-                <input type="checkbox" name="programs" value="Thursday WOMENS INT (Richmond) 6:00-7:30 PM" style="display:none;" />
+                <input type="checkbox" name="programs" value="Thursday WOMENS INT (Richmond) 6:00-7:30 PM" data-code="Thu IW 6" data-label="Thursday &middot; Women's Intermediate &middot; 6:00&ndash;7:30 PM" style="display:none;" />
                 <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
                 <div class="acc-prog-body">
                   <div class="acc-prog-title">6:00 &ndash; 7:30 PM</div>
-                  <div class="acc-prog-desc">9 sessions &middot; Sept 17, 24, Oct 1, 8, 15, 22, 29, Nov 5, 12 &middot; Ext. to Nov 19, 26 if needed</div>
+                  <div class="acc-prog-desc">9 Thursdays &middot; Sep 17 &ndash; Nov 12 &middot; Ext. to Nov 19, 26 if needed</div>
                 </div>
               </label>
               <label class="acc-prog" onclick="accProg(this)">
-                <input type="checkbox" name="programs" value="Thursday WOMENS INT (Richmond) 7:30-9:00 PM" style="display:none;" />
+                <input type="checkbox" name="programs" value="Thursday WOMENS INT (Richmond) 7:30-9:00 PM" data-code="Thu IW 730" data-label="Thursday &middot; Women's Intermediate &middot; 7:30&ndash;9:00 PM" style="display:none;" />
                 <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
                 <div class="acc-prog-body">
                   <div class="acc-prog-title">7:30 &ndash; 9:00 PM</div>
-                  <div class="acc-prog-desc">9 sessions &middot; Sept 17, 24, Oct 1, 8, 15, 22, 29, Nov 5, 12 &middot; Ext. to Nov 19, 26 if needed</div>
+                  <div class="acc-prog-desc">9 Thursdays &middot; Sep 17 &ndash; Nov 12 &middot; Ext. to Nov 19, 26 if needed</div>
                 </div>
               </label>
             </div>
@@ -1342,8 +1352,10 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
     </div>
 
     <div class="field" style="margin-top:1.1rem;">
-      <label class="lbl">Program Priority <span style="text-transform:none;font-weight:500;color:var(--gray-500);">(optional)</span></label>
-      <textarea name="programPriority" placeholder="If you selected more than one program above, let us know your order of preference, e.g. 1st choice: Tuesday BEG 6:00-7:45 PM, 2nd choice: Wednesday INT 6:00-7:30 PM"></textarea>
+      <label class="lbl">Program Priority <span style="text-transform:none;font-weight:500;color:var(--gray-500);">(auto-filled from your selections above)</span></label>
+      <div id="priorityEmpty" style="font-size:13.5px;color:var(--gray-500);padding:4px 0;">Select a program above and it'll show up here so you can rank your preference.</div>
+      <div id="priorityListWrap" style="display:none;flex-direction:column;gap:8px;"></div>
+      <input type="hidden" name="programPriority" id="programPriorityInput" />
     </div>
   </div>
 
@@ -1545,6 +1557,7 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
   </div>
 
   <p style="margin-top:1.75rem;font-size:14px;color:var(--gray-500);">See you on the court!</p>
+  <p style="margin-top:0.5rem;font-size:14px;"><a href="https://www.instagram.com/ftlovolleyball/?hl=en" target="_blank" rel="noopener" style="color:var(--teal);font-weight:700;">Follow us on Instagram</a></p>
 </div>
 
 </main>
@@ -1571,7 +1584,68 @@ function accProg(label) {
     var cb = label.querySelector('input[type="checkbox"]');
     if (!cb) return;
     label.classList.toggle('sel', cb.checked);
+    syncPriorityFromCheckbox(cb);
   }, 0);
+}
+
+/* ── PROGRAM PRIORITY: auto-populated from checked programs, reorderable ── */
+var priorityOrder = []; // array of checkbox DOM elements, in priority order (top = first choice)
+
+function syncPriorityFromCheckbox(cb) {
+  var idx = priorityOrder.indexOf(cb);
+  if (cb.checked && idx === -1) {
+    priorityOrder.push(cb);
+  } else if (!cb.checked && idx !== -1) {
+    priorityOrder.splice(idx, 1);
+  }
+  renderPriorityList();
+}
+
+function movePriority(cb, dir) {
+  var idx = priorityOrder.indexOf(cb);
+  var newIdx = idx + dir;
+  if (idx === -1 || newIdx < 0 || newIdx >= priorityOrder.length) return;
+  var tmp = priorityOrder[idx];
+  priorityOrder[idx] = priorityOrder[newIdx];
+  priorityOrder[newIdx] = tmp;
+  renderPriorityList();
+}
+
+function renderPriorityList() {
+  var wrap = document.getElementById('priorityListWrap');
+  var empty = document.getElementById('priorityEmpty');
+  wrap.innerHTML = '';
+
+  if (priorityOrder.length === 0) {
+    wrap.style.display = 'none';
+    empty.style.display = 'block';
+    document.getElementById('programPriorityInput').value = '';
+    return;
+  }
+
+  empty.style.display = 'none';
+  wrap.style.display = 'flex';
+
+  for (var i = 0; i < priorityOrder.length; i++) {
+    var cb = priorityOrder[i];
+    var row = document.createElement('div');
+    row.className = 'priority-row';
+    row.innerHTML =
+      '<div class="priority-rank">' + (i + 1) + '</div>' +
+      '<div class="priority-label">' + cb.getAttribute('data-label') + '</div>' +
+      '<div class="priority-controls">' +
+        '<button type="button" class="priority-btn" ' + (i === 0 ? 'disabled' : '') + ' aria-label="Move up in priority">&uarr;</button>' +
+        '<button type="button" class="priority-btn" ' + (i === priorityOrder.length - 1 ? 'disabled' : '') + ' aria-label="Move down in priority">&darr;</button>' +
+      '</div>';
+    var btns = row.querySelectorAll('.priority-btn');
+    btns[0].onclick = (function(c) { return function() { movePriority(c, -1); }; })(cb);
+    btns[1].onclick = (function(c) { return function() { movePriority(c, 1); }; })(cb);
+    wrap.appendChild(row);
+  }
+
+  var codes = [];
+  for (var j = 0; j < priorityOrder.length; j++) codes.push(priorityOrder[j].getAttribute('data-code'));
+  document.getElementById('programPriorityInput').value = codes.join(', ');
 }
 function toggleProg(label) {
   setTimeout(function() {
