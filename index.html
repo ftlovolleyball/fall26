@@ -93,8 +93,8 @@ body {
   gap: 8px;
   font-family: 'Barlow Condensed', sans-serif;
   font-weight: 700;
-  font-size: 11px;
-  letter-spacing: 0.18em;
+  font-size: 22px;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--orange);
   margin-bottom: 12px;
@@ -445,13 +445,19 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
 .acc-block.open .acc-body { display: block; }
 .acc-body-inner { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
 .acc-desc { font-size: 13.5px; color: var(--gray-700); line-height: 1.6; margin-bottom: 4px; }
-.acc-prog { display: flex; align-items: flex-start; gap: 12px; padding: 13px 15px; border-radius: 8px; border: 2px solid rgba(0,0,0,0.07); background: #fff; cursor: pointer; transition: all .15s; -webkit-tap-highlight-color: transparent; }
+.acc-note { font-size: 12.5px; color: var(--gray-700); font-style: italic; line-height: 1.55; margin-top: -6px; margin-bottom: 4px; }
+.acc-dates { font-size: 13px; font-weight: 600; color: var(--gray-700); line-height: 1.5; }
+.acc-slots-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media (max-width: 480px) {
+  .acc-slots-grid { grid-template-columns: 1fr; }
+}
+.acc-prog { display: flex; align-items: center; gap: 12px; padding: 13px 15px; border-radius: 8px; border: 2px solid rgba(0,0,0,0.07); background: #fff; cursor: pointer; transition: all .15s; -webkit-tap-highlight-color: transparent; }
 .acc-prog:active { transform: scale(0.99); }
 .beg-acc   .acc-prog:hover, .beg-acc   .acc-prog.sel { border-color: var(--teal); background: #eef6f2; }
 .ff-acc    .acc-prog:hover, .ff-acc    .acc-prog.sel { border-color: #6a4a9c; background: #f1eaf9; }
 .int-acc   .acc-prog:hover, .int-acc   .acc-prog.sel { border-color: #c8860a; background: #fdf5e6; }
 .wmn-acc   .acc-prog:hover, .wmn-acc   .acc-prog.sel { border-color: #1a6a8a; background: #eaf3f8; }
-.acc-cb { width: 20px; height: 20px; border-radius: 4px; border: 2px solid #ccc; margin-top: 2px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all .15s; }
+.acc-cb { width: 20px; height: 20px; border-radius: 4px; border: 2px solid #ccc; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all .15s; }
 .beg-acc   .acc-prog.sel .acc-cb { background: var(--teal); border-color: var(--teal); }
 .ff-acc    .acc-prog.sel .acc-cb { background: #6a4a9c; border-color: #6a4a9c; }
 .int-acc   .acc-prog.sel .acc-cb { background: #c8860a; border-color: #c8860a; }
@@ -459,7 +465,7 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
 .acc-cb-tick { display: none; color: #fff; font-size: 12px; font-weight: 900; }
 .acc-prog.sel .acc-cb-tick { display: block; }
 .acc-prog-body { flex: 1; min-width: 0; }
-.acc-prog-title { font-size: 15px; font-weight: 700; color: var(--black); margin-bottom: 3px; line-height: 1.3; }
+.acc-prog-title { font-size: 15px; font-weight: 700; color: var(--black); line-height: 1.3; }
 .acc-prog-desc { font-size: 13px; color: var(--gray-700); line-height: 1.55; }
 .acc-skip { color: var(--red); font-weight: 700; }
 
@@ -697,7 +703,7 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
       <div class="hero-eyebrow">2026 Fall Season &middot; Adults 18+</div>
       <h1>Fall Clinic Program<br><span>Application</span></h1>
       <p style="color:rgba(255,249,245,0.85);font-size:15px;max-width:520px;line-height:1.6;">
-        FTLO is BACK for Fall 2026 with our flagship Beginner and Intermediate training sessions :) and a NEW Women's Only Intermediate training session. Join us for 9 dedicated sessions of volleyball training indoors! Fall season facility reservations, especially during the week, have been challenging, so please respond as soon as you know your availability. Those who know FTLO know what we're about when we get together.
+        FTLO is BACK for Fall 2026 with our flagship Beginner and Intermediate training sessions :) and TWO new programs &mdash; Women's Intermediate Only and Foundation Focus clinic. Join us for 9 dedicated sessions of volleyball training indoors! Fall season facility reservations, especially during the week, have been challenging, so please respond as soon as you know your availability. Those who know FTLO know what we're about when we get together.
       </p>
       <p style="color:rgba(255,249,245,0.85);font-size:15px;max-width:520px;line-height:1.6;margin-top:0.75rem;">
         <strong style="color:var(--orange);">This is an application, not a confirmed spot.</strong> FTLO will follow up by email with a payment invite once your spot is confirmed.
@@ -1063,7 +1069,7 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
             <div class="acc-tag">BEG</div>
             <div class="acc-meta">
               <div class="acc-title-row"><span class="acc-title">Tuesday &middot; Beginner</span></div>
-              <div class="acc-subdesc">Richmond, BC</div>
+              <div class="acc-subdesc">Richmond, BC &middot; $295 GST Included</div>
             </div>
             <div class="acc-right">
               <span class="acc-pill">2 time slots</span>
@@ -1073,22 +1079,23 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
           <div class="acc-body">
             <div class="acc-body-inner">
               <div class="acc-desc">Build rally-ready confidence through clear instruction in passing, setting, serving, attacking, movement, communication, and rally structure. Sessions emphasize high-volume repetition, confident first contacts, playable second contacts, and controlled game-like practice.</div>
-              <label class="acc-prog" onclick="accProg(this)">
-                <input type="checkbox" name="programs" value="Tuesday BEG 6:00-7:45 PM" data-code="Tue B 6" data-label="Tuesday &middot; Beginner &middot; 6:00&ndash;7:45 PM" style="display:none;" />
-                <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
-                <div class="acc-prog-body">
-                  <div class="acc-prog-title">6:00 &ndash; 7:45 PM</div>
-                  <div class="acc-prog-desc">9 Tuesdays &middot; Sep 15 &ndash; Nov 10 &middot; Ext to Nov 24 if needed</div>
-                </div>
-              </label>
-              <label class="acc-prog" onclick="accProg(this)">
-                <input type="checkbox" name="programs" value="Tuesday BEG 7:45-9:30 PM" data-code="Tue B 745" data-label="Tuesday &middot; Beginner &middot; 7:45&ndash;9:30 PM" style="display:none;" />
-                <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
-                <div class="acc-prog-body">
-                  <div class="acc-prog-title">7:45 &ndash; 9:30 PM</div>
-                  <div class="acc-prog-desc">9 Tuesdays &middot; Sep 15 &ndash; Nov 10 &middot; Ext to Nov 24 if needed</div>
-                </div>
-              </label>
+              <div class="acc-dates">9 Tuesdays &middot; Sep 15 &ndash; Nov 10 &middot; Ext to Nov 24 if needed</div>
+              <div class="acc-slots-grid">
+                <label class="acc-prog" onclick="accProg(this)">
+                  <input type="checkbox" name="programs" value="Tuesday BEG 6:00-7:45 PM" data-code="Tue B 6" data-label="Tuesday &middot; Beginner &middot; 6:00&ndash;7:45 PM" style="display:none;" />
+                  <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
+                  <div class="acc-prog-body">
+                    <div class="acc-prog-title">6:00 &ndash; 7:45 PM</div>
+                  </div>
+                </label>
+                <label class="acc-prog" onclick="accProg(this)">
+                  <input type="checkbox" name="programs" value="Tuesday BEG 7:45-9:30 PM" data-code="Tue B 745" data-label="Tuesday &middot; Beginner &middot; 7:45&ndash;9:30 PM" style="display:none;" />
+                  <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
+                  <div class="acc-prog-body">
+                    <div class="acc-prog-title">7:45 &ndash; 9:30 PM</div>
+                  </div>
+                </label>
+              </div>
             </div>
           </div>
         </div>
@@ -1099,7 +1106,7 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
             <div class="acc-tag">BEG</div>
             <div class="acc-meta">
               <div class="acc-title-row"><span class="acc-title">Wednesday &middot; Beginner</span></div>
-              <div class="acc-subdesc">Edmonds Community School, Burnaby, BC</div>
+              <div class="acc-subdesc">Edmonds Community School, Burnaby, BC &middot; $255 GST Included</div>
             </div>
             <div class="acc-right">
               <span class="acc-pill">2 time slots</span>
@@ -1109,22 +1116,23 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
           <div class="acc-body">
             <div class="acc-body-inner">
               <div class="acc-desc">Build rally-ready confidence through clear instruction in passing, setting, serving, attacking, movement, communication, and rally structure. Sessions emphasize high-volume repetition, confident first contacts, playable second contacts, and controlled game-like practice.</div>
-              <label class="acc-prog" onclick="accProg(this)">
-                <input type="checkbox" name="programs" value="Wednesday BEG (Edmonds) 6:00-7:30 PM" data-code="Wed B 6" data-label="Wednesday &middot; Beginner &middot; 6:00&ndash;7:30 PM" style="display:none;" />
-                <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
-                <div class="acc-prog-body">
-                  <div class="acc-prog-title">6:00 &ndash; 7:30 PM</div>
-                  <div class="acc-prog-desc">9 Wednesdays &middot; Sep 16 &ndash; Nov 25 &middot; <span class="acc-skip">No clinic Sep 30 &amp; Nov 11.</span> Ext to Dec 9 if needed</div>
-                </div>
-              </label>
-              <label class="acc-prog" onclick="accProg(this)">
-                <input type="checkbox" name="programs" value="Wednesday BEG (Edmonds) 7:30-9:00 PM" data-code="Wed B 730" data-label="Wednesday &middot; Beginner &middot; 7:30&ndash;9:00 PM" style="display:none;" />
-                <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
-                <div class="acc-prog-body">
-                  <div class="acc-prog-title">7:30 &ndash; 9:00 PM</div>
-                  <div class="acc-prog-desc">9 Wednesdays &middot; Sep 16 &ndash; Nov 25 &middot; <span class="acc-skip">No clinic Sep 30 &amp; Nov 11.</span> Ext to Dec 9 if needed</div>
-                </div>
-              </label>
+              <div class="acc-dates">9 Wednesdays &middot; Sep 16 &ndash; Nov 25 &middot; <span class="acc-skip">No clinic Sep 30 &amp; Nov 11.</span> Ext to Dec 9 if needed</div>
+              <div class="acc-slots-grid">
+                <label class="acc-prog" onclick="accProg(this)">
+                  <input type="checkbox" name="programs" value="Wednesday BEG (Edmonds) 6:00-7:30 PM" data-code="Wed B 6" data-label="Wednesday &middot; Beginner &middot; 6:00&ndash;7:30 PM" style="display:none;" />
+                  <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
+                  <div class="acc-prog-body">
+                    <div class="acc-prog-title">6:00 &ndash; 7:30 PM</div>
+                  </div>
+                </label>
+                <label class="acc-prog" onclick="accProg(this)">
+                  <input type="checkbox" name="programs" value="Wednesday BEG (Edmonds) 7:30-9:00 PM" data-code="Wed B 730" data-label="Wednesday &middot; Beginner &middot; 7:30&ndash;9:00 PM" style="display:none;" />
+                  <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
+                  <div class="acc-prog-body">
+                    <div class="acc-prog-title">7:30 &ndash; 9:00 PM</div>
+                  </div>
+                </label>
+              </div>
             </div>
           </div>
         </div>
@@ -1135,7 +1143,7 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
             <div class="acc-tag">FF</div>
             <div class="acc-meta">
               <div class="acc-title-row"><span class="acc-title">Tuesday &middot; Foundation Focus: Pass &amp; Attack</span></div>
-              <div class="acc-subdesc">Richmond, BC or South Burnaby area &middot; <em>exact location to be confirmed</em></div>
+              <div class="acc-subdesc">Richmond, BC or South Burnaby area &middot; <em>exact location to be confirmed</em> &middot; $295 GST Included</div>
             </div>
             <div class="acc-right">
               <span class="acc-pill">2 time slots</span>
@@ -1145,22 +1153,24 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
           <div class="acc-body">
             <div class="acc-body-inner">
               <div class="acc-desc">Develop more consistent passing and attacking through high-volume technical drills, with less emphasis on extended gameplay. Training focuses on platform control, overhead contact, and adjusting to various speeds and ball trajectories.</div>
-              <label class="acc-prog" onclick="accProg(this)">
-                <input type="checkbox" name="programs" value="Tuesday FF (Location TBD) 6:00-7:45 PM" data-code="Tue FF 6" data-label="Tuesday &middot; Foundation Focus &middot; 6:00&ndash;7:45 PM" style="display:none;" />
-                <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
-                <div class="acc-prog-body">
-                  <div class="acc-prog-title">6:00 &ndash; 7:45 PM</div>
-                  <div class="acc-prog-desc">9 Tuesdays &middot; Sep 15 &ndash; Nov 10 &middot; Ext to Nov 24 if needed</div>
-                </div>
-              </label>
-              <label class="acc-prog" onclick="accProg(this)">
-                <input type="checkbox" name="programs" value="Tuesday FF (Location TBD) 7:45-9:30 PM" data-code="Tue FF 745" data-label="Tuesday &middot; Foundation Focus &middot; 7:45&ndash;9:30 PM" style="display:none;" />
-                <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
-                <div class="acc-prog-body">
-                  <div class="acc-prog-title">7:45 &ndash; 9:30 PM</div>
-                  <div class="acc-prog-desc">9 Tuesdays &middot; Sep 15 &ndash; Nov 10 &middot; Ext to Nov 24 if needed</div>
-                </div>
-              </label>
+              <div class="acc-note">Training for this clinic will be on 3 smaller-sized courts, appropriate for 3v3 or 4v4, co-ed height of 2.35m.</div>
+              <div class="acc-dates">9 Tuesdays &middot; Sep 15 &ndash; Nov 10 &middot; Ext to Nov 24 if needed</div>
+              <div class="acc-slots-grid">
+                <label class="acc-prog" onclick="accProg(this)">
+                  <input type="checkbox" name="programs" value="Tuesday FF (Location TBD) 6:00-7:45 PM" data-code="Tue FF 6" data-label="Tuesday &middot; Foundation Focus &middot; 6:00&ndash;7:45 PM" style="display:none;" />
+                  <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
+                  <div class="acc-prog-body">
+                    <div class="acc-prog-title">6:00 &ndash; 7:45 PM</div>
+                  </div>
+                </label>
+                <label class="acc-prog" onclick="accProg(this)">
+                  <input type="checkbox" name="programs" value="Tuesday FF (Location TBD) 7:45-9:30 PM" data-code="Tue FF 745" data-label="Tuesday &middot; Foundation Focus &middot; 7:45&ndash;9:30 PM" style="display:none;" />
+                  <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
+                  <div class="acc-prog-body">
+                    <div class="acc-prog-title">7:45 &ndash; 9:30 PM</div>
+                  </div>
+                </label>
+              </div>
             </div>
           </div>
         </div>
@@ -1171,7 +1181,7 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
             <div class="acc-tag">INT</div>
             <div class="acc-meta">
               <div class="acc-title-row"><span class="acc-title">Wednesday &middot; Intermediate</span></div>
-              <div class="acc-subdesc">Lochdale Community School, Burnaby, BC</div>
+              <div class="acc-subdesc">Lochdale Community School, Burnaby, BC &middot; $255 GST Included</div>
             </div>
             <div class="acc-right">
               <span class="acc-pill">2 time slots</span>
@@ -1193,22 +1203,23 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
                   <p style="margin:0;">This helps ensure a supportive and practical experience for all players in the program.</p>
                 </div>
               </div>
-              <label class="acc-prog" onclick="accProg(this)">
-                <input type="checkbox" name="programs" value="Wednesday INT (Lochdale) 6:00-7:30 PM" data-code="Wed I 6" data-label="Wednesday &middot; Intermediate &middot; 6:00&ndash;7:30 PM" style="display:none;" />
-                <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
-                <div class="acc-prog-body">
-                  <div class="acc-prog-title">6:00 &ndash; 7:30 PM</div>
-                  <div class="acc-prog-desc">9 Wednesdays &middot; Sep 16 &ndash; Nov 25 &middot; <span class="acc-skip">No clinic Sep 30 &amp; Nov 11.</span> Ext to Dec 9 if needed</div>
-                </div>
-              </label>
-              <label class="acc-prog" onclick="accProg(this)">
-                <input type="checkbox" name="programs" value="Wednesday INT (Lochdale) 7:30-9:00 PM" data-code="Wed I 730" data-label="Wednesday &middot; Intermediate &middot; 7:30&ndash;9:00 PM" style="display:none;" />
-                <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
-                <div class="acc-prog-body">
-                  <div class="acc-prog-title">7:30 &ndash; 9:00 PM</div>
-                  <div class="acc-prog-desc">9 Wednesdays &middot; Sep 16 &ndash; Nov 25 &middot; <span class="acc-skip">No clinic Sep 30 &amp; Nov 11.</span> Ext to Dec 9 if needed</div>
-                </div>
-              </label>
+              <div class="acc-dates">9 Wednesdays &middot; Sep 16 &ndash; Nov 25 &middot; <span class="acc-skip">No clinic Sep 30 &amp; Nov 11.</span> Ext to Dec 9 if needed</div>
+              <div class="acc-slots-grid">
+                <label class="acc-prog" onclick="accProg(this)">
+                  <input type="checkbox" name="programs" value="Wednesday INT (Lochdale) 6:00-7:30 PM" data-code="Wed I 6" data-label="Wednesday &middot; Intermediate &middot; 6:00&ndash;7:30 PM" style="display:none;" />
+                  <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
+                  <div class="acc-prog-body">
+                    <div class="acc-prog-title">6:00 &ndash; 7:30 PM</div>
+                  </div>
+                </label>
+                <label class="acc-prog" onclick="accProg(this)">
+                  <input type="checkbox" name="programs" value="Wednesday INT (Lochdale) 7:30-9:00 PM" data-code="Wed I 730" data-label="Wednesday &middot; Intermediate &middot; 7:30&ndash;9:00 PM" style="display:none;" />
+                  <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
+                  <div class="acc-prog-body">
+                    <div class="acc-prog-title">7:30 &ndash; 9:00 PM</div>
+                  </div>
+                </label>
+              </div>
             </div>
           </div>
         </div>
@@ -1219,7 +1230,7 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
             <div class="acc-tag">INT</div>
             <div class="acc-meta">
               <div class="acc-title-row"><span class="acc-title">Thursday &middot; Intermediate</span></div>
-              <div class="acc-subdesc">Lochdale Community School, Burnaby, BC</div>
+              <div class="acc-subdesc">Lochdale Community School, Burnaby, BC &middot; $255 GST Included</div>
             </div>
             <div class="acc-right">
               <span class="acc-pill">2 time slots</span>
@@ -1241,22 +1252,23 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
                   <p style="margin:0;">This helps ensure a supportive and practical experience for all players in the program.</p>
                 </div>
               </div>
-              <label class="acc-prog" onclick="accProg(this)">
-                <input type="checkbox" name="programs" value="Thursday INT (Lochdale) 6:00-7:30 PM" data-code="Thu I 6" data-label="Thursday &middot; Intermediate &middot; 6:00&ndash;7:30 PM" style="display:none;" />
-                <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
-                <div class="acc-prog-body">
-                  <div class="acc-prog-title">6:00 &ndash; 7:30 PM</div>
-                  <div class="acc-prog-desc">9 Thursdays &middot; Sep 17 &ndash; Nov 12 &middot; Ext to Nov 26 if needed</div>
-                </div>
-              </label>
-              <label class="acc-prog" onclick="accProg(this)">
-                <input type="checkbox" name="programs" value="Thursday INT (Lochdale) 7:30-9:00 PM" data-code="Thu I 730" data-label="Thursday &middot; Intermediate &middot; 7:30&ndash;9:00 PM" style="display:none;" />
-                <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
-                <div class="acc-prog-body">
-                  <div class="acc-prog-title">7:30 &ndash; 9:00 PM</div>
-                  <div class="acc-prog-desc">9 Thursdays &middot; Sep 17 &ndash; Nov 12 &middot; Ext to Nov 26 if needed</div>
-                </div>
-              </label>
+              <div class="acc-dates">9 Thursdays &middot; Sep 17 &ndash; Nov 12 &middot; Ext to Nov 26 if needed</div>
+              <div class="acc-slots-grid">
+                <label class="acc-prog" onclick="accProg(this)">
+                  <input type="checkbox" name="programs" value="Thursday INT (Lochdale) 6:00-7:30 PM" data-code="Thu I 6" data-label="Thursday &middot; Intermediate &middot; 6:00&ndash;7:30 PM" style="display:none;" />
+                  <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
+                  <div class="acc-prog-body">
+                    <div class="acc-prog-title">6:00 &ndash; 7:30 PM</div>
+                  </div>
+                </label>
+                <label class="acc-prog" onclick="accProg(this)">
+                  <input type="checkbox" name="programs" value="Thursday INT (Lochdale) 7:30-9:00 PM" data-code="Thu I 730" data-label="Thursday &middot; Intermediate &middot; 7:30&ndash;9:00 PM" style="display:none;" />
+                  <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
+                  <div class="acc-prog-body">
+                    <div class="acc-prog-title">7:30 &ndash; 9:00 PM</div>
+                  </div>
+                </label>
+              </div>
             </div>
           </div>
         </div>
@@ -1267,7 +1279,7 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
             <div class="acc-tag">WMN</div>
             <div class="acc-meta">
               <div class="acc-title-row"><span class="acc-title">Thursday &middot; Women's Intermediate</span></div>
-              <div class="acc-subdesc">Women's only &middot; Richmond, BC</div>
+              <div class="acc-subdesc">Women's only &middot; Richmond, BC &middot; $295 GST Included</div>
             </div>
             <div class="acc-right">
               <span class="acc-pill">2 time slots</span>
@@ -1289,22 +1301,24 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
                   <p style="margin:0;">This helps ensure a supportive and practical experience for all players in the program.</p>
                 </div>
               </div>
-              <label class="acc-prog" onclick="accProg(this)">
-                <input type="checkbox" name="programs" value="Thursday WOMENS INT (Richmond) 6:00-7:30 PM" data-code="Thu IW 6" data-label="Thursday &middot; Women's Intermediate &middot; 6:00&ndash;7:30 PM" style="display:none;" />
-                <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
-                <div class="acc-prog-body">
-                  <div class="acc-prog-title">6:00 &ndash; 7:30 PM</div>
-                  <div class="acc-prog-desc">9 Thursdays &middot; Sep 17 &ndash; Nov 12 &middot; Ext to Nov 26 if needed</div>
-                </div>
-              </label>
-              <label class="acc-prog" onclick="accProg(this)">
-                <input type="checkbox" name="programs" value="Thursday WOMENS INT (Richmond) 7:30-9:00 PM" data-code="Thu IW 730" data-label="Thursday &middot; Women's Intermediate &middot; 7:30&ndash;9:00 PM" style="display:none;" />
-                <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
-                <div class="acc-prog-body">
-                  <div class="acc-prog-title">7:30 &ndash; 9:00 PM</div>
-                  <div class="acc-prog-desc">9 Thursdays &middot; Sep 17 &ndash; Nov 12 &middot; Ext to Nov 26 if needed</div>
-                </div>
-              </label>
+              <div class="acc-note">Training for this clinic will be on 3 smaller-sized courts, appropriate for 3v3 or 4v4, co-ed height of 2.35m.</div>
+              <div class="acc-dates">9 Thursdays &middot; Sep 17 &ndash; Nov 12 &middot; Ext to Nov 26 if needed</div>
+              <div class="acc-slots-grid">
+                <label class="acc-prog" onclick="accProg(this)">
+                  <input type="checkbox" name="programs" value="Thursday WOMENS INT (Richmond) 6:00-7:45 PM" data-code="Thu IW 6" data-label="Thursday &middot; Women's Intermediate &middot; 6:00&ndash;7:45 PM" style="display:none;" />
+                  <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
+                  <div class="acc-prog-body">
+                    <div class="acc-prog-title">6:00 &ndash; 7:45 PM</div>
+                  </div>
+                </label>
+                <label class="acc-prog" onclick="accProg(this)">
+                  <input type="checkbox" name="programs" value="Thursday WOMENS INT (Richmond) 7:45-9:30 PM" data-code="Thu IW 745" data-label="Thursday &middot; Women's Intermediate &middot; 7:45&ndash;9:30 PM" style="display:none;" />
+                  <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
+                  <div class="acc-prog-body">
+                    <div class="acc-prog-title">7:45 &ndash; 9:30 PM</div>
+                  </div>
+                </label>
+              </div>
             </div>
           </div>
         </div>
@@ -1315,7 +1329,8 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
     </div>
 
     <div class="field" style="margin-top:1.1rem;">
-      <label class="lbl">Program Priority <span style="text-transform:none;font-weight:500;color:var(--gray-500);">(auto-filled from your selections above)</span></label>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:900;letter-spacing:0.04em;text-transform:uppercase;color:var(--teal);margin-bottom:4px;">Program Priority</div>
+      <div style="font-size:13.5px;color:var(--gray-700);line-height:1.6;margin-bottom:10px;">Please adjust and notify us of your program preferences &mdash; use the &uarr;/&darr; arrows below to rank your selections from most to least preferred. This helps FTLO place you if not every session you applied for has room.</div>
       <div id="priorityEmpty" style="font-size:13.5px;color:var(--gray-500);padding:4px 0;">Select a program above and it'll show up here so you can rank your preference.</div>
       <div id="priorityListWrap" style="display:none;flex-direction:column;gap:8px;"></div>
       <input type="hidden" name="programPriority" id="programPriorityInput" />
