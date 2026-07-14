@@ -130,6 +130,7 @@ var HEADER_ROW = [
   'Clinic Recommendation'    // Skipped / BEG / BEG/FF / FF/INT / INT / INT/INT(W) — from the Section 2 self-assessment quiz
 ].concat(PROGRAM_COLUMNS).concat([
   'Applicant Expressed Preference',
+  'Invited Program',   // left blank, fill in manually once you decide which program to invite them to
   'Conduct Agreed',
   'Medical / Training Notes',
   'Heard From', 'Heard Details',
@@ -154,6 +155,7 @@ function handleApplicationSubmit(data, ss) {
     data.clinicRecommendation || ''
   ].concat(buildProgramColumnValues(data)).concat([
     buildPreferenceCell(data),
+    '', // Invited Program, blank until you fill it in manually
     data.agreeConduct || '',
     data.medical      || '',
     data.heardFrom    || '',
