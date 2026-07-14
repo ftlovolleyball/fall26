@@ -2003,6 +2003,30 @@ function checkEmailThenNext() {
       showStep(2);
     });
 }
+
+/* ── EMBED SUPPORT ──────────────────────────────────────────────────────
+   When this page is loaded inside an <iframe> (e.g. embedded on a
+   WordPress page), report our real content height to the parent window so
+   it can resize the iframe to match. That way there's only ever ONE
+   scrollbar (the WordPress page's), which avoids the "can't scroll the
+   form on mobile" problem a fixed-height iframe causes. No-op if this page
+   is loaded directly (not embedded). */
+(function () {
+  if (window.self === window.top) return;
+
+  function reportHeight() {
+    window.parent.postMessage({ type: 'ftlo-resize', height: document.documentElement.scrollHeight }, '*');
+  }
+
+  reportHeight();
+  window.addEventListener('load', reportHeight);
+
+  if (window.ResizeObserver) {
+    new ResizeObserver(reportHeight).observe(document.body);
+  } else {
+    setInterval(reportHeight, 400);
+  }
+})();
 </script>
 
 </body>
