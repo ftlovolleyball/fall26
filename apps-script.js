@@ -20,13 +20,30 @@
 //     to edit this spreadsheet and send email as you).
 //  4. Copy the "Web app URL" you're given (ends in /exec) and send it back,
 //     it needs to be pasted into index.html as APPS_SCRIPT_URL.
+//  5. Select installReminderTrigger in the function dropdown at the top of
+//     the editor and click Run once. This turns on the abandoned-application
+//     reminder emails (see ABANDONED APPLICATION REMINDERS below). You'll be
+//     asked to authorize the script again the first time - that's expected.
 //
 // WHAT THIS DOES:
 //  - doPost(e): runs when someone submits the application form. Writes a row to
 //    the "Applications" tab (created automatically if it doesn't exist yet) and
 //    emails the applicant a confirmation.
 //  - doGet(e): handles the "already applied?" duplicate-email check the form
-//    does before letting someone continue past Step 1.
+//    does before letting someone continue past Step 1, and records when
+//    someone starts an application (see below).
+//
+// ABANDONED APPLICATION REMINDERS:
+//  When an applicant gets past Step 1 (Contact Info), the form pings this
+//  script with their name/email, which gets logged to a separate "Started
+//  Applications" tab (created automatically). Every 6 hours, the
+//  sendAbandonedApplicationReminders() trigger checks that tab for anyone who
+//  started at least 48 hours ago and never actually submitted, and sends them
+//  a one-time reminder email. If they did submit, that row is just marked
+//  "Not needed - completed" and left alone. This requires the one-time
+//  installReminderTrigger() run described in step 5 above - simply pasting
+//  the code is not enough, since Apps Script triggers aren't created by
+//  deploying, only by running that setup function (or via the Triggers UI).
 //
 // TIMESTAMPS:
 //  The "Timestamp" column is generated HERE, on Google's servers, using
@@ -40,6 +57,8 @@
 var SHEET_ID = '1QAXakjHOKh3pvCH7IXMXExRSrjYfWWnR0xcd-80zAkc'; // "2026 Fall Clinic Programs"
 var SHEET_NAME = 'Applications';
 var BACKUP_SHEET_NAME = 'backup'; // mirror of every submission; never edited by hand
+var STARTED_SHEET_NAME = 'Started Applications'; // tracks who began but hasn't submitted, for the abandoned-application reminder
+var REMINDER_DELAY_HOURS = 48;
 var TIMEZONE = 'America/Vancouver';
 
 // ── PROGRAM CATALOG ───────────────────────────────────────────────────────
@@ -89,6 +108,13 @@ function doGet(e) {
     var email = (e.parameter.email || '').toLowerCase().trim();
     var exists = emailAlreadyApplied(email);
     return ContentService.createTextOutput(JSON.stringify({ exists: exists }))
+                          .setMimeType(ContentService.MimeType.JSON);
+  }
+
+  if (action === 'markStarted') {
+    var startedEmail = (e.parameter.email || '').toLowerCase().trim();
+    markApplicationStarted(startedEmail, e.parameter.firstName || '', e.parameter.lastName || '');
+    return ContentService.createTextOutput(JSON.stringify({ status: 'ok' }))
                           .setMimeType(ContentService.MimeType.JSON);
   }
 
@@ -173,6 +199,129 @@ function emailAlreadyApplied(email) {
     if (String(emails[i][0]).toLowerCase().trim() === email) return true;
   }
   return false;
+}
+
+// ── Records that someone got past Contact Info, so a reminder can go out later
+// if they never actually submit. Called once per applicant - if they've
+// already been recorded (e.g. they navigated back and forward through Step 1
+// again), this does nothing, so the original started time is preserved. ─────
+function markApplicationStarted(email, firstName, lastName) {
+  if (!email) return;
+  var ss = SpreadsheetApp.openById(SHEET_ID);
+  var sheet = ss.getSheetByName(STARTED_SHEET_NAME);
+  if (!sheet) {
+    sheet = ss.insertSheet(STARTED_SHEET_NAME);
+  }
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(['Started Timestamp', 'First Name', 'Last Name', 'Email', 'Reminder Sent']);
+  }
+
+  var lastRow = sheet.getLastRow();
+  if (lastRow >= 2) {
+    var emails = sheet.getRange(2, 4, lastRow - 1, 1).getValues();
+    for (var i = 0; i < emails.length; i++) {
+      if (String(emails[i][0]).toLowerCase().trim() === email) return;
+    }
+  }
+
+  var serverTimestamp = Utilities.formatDate(new Date(), TIMEZONE, 'yyyy-MM-dd HH:mm:ss');
+  sheet.appendRow([serverTimestamp, firstName || '', lastName || '', email, '']);
+}
+
+// ── Time-driven (see installReminderTrigger() below): finds anyone who
+// started an application at least REMINDER_DELAY_HOURS ago and never
+// submitted, and sends them a one-time reminder. ─────────────────────────────
+function sendAbandonedApplicationReminders() {
+  var ss = SpreadsheetApp.openById(SHEET_ID);
+  var sheet = ss.getSheetByName(STARTED_SHEET_NAME);
+  if (!sheet) return;
+
+  var lastRow = sheet.getLastRow();
+  if (lastRow < 2) return;
+
+  var rows = sheet.getRange(2, 1, lastRow - 1, 5).getValues();
+  var now = new Date();
+
+  for (var i = 0; i < rows.length; i++) {
+    var startedAt = rows[i][0];
+    var firstName = rows[i][1];
+    var email = rows[i][3];
+    var reminderSent = rows[i][4];
+    var rowNum = i + 2; // header row + 1-indexing
+
+    if (reminderSent) continue; // already handled
+    if (!(startedAt instanceof Date) || !email) continue;
+
+    var hoursElapsed = (now.getTime() - startedAt.getTime()) / (1000 * 60 * 60);
+    if (hoursElapsed < REMINDER_DELAY_HOURS) continue;
+
+    if (emailAlreadyApplied(String(email).toLowerCase().trim())) {
+      sheet.getRange(rowNum, 5).setValue('Not needed - completed');
+      continue;
+    }
+
+    sendReminderEmail(email, firstName);
+    sheet.getRange(rowNum, 5).setValue(Utilities.formatDate(new Date(), TIMEZONE, 'yyyy-MM-dd HH:mm:ss'));
+  }
+}
+
+// ── ONE-TIME SETUP: after deploying, select this function in the dropdown at
+// the top of the Apps Script editor and click Run once. It installs a trigger
+// that calls sendAbandonedApplicationReminders() every 6 hours. Safe to
+// re-run - it clears any existing trigger for that function first, so you
+// won't end up with duplicates. ───────────────────────────────────────────────
+function installReminderTrigger() {
+  var triggers = ScriptApp.getProjectTriggers();
+  for (var i = 0; i < triggers.length; i++) {
+    if (triggers[i].getHandlerFunction() === 'sendAbandonedApplicationReminders') {
+      ScriptApp.deleteTrigger(triggers[i]);
+    }
+  }
+  ScriptApp.newTrigger('sendAbandonedApplicationReminders')
+    .timeBased()
+    .everyHours(6)
+    .create();
+}
+
+function sendReminderEmail(toEmail, firstName) {
+  var subject = "Don't forget to finish your FTLO Fall Clinic application";
+  var greetingName = firstName ? firstName : 'there';
+  var formUrl = 'https://ftlovolleyball.github.io/fall26/';
+
+  var html = [
+    '<div style="font-family:Arial,sans-serif;max-width:520px;margin:0 auto;color:#222;">',
+
+    '<div style="background:#1F4049;padding:22px 28px;border-radius:8px 8px 0 0;">',
+      '<p style="margin:0 0 4px;font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#F8BA44;">FTLO Volleyball</p>',
+      '<h1 style="margin:0;font-size:19px;line-height:1.3;color:#FFF9F5;">Still want to join us this Fall?</h1>',
+    '</div>',
+
+    '<div style="background:#fff;border:1px solid #e0e0e0;border-top:none;padding:24px 28px;">',
+      '<p style="margin:0 0 14px;font-size:15px;line-height:1.65;color:#333;">',
+        'Hi ' + greetingName + ',<br><br>',
+        'We noticed you started an application for FTLO\'s Fall 2026 clinic programs but haven\'t submitted it yet.',
+      '</p>',
+      '<p style="margin:0 0 20px;font-size:15px;line-height:1.65;color:#333;">',
+        'If you have any questions, just reply to this email or reach out to ',
+        '<a href="mailto:info@ftlovolleyball.ca" style="color:#1F4049;font-weight:700;">info@ftlovolleyball.ca</a>. ',
+        'Otherwise, we\'d love for you to complete your application as soon as possible so we can review it!',
+      '</p>',
+      '<div style="text-align:center;">',
+        '<a href="' + formUrl + '" target="_blank" style="display:inline-block;background:#F8BA44;color:#1F4049;font-weight:800;font-size:14px;letter-spacing:0.04em;text-transform:uppercase;padding:13px 28px;border-radius:6px;text-decoration:none;">Finish My Application</a>',
+      '</div>',
+    '</div>',
+
+    '<div style="background:#1F4049;padding:14px 28px;border-radius:0 0 8px 8px;text-align:center;">',
+      '<p style="margin:0;font-size:12px;color:rgba(255,249,245,0.55);">FTLO Volleyball Association &middot; <a href="https://www.ftlovolleyball.ca" style="color:#F8BA44;text-decoration:none;">ftlovolleyball.ca</a></p>',
+    '</div>',
+
+    '</div>'
+  ].join('');
+
+  GmailApp.sendEmail(toEmail, subject, '', {
+    htmlBody: html,
+    name: 'FTLO Volleyball'
+  });
 }
 
 function sendApplicationConfirmationEmail(data, serverTimestamp) {

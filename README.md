@@ -10,6 +10,9 @@ Static registration/application page for FTLO Volleyball's Fall 2026 clinics, ho
 - [x] `index.html` is wired up to the deployed Apps Script URL
 - [x] GitHub Pages enabled: https://ftlovolleyball.github.io/fall26/
 - [x] Hero background photo in place (`images/hero-photo.jpg`)
+- [ ] Abandoned application reminder emails coded, but needs the one-time
+      `installReminderTrigger()` run in the Apps Script editor to actually turn on
+      (see "Abandoned application reminders" below)
 - [ ] Exact facility addresses not yet filled in (marked `[exact address to be added]` in Step 2)
 - [ ] Program pricing not yet finalized (not shown on the form)
 - [ ] `images/logo.svg` is still a placeholder. Replace whenever you have a real logo file
@@ -46,6 +49,15 @@ swap it for a different photo:
 
 `images/logo.svg` (header logo) is still a placeholder. Swap it the same way, or tell Claude the
 new filename.
+
+## Abandoned application reminders
+
+If someone fills in Contact Info (Step 1) but never actually submits the form, they get a single
+reminder email ~48 hours later asking them to finish up or reach out with questions. This needs a
+one-time manual step beyond just deploying the script - see step 5 in the SETUP comment at the
+top of `apps-script.js`, and the "ABANDONED APPLICATION REMINDERS" comment further down in that
+same file for how it works. It logs to a separate "Started Applications" tab in the same
+spreadsheet (created automatically), distinct from "Applications".
 
 ## How this differs from the Summer 2026 site
 

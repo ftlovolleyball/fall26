@@ -250,6 +250,7 @@ body {
 .notice.warn { background: var(--orange-light); border: 1px solid #f0d080; color: #6a4a00; }
 .notice.danger { background: var(--red-light); border: 1px solid #f0b8b0; color: #7a1a10; }
 .notice.success { background: var(--green-light); border: 1px solid #a8d5ac; color: var(--green); }
+.rec-top-note { font-weight: 700; }
 
 /* ── FIELDS ── */
 .field { margin-bottom: 1.4rem; }
@@ -1847,7 +1848,17 @@ function getQuizAnswers() {
   };
 }
 
-function renderRecommendationBanner(rec) {
+// True only when every answer is the top/most-advanced option - the strongest
+// possible signal that Intermediate may already be a ceiling for them.
+function isTopScoreEverywhere(a) {
+  return a.q1 === 'D_SEMI_COMPETITIVE' &&
+         a.q2 === 'C_TRANSITION_READING' &&
+         a.q3 === 'D_8_TO_10' &&
+         a.q4 === 'C_FASTER_PLAY_STRATEGY' &&
+         a.q5 === 'C_MULTI_TOUCH_SCENARIOS';
+}
+
+function renderRecommendationBanner(rec, answers) {
   var banner = document.getElementById('recommendationBanner');
   if (!rec) { banner.style.display = 'none'; return; }
 
@@ -1863,6 +1874,12 @@ function renderRecommendationBanner(rec) {
     li.textContent = display.bullets[i];
     list.appendChild(li);
   }
+  if (answers && isTopScoreEverywhere(answers)) {
+    var topLi = document.createElement('li');
+    topLi.className = 'rec-top-note';
+    topLi.textContent = 'Your skill level seems to be near the highest for our current programs, you may need to ask for more specific feedback when training with FTLO coaches, as our programs cater to skilled work, strategies and multi-touch play scenarios - otherwise, elsewhere private training is recommended.';
+    list.appendChild(topLi);
+  }
   banner.style.display = 'flex';
 
   // Exported value: dynamic INT/INT(W) label when the applicant is eligible for Women's
@@ -1872,8 +1889,9 @@ function renderRecommendationBanner(rec) {
 function nextFromQuiz() {
   var valid = validateStep(2);
   if (!valid) return;
-  var rec = calculateClinicRecommendation(getQuizAnswers());
-  renderRecommendationBanner(rec);
+  var answers = getQuizAnswers();
+  var rec = calculateClinicRecommendation(answers);
+  renderRecommendationBanner(rec, answers);
   showStep(3);
 }
 
@@ -1994,14 +2012,30 @@ function checkEmailThenNext() {
       if (json.exists) {
         markErr('f-email', 'This email has already been submitted. Each person may only apply once. Please contact info@ftlovolleyball.ca if you need help.');
       } else {
+        markApplicationStarted();
         showStep(2);
       }
     })
     .catch(function() {
       btn.disabled = false;
       btn.innerHTML = 'Continue to Clinic Quiz <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>';
+      markApplicationStarted();
       showStep(2);
     });
+}
+
+// Fire-and-forget: lets Apps Script know this applicant got past Contact Info,
+// so it can send a reminder if they never come back to actually submit.
+// Failure here should never block the applicant from proceeding.
+function markApplicationStarted() {
+  var email = getVal('email').toLowerCase();
+  var firstName = getVal('firstName');
+  var lastName = getVal('lastName');
+  fetch(APPS_SCRIPT_URL + '?action=markStarted' +
+    '&email=' + encodeURIComponent(email) +
+    '&firstName=' + encodeURIComponent(firstName) +
+    '&lastName=' + encodeURIComponent(lastName) +
+    '&v=' + Date.now(), { cache: 'no-store' }).catch(function() {});
 }
 
 /* ── EMBED SUPPORT ──────────────────────────────────────────────────────
