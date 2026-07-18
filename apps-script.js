@@ -36,11 +36,14 @@
 // ABANDONED APPLICATION REMINDERS:
 //  When an applicant gets past Step 1 (Contact Info), the form pings this
 //  script with their name/email, which gets logged to a separate "Started
-//  Applications" tab (created automatically). Every 6 hours, the
+//  Applications" tab (created automatically), with a Completed column left
+//  blank. If/when that person actually submits, the Completed column on
+//  their row is filled in immediately (see markApplicationCompleted()), so
+//  the tab always shows current status at a glance - no need to wait on the
+//  reminder trigger below to find out who's done. Every 6 hours, the
 //  sendAbandonedApplicationReminders() trigger checks that tab for anyone who
-//  started at least 48 hours ago and never actually submitted, and sends them
-//  a one-time reminder email. If they did submit, that row is just marked
-//  "Not needed - completed" and left alone. This requires the one-time
+//  started at least 48 hours ago and is still not marked Completed, and sends
+//  them a one-time reminder email. This requires the one-time
 //  installReminderTrigger() run described in step 5 above - simply pasting
 //  the code is not enough, since Apps Script triggers aren't created by
 //  deploying, only by running that setup function (or via the Triggers UI).
@@ -168,6 +171,7 @@ function handleApplicationSubmit(data, ss) {
   appendRowToSheet(ss, BACKUP_SHEET_NAME, row);
 
   if (data.email) {
+    markApplicationCompleted(ss, data.email, serverTimestamp);
     sendApplicationConfirmationEmail(data, serverTimestamp);
   }
 }
@@ -215,7 +219,7 @@ function markApplicationStarted(email, firstName, lastName) {
     sheet = ss.insertSheet(STARTED_SHEET_NAME);
   }
   if (sheet.getLastRow() === 0) {
-    sheet.appendRow(['Started Timestamp', 'First Name', 'Last Name', 'Email', 'Reminder Sent']);
+    sheet.appendRow(['Started Timestamp', 'First Name', 'Last Name', 'Email', 'Completed', 'Reminder Sent']);
   }
 
   var lastRow = sheet.getLastRow();
@@ -227,7 +231,32 @@ function markApplicationStarted(email, firstName, lastName) {
   }
 
   var serverTimestamp = Utilities.formatDate(new Date(), TIMEZONE, 'yyyy-MM-dd HH:mm:ss');
-  sheet.appendRow([serverTimestamp, firstName || '', lastName || '', email, '']);
+  sheet.appendRow([serverTimestamp, firstName || '', lastName || '', email, '', '']);
+}
+
+// ── Called right when someone submits (handleApplicationSubmit), so the
+// Started Applications tab reflects completion immediately rather than
+// waiting on the 6-hourly reminder trigger to notice. Finds their row by
+// email and fills in the Completed column; does nothing if they don't have
+// a Started Applications row (e.g. they submitted without the Step 1 ping
+// ever firing). ───────────────────────────────────────────────────────────
+function markApplicationCompleted(ss, email, completedTimestamp) {
+  var normalizedEmail = String(email).toLowerCase().trim();
+  if (!normalizedEmail) return;
+
+  var sheet = ss.getSheetByName(STARTED_SHEET_NAME);
+  if (!sheet) return;
+
+  var lastRow = sheet.getLastRow();
+  if (lastRow < 2) return;
+
+  var emails = sheet.getRange(2, 4, lastRow - 1, 1).getValues();
+  for (var i = 0; i < emails.length; i++) {
+    if (String(emails[i][0]).toLowerCase().trim() === normalizedEmail) {
+      sheet.getRange(i + 2, 5).setValue(completedTimestamp);
+      return; // markApplicationStarted dedupes, so only one row per email
+    }
+  }
 }
 
 // ── Time-driven (see installReminderTrigger() below): finds anyone who
@@ -241,29 +270,32 @@ function sendAbandonedApplicationReminders() {
   var lastRow = sheet.getLastRow();
   if (lastRow < 2) return;
 
-  var rows = sheet.getRange(2, 1, lastRow - 1, 5).getValues();
+  var rows = sheet.getRange(2, 1, lastRow - 1, 6).getValues();
   var now = new Date();
 
   for (var i = 0; i < rows.length; i++) {
     var startedAt = rows[i][0];
     var firstName = rows[i][1];
     var email = rows[i][3];
-    var reminderSent = rows[i][4];
+    var completed = rows[i][4];
+    var reminderSent = rows[i][5];
     var rowNum = i + 2; // header row + 1-indexing
 
-    if (reminderSent) continue; // already handled
+    if (completed || reminderSent) continue; // already handled
     if (!(startedAt instanceof Date) || !email) continue;
 
     var hoursElapsed = (now.getTime() - startedAt.getTime()) / (1000 * 60 * 60);
     if (hoursElapsed < REMINDER_DELAY_HOURS) continue;
 
+    // Completed should normally already be set by markApplicationCompleted()
+    // at submit time; this is a fallback for rows from before that existed.
     if (emailAlreadyApplied(String(email).toLowerCase().trim())) {
-      sheet.getRange(rowNum, 5).setValue('Not needed - completed');
+      sheet.getRange(rowNum, 5).setValue('Yes (detected)');
       continue;
     }
 
     sendReminderEmail(email, firstName);
-    sheet.getRange(rowNum, 5).setValue(Utilities.formatDate(new Date(), TIMEZONE, 'yyyy-MM-dd HH:mm:ss'));
+    sheet.getRange(rowNum, 6).setValue(Utilities.formatDate(new Date(), TIMEZONE, 'yyyy-MM-dd HH:mm:ss'));
   }
 }
 
