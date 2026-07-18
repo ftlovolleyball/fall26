@@ -48,6 +48,16 @@
 //  the code is not enough, since Apps Script triggers aren't created by
 //  deploying, only by running that setup function (or via the Triggers UI).
 //
+// UPGRADING AN EXISTING DEPLOYMENT TO ADD THE "Completed" COLUMN:
+//  If you already had this script deployed with a "Started Applications" tab
+//  before the Completed column existed, redeploying picks up the new column
+//  automatically (see ensureStartedSheetSchema()) - no need to touch the
+//  sheet by hand. But that only fills in Completed going forward; anyone
+//  already sitting in that tab from before this update won't be checked
+//  automatically. Right after redeploying, select backfillCompletedColumn in
+//  the function dropdown and click Run once to fill in Completed for
+//  everyone already in the tab. Safe to re-run any time.
+//
 // TIMESTAMPS:
 //  The "Timestamp" column is generated HERE, on Google's servers, using
 //  Utilities.formatDate(), NOT taken from the applicant's browser or device.
@@ -207,6 +217,27 @@ function emailAlreadyApplied(email) {
   return false;
 }
 
+// ── Adds the Completed column the first time this code runs against a
+// Started Applications tab that predates it. A brand-new tab gets the
+// current 6-column header outright; an existing tab (with real rows and an
+// old 5-column "...Email, Reminder Sent" header) gets a blank column
+// inserted before the old Reminder Sent column, shifting its existing
+// values right rather than losing them, then both headers are relabeled.
+// Safe to call every time - it's a no-op once the header is already current.
+function ensureStartedSheetSchema(sheet) {
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(['Started Timestamp', 'First Name', 'Last Name', 'Email', 'Completed', 'Reminder Sent']);
+    return;
+  }
+
+  var header = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+  if (header[4] !== 'Completed') {
+    sheet.insertColumnBefore(5);
+    sheet.getRange(1, 5).setValue('Completed');
+    sheet.getRange(1, 6).setValue('Reminder Sent');
+  }
+}
+
 // ── Records that someone got past Contact Info, so a reminder can go out later
 // if they never actually submit. Called once per applicant - if they've
 // already been recorded (e.g. they navigated back and forward through Step 1
@@ -218,9 +249,7 @@ function markApplicationStarted(email, firstName, lastName) {
   if (!sheet) {
     sheet = ss.insertSheet(STARTED_SHEET_NAME);
   }
-  if (sheet.getLastRow() === 0) {
-    sheet.appendRow(['Started Timestamp', 'First Name', 'Last Name', 'Email', 'Completed', 'Reminder Sent']);
-  }
+  ensureStartedSheetSchema(sheet);
 
   var lastRow = sheet.getLastRow();
   if (lastRow >= 2) {
@@ -246,6 +275,7 @@ function markApplicationCompleted(ss, email, completedTimestamp) {
 
   var sheet = ss.getSheetByName(STARTED_SHEET_NAME);
   if (!sheet) return;
+  ensureStartedSheetSchema(sheet);
 
   var lastRow = sheet.getLastRow();
   if (lastRow < 2) return;
@@ -266,6 +296,7 @@ function sendAbandonedApplicationReminders() {
   var ss = SpreadsheetApp.openById(SHEET_ID);
   var sheet = ss.getSheetByName(STARTED_SHEET_NAME);
   if (!sheet) return;
+  ensureStartedSheetSchema(sheet);
 
   var lastRow = sheet.getLastRow();
   if (lastRow < 2) return;
@@ -296,6 +327,39 @@ function sendAbandonedApplicationReminders() {
 
     sendReminderEmail(email, firstName);
     sheet.getRange(rowNum, 6).setValue(Utilities.formatDate(new Date(), TIMEZONE, 'yyyy-MM-dd HH:mm:ss'));
+  }
+}
+
+// ── ONE-TIME CLEANUP: run this once, manually, right after deploying the
+// Completed column for the first time. Only markApplicationCompleted() (fired
+// by new submissions) and the reminder trigger's 48-hour fallback check ever
+// fill in Completed, so anyone who already had a Started Applications row
+// before this deploy - including people who quietly finished their
+// application days ago - would otherwise show blank Completed forever. This
+// walks every existing row and fills in Completed for anyone who's actually
+// in the Applications tab. Safe to re-run any time; it only ever fills in
+// blank Completed cells, never overwrites one. ───────────────────────────────
+function backfillCompletedColumn() {
+  var ss = SpreadsheetApp.openById(SHEET_ID);
+  var sheet = ss.getSheetByName(STARTED_SHEET_NAME);
+  if (!sheet) return;
+  ensureStartedSheetSchema(sheet);
+
+  var lastRow = sheet.getLastRow();
+  if (lastRow < 2) return;
+
+  var rows = sheet.getRange(2, 1, lastRow - 1, 6).getValues();
+
+  for (var i = 0; i < rows.length; i++) {
+    var email = rows[i][3];
+    var completed = rows[i][4];
+    var rowNum = i + 2;
+
+    if (completed || !email) continue;
+
+    if (emailAlreadyApplied(String(email).toLowerCase().trim())) {
+      sheet.getRange(rowNum, 5).setValue('Yes (backfilled)');
+    }
   }
 }
 
