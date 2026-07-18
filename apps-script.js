@@ -219,22 +219,22 @@ function emailAlreadyApplied(email) {
 
 // ── Adds the Completed column the first time this code runs against a
 // Started Applications tab that predates it. A brand-new tab gets the
-// current 6-column header outright; an existing tab (with real rows and an
-// old 5-column "...Email, Reminder Sent" header) gets a blank column
-// inserted before the old Reminder Sent column, shifting its existing
-// values right rather than losing them, then both headers are relabeled.
-// Safe to call every time - it's a no-op once the header is already current.
+// current 6-column header outright. An existing tab (with real rows and an
+// old 5-column "...Email, Reminder Sent" header) just gets a "Completed"
+// header appended as a new 6th column - existing columns and their data
+// are never touched or moved, so every row's existing Reminder Sent value
+// stays exactly where it is; the new Completed cell is simply blank for
+// rows that predate it, same as any other new column added to a sheet with
+// existing rows. Safe to call every time - a no-op once already current.
 function ensureStartedSheetSchema(sheet) {
   if (sheet.getLastRow() === 0) {
-    sheet.appendRow(['Started Timestamp', 'First Name', 'Last Name', 'Email', 'Completed', 'Reminder Sent']);
+    sheet.appendRow(['Started Timestamp', 'First Name', 'Last Name', 'Email', 'Reminder Sent', 'Completed']);
     return;
   }
 
   var header = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
-  if (header[4] !== 'Completed') {
-    sheet.insertColumnBefore(5);
-    sheet.getRange(1, 5).setValue('Completed');
-    sheet.getRange(1, 6).setValue('Reminder Sent');
+  if (header[5] !== 'Completed') {
+    sheet.getRange(1, 6).setValue('Completed');
   }
 }
 
@@ -283,7 +283,7 @@ function markApplicationCompleted(ss, email, completedTimestamp) {
   var emails = sheet.getRange(2, 4, lastRow - 1, 1).getValues();
   for (var i = 0; i < emails.length; i++) {
     if (String(emails[i][0]).toLowerCase().trim() === normalizedEmail) {
-      sheet.getRange(i + 2, 5).setValue(completedTimestamp);
+      sheet.getRange(i + 2, 6).setValue(completedTimestamp);
       return; // markApplicationStarted dedupes, so only one row per email
     }
   }
@@ -308,8 +308,8 @@ function sendAbandonedApplicationReminders() {
     var startedAt = rows[i][0];
     var firstName = rows[i][1];
     var email = rows[i][3];
-    var completed = rows[i][4];
-    var reminderSent = rows[i][5];
+    var reminderSent = rows[i][4];
+    var completed = rows[i][5];
     var rowNum = i + 2; // header row + 1-indexing
 
     if (completed || reminderSent) continue; // already handled
@@ -321,12 +321,12 @@ function sendAbandonedApplicationReminders() {
     // Completed should normally already be set by markApplicationCompleted()
     // at submit time; this is a fallback for rows from before that existed.
     if (emailAlreadyApplied(String(email).toLowerCase().trim())) {
-      sheet.getRange(rowNum, 5).setValue('Yes (detected)');
+      sheet.getRange(rowNum, 6).setValue('Yes (detected)');
       continue;
     }
 
     sendReminderEmail(email, firstName);
-    sheet.getRange(rowNum, 6).setValue(Utilities.formatDate(new Date(), TIMEZONE, 'yyyy-MM-dd HH:mm:ss'));
+    sheet.getRange(rowNum, 5).setValue(Utilities.formatDate(new Date(), TIMEZONE, 'yyyy-MM-dd HH:mm:ss'));
   }
 }
 
@@ -352,13 +352,13 @@ function backfillCompletedColumn() {
 
   for (var i = 0; i < rows.length; i++) {
     var email = rows[i][3];
-    var completed = rows[i][4];
+    var completed = rows[i][5];
     var rowNum = i + 2;
 
     if (completed || !email) continue;
 
     if (emailAlreadyApplied(String(email).toLowerCase().trim())) {
-      sheet.getRange(rowNum, 5).setValue('Yes (backfilled)');
+      sheet.getRange(rowNum, 6).setValue('Yes (backfilled)');
     }
   }
 }
