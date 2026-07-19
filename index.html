@@ -1485,6 +1485,11 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
     <div>By submitting this application, you confirm all details are accurate and that you have read and agreed to the FTLO Code of Conduct, all Policies, and the General Agreements of Participation. Submitting does not guarantee a spot. FTLO will follow up by email with payment instructions if a spot is available.</div>
   </div>
 
+  <div class="notice danger" id="submitErrorBox" style="display:none;">
+    <span class="notice-icon">&#9888;</span>
+    <div>We couldn't confirm your application actually went through. Please tap <strong>Submit Application</strong> again. If this keeps happening, please email <strong>info@ftlovolleyball.ca</strong> directly (include your name so we don't miss you) rather than assuming it was received.</div>
+  </div>
+
   <div class="nav-row">
     <button type="button" class="btn-back" onclick="prevStep(4)">Back</button>
     <button type="button" class="btn-submit" id="submitBtn" onclick="submitForm()">Submit Application</button>
@@ -1963,32 +1968,77 @@ function submitForm() {
   var btn = document.getElementById('submitBtn');
   btn.disabled = true;
   btn.innerHTML = 'Submitting...';
+  var errorBox = document.getElementById('submitErrorBox');
+  if (errorBox) errorBox.style.display = 'none';
 
   var data = collectData();
 
-  // Use XMLHttpRequest - most compatible with Google Apps Script
+  // Cross-origin POSTs to Apps Script are unreliable to read a response from
+  // (xhr.onload/onerror can misfire either way regardless of whether the
+  // submission actually succeeded server-side), so we never trust them
+  // directly. Once the POST settles (by any signal, including a timeout),
+  // we independently confirm the application actually landed using the same
+  // checkEmail GET the form already relies on elsewhere - only THEN do we
+  // show the applicant a success screen. Never show success on a guess.
+  var settled = false;
+  function onSettled() {
+    if (settled) return;
+    settled = true;
+    btn.innerHTML = 'Confirming...';
+    verifySubmission(data.email, 1);
+  }
+
   var xhr = new XMLHttpRequest();
   xhr.open('POST', APPS_SCRIPT_URL, true);
   xhr.setRequestHeader('Content-Type', 'text/plain');
-
-  xhr.onload = function() {
-    showSuccess();
-  };
-  xhr.onerror = function() {
-    // no-cors means we won't get a response back, so we show success anyway
-    // if the request was sent (onerror only fires on network failure)
-    showSuccess();
-  };
+  xhr.onload = onSettled;
+  xhr.onerror = onSettled;
 
   try {
     xhr.send(JSON.stringify(data));
-    // For no-cors situations, show success after short delay
-    setTimeout(function() {
-      showSuccess();
-    }, 2000);
+    setTimeout(onSettled, 3000);
   }
-  catch(e) {
-    showSuccess();
+  catch (e) {
+    onSettled();
+  }
+}
+
+var SUBMIT_VERIFY_MAX_ATTEMPTS = 4;
+var SUBMIT_VERIFY_RETRY_DELAY_MS = 2500;
+
+function verifySubmission(email, attempt) {
+  fetch(APPS_SCRIPT_URL + '?action=checkEmail&email=' + encodeURIComponent(email.toLowerCase()) + '&v=' + Date.now(), { cache: 'no-store' })
+    .then(function(r) { return r.json(); })
+    .then(function(json) {
+      if (json.exists) {
+        showSuccess();
+        return;
+      }
+      retryOrFail(email, attempt);
+    })
+    .catch(function() {
+      retryOrFail(email, attempt);
+    });
+}
+
+function retryOrFail(email, attempt) {
+  if (attempt < SUBMIT_VERIFY_MAX_ATTEMPTS) {
+    setTimeout(function() {
+      verifySubmission(email, attempt + 1);
+    }, SUBMIT_VERIFY_RETRY_DELAY_MS);
+    return;
+  }
+  showSubmitFailure();
+}
+
+function showSubmitFailure() {
+  var btn = document.getElementById('submitBtn');
+  btn.disabled = false;
+  btn.innerHTML = 'Submit Application';
+  var errorBox = document.getElementById('submitErrorBox');
+  if (errorBox) {
+    errorBox.style.display = 'flex';
+    errorBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 }
 
