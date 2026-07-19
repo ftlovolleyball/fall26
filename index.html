@@ -1487,7 +1487,7 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
 
   <div class="notice danger" id="submitErrorBox" style="display:none;">
     <span class="notice-icon">&#9888;</span>
-    <div>We couldn't confirm your application actually went through. Please tap <strong>Submit Application</strong> again. If this keeps happening, please email <strong>info@ftlovolleyball.ca</strong> directly (include your name so we don't miss you) rather than assuming it was received.</div>
+    <div>We couldn't confirm your application actually went through. Please tap <strong>Submit Application</strong> again. If this keeps happening, please email <strong>info@ftlovolleyball.ca</strong> directly with your name and which program(s)/time slot(s) you want to apply for, so we don't miss you.</div>
   </div>
 
   <div class="nav-row">
@@ -1497,6 +1497,10 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
 </section>
 
 </form>
+
+<!-- Submission target: a real (invisible) form post into this iframe is used
+     instead of fetch/XHR - see submitForm() below for why. -->
+<iframe name="hiddenSubmitFrame" id="hiddenSubmitFrame" style="display:none;" title="submission target"></iframe>
 
 <!-- ── SUCCESS ── -->
 <div class="success-wrap" id="successScreen">
@@ -1973,34 +1977,42 @@ function submitForm() {
 
   var data = collectData();
 
-  // Cross-origin POSTs to Apps Script are unreliable to read a response from
-  // (xhr.onload/onerror can misfire either way regardless of whether the
-  // submission actually succeeded server-side), so we never trust them
-  // directly. Once the POST settles (by any signal, including a timeout),
-  // we independently confirm the application actually landed using the same
-  // checkEmail GET the form already relies on elsewhere - only THEN do we
-  // show the applicant a success screen. Never show success on a guess.
-  var settled = false;
-  function onSettled() {
-    if (settled) return;
-    settled = true;
+  // Submitted as a real (invisible) HTML form post rather than fetch/XHR.
+  // Ad blockers and privacy extensions commonly intercept scripted network
+  // calls to third-party URLs (which is what a fetch/XHR to a
+  // script.google.com URL looks like to them) without the visitor ever
+  // knowing - but they don't block ordinary form submissions, since that
+  // would break most of the web. This is the standard, most reliable way to
+  // post to a Google Apps Script web app from an external site.
+  submitViaHiddenForm(data);
+
+  // We still can't read a response back from a cross-origin form post into
+  // an iframe, so - same as before - we independently confirm the
+  // application actually landed using the checkEmail GET the form already
+  // relies on elsewhere, and only show success once that's confirmed.
+  // Never show success on a guess.
+  setTimeout(function() {
     btn.innerHTML = 'Confirming...';
     verifySubmission(data.email, 1);
-  }
+  }, 3000);
+}
 
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', APPS_SCRIPT_URL, true);
-  xhr.setRequestHeader('Content-Type', 'text/plain');
-  xhr.onload = onSettled;
-  xhr.onerror = onSettled;
+function submitViaHiddenForm(data) {
+  var form = document.createElement('form');
+  form.method = 'POST';
+  form.action = APPS_SCRIPT_URL;
+  form.target = 'hiddenSubmitFrame';
+  form.style.display = 'none';
 
-  try {
-    xhr.send(JSON.stringify(data));
-    setTimeout(onSettled, 3000);
-  }
-  catch (e) {
-    onSettled();
-  }
+  var field = document.createElement('input');
+  field.type = 'hidden';
+  field.name = 'payload';
+  field.value = JSON.stringify(data);
+  form.appendChild(field);
+
+  document.body.appendChild(form);
+  form.submit();
+  document.body.removeChild(form);
 }
 
 var SUBMIT_VERIFY_MAX_ATTEMPTS = 4;

@@ -98,7 +98,14 @@ var PROGRAM_CATALOG = [
 var PROGRAM_COLUMNS = ['Tue Beg', 'Wed Beg', 'Tue FF', 'Wed Int', 'Thu Int', "Thu Women's Int"];
 
 function doPost(e) {
-  var data = JSON.parse(e.postData.contents);
+  // Submitted either as a raw JSON body (older fetch/XHR path) or as a real
+  // HTML form post with the JSON tucked into a hidden "payload" field (the
+  // current path - a real form submission is far less likely to get silently
+  // blocked by ad blockers/privacy extensions than a scripted fetch/XHR call,
+  // since blocking normal form posts would break most of the web). Support
+  // both so neither submission method is left behind.
+  var raw = (e.postData && e.postData.contents) || (e.parameter && e.parameter.payload) || '{}';
+  var data = JSON.parse(raw);
 
   // Honeypot: real applicants never see or fill this field. If it has a
   // value, this is a bot. Pretend it worked, but don't write a row or
