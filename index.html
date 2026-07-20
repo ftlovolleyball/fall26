@@ -1990,11 +1990,13 @@ function submitForm() {
   // an iframe, so - same as before - we independently confirm the
   // application actually landed using the checkEmail GET the form already
   // relies on elsewhere, and only show success once that's confirmed.
-  // Never show success on a guess.
+  // Never show success on a guess. The form.submit() above already fired
+  // the real request, so there's nothing left to wait on before starting to
+  // check - just a brief head start for the request to land.
   setTimeout(function() {
     btn.innerHTML = 'Confirming...';
     verifySubmission(data.email, 1);
-  }, 3000);
+  }, SUBMIT_INITIAL_CHECK_DELAY_MS);
 }
 
 function submitViaHiddenForm(data) {
@@ -2015,8 +2017,9 @@ function submitViaHiddenForm(data) {
   document.body.removeChild(form);
 }
 
-var SUBMIT_VERIFY_MAX_ATTEMPTS = 4;
-var SUBMIT_VERIFY_RETRY_DELAY_MS = 2500;
+var SUBMIT_INITIAL_CHECK_DELAY_MS = 500;
+var SUBMIT_VERIFY_MAX_ATTEMPTS = 5;
+var SUBMIT_VERIFY_RETRY_DELAY_MS = 800;
 
 function verifySubmission(email, attempt) {
   fetch(APPS_SCRIPT_URL + '?action=checkEmail&email=' + encodeURIComponent(email.toLowerCase()) + '&v=' + Date.now(), { cache: 'no-store' })
