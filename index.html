@@ -1485,6 +1485,11 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
     <div>By submitting this application, you confirm all details are accurate and that you have read and agreed to the FTLO Code of Conduct, all Policies, and the General Agreements of Participation. Submitting does not guarantee a spot. FTLO will follow up by email with payment instructions if a spot is available.</div>
   </div>
 
+  <div class="notice danger" id="submitErrorBox" style="display:none;">
+    <span class="notice-icon">&#9888;</span>
+    <div>We couldn't confirm your application actually went through. Please tap <strong>Submit Application</strong> again. If this keeps happening, please email <strong>info@ftlovolleyball.ca</strong> directly with your name and which program(s)/time slot(s) you want to apply for, so we don't miss you.</div>
+  </div>
+
   <div class="nav-row">
     <button type="button" class="btn-back" onclick="prevStep(4)">Back</button>
     <button type="button" class="btn-submit" id="submitBtn" onclick="submitForm()">Submit Application</button>
@@ -1492,6 +1497,10 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
 </section>
 
 </form>
+
+<!-- Submission target: a real (invisible) form post into this iframe is used
+     instead of fetch/XHR - see submitForm() below for why. -->
+<iframe name="hiddenSubmitFrame" id="hiddenSubmitFrame" style="display:none;" title="submission target"></iframe>
 
 <!-- ── SUCCESS ── -->
 <div class="success-wrap" id="successScreen">
@@ -1963,32 +1972,88 @@ function submitForm() {
   var btn = document.getElementById('submitBtn');
   btn.disabled = true;
   btn.innerHTML = 'Submitting...';
+  var errorBox = document.getElementById('submitErrorBox');
+  if (errorBox) errorBox.style.display = 'none';
 
   var data = collectData();
 
-  // Use XMLHttpRequest - most compatible with Google Apps Script
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', APPS_SCRIPT_URL, true);
-  xhr.setRequestHeader('Content-Type', 'text/plain');
+  // Submitted as a real (invisible) HTML form post rather than fetch/XHR.
+  // Ad blockers and privacy extensions commonly intercept scripted network
+  // calls to third-party URLs (which is what a fetch/XHR to a
+  // script.google.com URL looks like to them) without the visitor ever
+  // knowing - but they don't block ordinary form submissions, since that
+  // would break most of the web. This is the standard, most reliable way to
+  // post to a Google Apps Script web app from an external site.
+  submitViaHiddenForm(data);
 
-  xhr.onload = function() {
-    showSuccess();
-  };
-  xhr.onerror = function() {
-    // no-cors means we won't get a response back, so we show success anyway
-    // if the request was sent (onerror only fires on network failure)
-    showSuccess();
-  };
+  // We still can't read a response back from a cross-origin form post into
+  // an iframe, so - same as before - we independently confirm the
+  // application actually landed using the checkEmail GET the form already
+  // relies on elsewhere, and only show success once that's confirmed.
+  // Never show success on a guess. The form.submit() above already fired
+  // the real request, so there's nothing left to wait on before starting to
+  // check - just a brief head start for the request to land.
+  setTimeout(function() {
+    btn.innerHTML = 'Confirming...';
+    verifySubmission(data.email, 1);
+  }, SUBMIT_INITIAL_CHECK_DELAY_MS);
+}
 
-  try {
-    xhr.send(JSON.stringify(data));
-    // For no-cors situations, show success after short delay
+function submitViaHiddenForm(data) {
+  var form = document.createElement('form');
+  form.method = 'POST';
+  form.action = APPS_SCRIPT_URL;
+  form.target = 'hiddenSubmitFrame';
+  form.style.display = 'none';
+
+  var field = document.createElement('input');
+  field.type = 'hidden';
+  field.name = 'payload';
+  field.value = JSON.stringify(data);
+  form.appendChild(field);
+
+  document.body.appendChild(form);
+  form.submit();
+  document.body.removeChild(form);
+}
+
+var SUBMIT_INITIAL_CHECK_DELAY_MS = 500;
+var SUBMIT_VERIFY_MAX_ATTEMPTS = 5;
+var SUBMIT_VERIFY_RETRY_DELAY_MS = 800;
+
+function verifySubmission(email, attempt) {
+  fetch(APPS_SCRIPT_URL + '?action=checkEmail&email=' + encodeURIComponent(email.toLowerCase()) + '&v=' + Date.now(), { cache: 'no-store' })
+    .then(function(r) { return r.json(); })
+    .then(function(json) {
+      if (json.exists) {
+        showSuccess();
+        return;
+      }
+      retryOrFail(email, attempt);
+    })
+    .catch(function() {
+      retryOrFail(email, attempt);
+    });
+}
+
+function retryOrFail(email, attempt) {
+  if (attempt < SUBMIT_VERIFY_MAX_ATTEMPTS) {
     setTimeout(function() {
-      showSuccess();
-    }, 2000);
+      verifySubmission(email, attempt + 1);
+    }, SUBMIT_VERIFY_RETRY_DELAY_MS);
+    return;
   }
-  catch(e) {
-    showSuccess();
+  showSubmitFailure();
+}
+
+function showSubmitFailure() {
+  var btn = document.getElementById('submitBtn');
+  btn.disabled = false;
+  btn.innerHTML = 'Submit Application';
+  var errorBox = document.getElementById('submitErrorBox');
+  if (errorBox) {
+    errorBox.style.display = 'flex';
+    errorBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 }
 

@@ -36,14 +36,27 @@
 // ABANDONED APPLICATION REMINDERS:
 //  When an applicant gets past Step 1 (Contact Info), the form pings this
 //  script with their name/email, which gets logged to a separate "Started
-//  Applications" tab (created automatically). Every 6 hours, the
+//  Applications" tab (created automatically), with a Completed column left
+//  blank. If/when that person actually submits, the Completed column on
+//  their row is filled in immediately (see markApplicationCompleted()), so
+//  the tab always shows current status at a glance - no need to wait on the
+//  reminder trigger below to find out who's done. Every 6 hours, the
 //  sendAbandonedApplicationReminders() trigger checks that tab for anyone who
-//  started at least 48 hours ago and never actually submitted, and sends them
-//  a one-time reminder email. If they did submit, that row is just marked
-//  "Not needed - completed" and left alone. This requires the one-time
+//  started at least 48 hours ago and is still not marked Completed, and sends
+//  them a one-time reminder email. This requires the one-time
 //  installReminderTrigger() run described in step 5 above - simply pasting
 //  the code is not enough, since Apps Script triggers aren't created by
 //  deploying, only by running that setup function (or via the Triggers UI).
+//
+// UPGRADING AN EXISTING DEPLOYMENT TO ADD THE "Completed" COLUMN:
+//  If you already had this script deployed with a "Started Applications" tab
+//  before the Completed column existed, redeploying picks up the new column
+//  automatically (see ensureStartedSheetSchema()) - no need to touch the
+//  sheet by hand. But that only fills in Completed going forward; anyone
+//  already sitting in that tab from before this update won't be checked
+//  automatically. Right after redeploying, select backfillCompletedColumn in
+//  the function dropdown and click Run once to fill in Completed for
+//  everyone already in the tab. Safe to re-run any time.
 //
 // TIMESTAMPS:
 //  The "Timestamp" column is generated HERE, on Google's servers, using
@@ -85,7 +98,14 @@ var PROGRAM_CATALOG = [
 var PROGRAM_COLUMNS = ['Tue Beg', 'Wed Beg', 'Tue FF', 'Wed Int', 'Thu Int', "Thu Women's Int"];
 
 function doPost(e) {
-  var data = JSON.parse(e.postData.contents);
+  // Submitted either as a raw JSON body (older fetch/XHR path) or as a real
+  // HTML form post with the JSON tucked into a hidden "payload" field (the
+  // current path - a real form submission is far less likely to get silently
+  // blocked by ad blockers/privacy extensions than a scripted fetch/XHR call,
+  // since blocking normal form posts would break most of the web). Support
+  // both so neither submission method is left behind.
+  var raw = (e.postData && e.postData.contents) || (e.parameter && e.parameter.payload) || '{}';
+  var data = JSON.parse(raw);
 
   // Honeypot: real applicants never see or fill this field. If it has a
   // value, this is a bot. Pretend it worked, but don't write a row or
@@ -168,6 +188,7 @@ function handleApplicationSubmit(data, ss) {
   appendRowToSheet(ss, BACKUP_SHEET_NAME, row);
 
   if (data.email) {
+    markApplicationCompleted(ss, data.email, serverTimestamp);
     sendApplicationConfirmationEmail(data, serverTimestamp);
   }
 }
@@ -203,6 +224,27 @@ function emailAlreadyApplied(email) {
   return false;
 }
 
+// ── Adds the Completed column the first time this code runs against a
+// Started Applications tab that predates it. A brand-new tab gets the
+// current 6-column header outright. An existing tab (with real rows and an
+// old 5-column "...Email, Reminder Sent" header) just gets a "Completed"
+// header appended as a new 6th column - existing columns and their data
+// are never touched or moved, so every row's existing Reminder Sent value
+// stays exactly where it is; the new Completed cell is simply blank for
+// rows that predate it, same as any other new column added to a sheet with
+// existing rows. Safe to call every time - a no-op once already current.
+function ensureStartedSheetSchema(sheet) {
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(['Started Timestamp', 'First Name', 'Last Name', 'Email', 'Reminder Sent', 'Completed']);
+    return;
+  }
+
+  var header = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+  if (header[5] !== 'Completed') {
+    sheet.getRange(1, 6).setValue('Completed');
+  }
+}
+
 // ── Records that someone got past Contact Info, so a reminder can go out later
 // if they never actually submit. Called once per applicant - if they've
 // already been recorded (e.g. they navigated back and forward through Step 1
@@ -214,9 +256,7 @@ function markApplicationStarted(email, firstName, lastName) {
   if (!sheet) {
     sheet = ss.insertSheet(STARTED_SHEET_NAME);
   }
-  if (sheet.getLastRow() === 0) {
-    sheet.appendRow(['Started Timestamp', 'First Name', 'Last Name', 'Email', 'Reminder Sent']);
-  }
+  ensureStartedSheetSchema(sheet);
 
   var lastRow = sheet.getLastRow();
   if (lastRow >= 2) {
@@ -227,7 +267,33 @@ function markApplicationStarted(email, firstName, lastName) {
   }
 
   var serverTimestamp = Utilities.formatDate(new Date(), TIMEZONE, 'yyyy-MM-dd HH:mm:ss');
-  sheet.appendRow([serverTimestamp, firstName || '', lastName || '', email, '']);
+  sheet.appendRow([serverTimestamp, firstName || '', lastName || '', email, '', '']);
+}
+
+// ── Called right when someone submits (handleApplicationSubmit), so the
+// Started Applications tab reflects completion immediately rather than
+// waiting on the 6-hourly reminder trigger to notice. Finds their row by
+// email and fills in the Completed column; does nothing if they don't have
+// a Started Applications row (e.g. they submitted without the Step 1 ping
+// ever firing). ───────────────────────────────────────────────────────────
+function markApplicationCompleted(ss, email, completedTimestamp) {
+  var normalizedEmail = String(email).toLowerCase().trim();
+  if (!normalizedEmail) return;
+
+  var sheet = ss.getSheetByName(STARTED_SHEET_NAME);
+  if (!sheet) return;
+  ensureStartedSheetSchema(sheet);
+
+  var lastRow = sheet.getLastRow();
+  if (lastRow < 2) return;
+
+  var emails = sheet.getRange(2, 4, lastRow - 1, 1).getValues();
+  for (var i = 0; i < emails.length; i++) {
+    if (String(emails[i][0]).toLowerCase().trim() === normalizedEmail) {
+      sheet.getRange(i + 2, 6).setValue(completedTimestamp);
+      return; // markApplicationStarted dedupes, so only one row per email
+    }
+  }
 }
 
 // ── Time-driven (see installReminderTrigger() below): finds anyone who
@@ -237,11 +303,12 @@ function sendAbandonedApplicationReminders() {
   var ss = SpreadsheetApp.openById(SHEET_ID);
   var sheet = ss.getSheetByName(STARTED_SHEET_NAME);
   if (!sheet) return;
+  ensureStartedSheetSchema(sheet);
 
   var lastRow = sheet.getLastRow();
   if (lastRow < 2) return;
 
-  var rows = sheet.getRange(2, 1, lastRow - 1, 5).getValues();
+  var rows = sheet.getRange(2, 1, lastRow - 1, 6).getValues();
   var now = new Date();
 
   for (var i = 0; i < rows.length; i++) {
@@ -249,21 +316,57 @@ function sendAbandonedApplicationReminders() {
     var firstName = rows[i][1];
     var email = rows[i][3];
     var reminderSent = rows[i][4];
+    var completed = rows[i][5];
     var rowNum = i + 2; // header row + 1-indexing
 
-    if (reminderSent) continue; // already handled
+    if (completed || reminderSent) continue; // already handled
     if (!(startedAt instanceof Date) || !email) continue;
 
     var hoursElapsed = (now.getTime() - startedAt.getTime()) / (1000 * 60 * 60);
     if (hoursElapsed < REMINDER_DELAY_HOURS) continue;
 
+    // Completed should normally already be set by markApplicationCompleted()
+    // at submit time; this is a fallback for rows from before that existed.
     if (emailAlreadyApplied(String(email).toLowerCase().trim())) {
-      sheet.getRange(rowNum, 5).setValue('Not needed - completed');
+      sheet.getRange(rowNum, 6).setValue('Yes (detected)');
       continue;
     }
 
     sendReminderEmail(email, firstName);
     sheet.getRange(rowNum, 5).setValue(Utilities.formatDate(new Date(), TIMEZONE, 'yyyy-MM-dd HH:mm:ss'));
+  }
+}
+
+// ── ONE-TIME CLEANUP: run this once, manually, right after deploying the
+// Completed column for the first time. Only markApplicationCompleted() (fired
+// by new submissions) and the reminder trigger's 48-hour fallback check ever
+// fill in Completed, so anyone who already had a Started Applications row
+// before this deploy - including people who quietly finished their
+// application days ago - would otherwise show blank Completed forever. This
+// walks every existing row and fills in Completed for anyone who's actually
+// in the Applications tab. Safe to re-run any time; it only ever fills in
+// blank Completed cells, never overwrites one. ───────────────────────────────
+function backfillCompletedColumn() {
+  var ss = SpreadsheetApp.openById(SHEET_ID);
+  var sheet = ss.getSheetByName(STARTED_SHEET_NAME);
+  if (!sheet) return;
+  ensureStartedSheetSchema(sheet);
+
+  var lastRow = sheet.getLastRow();
+  if (lastRow < 2) return;
+
+  var rows = sheet.getRange(2, 1, lastRow - 1, 6).getValues();
+
+  for (var i = 0; i < rows.length; i++) {
+    var email = rows[i][3];
+    var completed = rows[i][5];
+    var rowNum = i + 2;
+
+    if (completed || !email) continue;
+
+    if (emailAlreadyApplied(String(email).toLowerCase().trim())) {
+      sheet.getRange(rowNum, 6).setValue('Yes (backfilled)');
+    }
   }
 }
 
