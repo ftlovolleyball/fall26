@@ -1038,12 +1038,13 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
           </ul>
         </div>
         <div class="skill-card" style="background:#f5f0fb;border:2px solid #d8c8ec;">
-          <div class="skill-card-title" style="color:#5a3a8c;">Foundation Focus: Pass &amp; Attack</div>
+          <div class="skill-card-title" style="color:#5a3a8c;margin-bottom:2px;">Foundation Focus: Pass &amp; Attack</div>
+          <div style="font-size:11px;font-weight:700;color:#5a3a8c;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;">Not for first-time players</div>
           <ul>
-            <li><span>&bull;</span>Understands basic gameplay flow</li>
+            <li><span>&bull;</span>Requires real prior playing experience &ndash; not a starting point</li>
+            <li><span>&bull;</span>Already understands basic gameplay flow</li>
             <li><span>&bull;</span>Mainly needs cleaner, more consistent contacts</li>
             <li><span>&bull;</span>High-volume passing, attacking &amp; serving reps</li>
-            <li><span>&bull;</span>Some past or current playing experience</li>
             <li><span>&bull;</span>B to BB+ level</li>
           </ul>
         </div>
@@ -1776,17 +1777,18 @@ function getRecommendationDisplay(rec, gender) {
       bullets: [
         'Best for players still learning volleyball flow, positioning, and fundamental skills',
         'Clear instruction across passing, setting, serving, and attacking',
-        'Supportive gameplay to build confidence and become rally-ready'
+        'Supportive gameplay to build confidence and become rally-ready',
+        'Most FTLOers train Beginner for 2-3 seasons before moving up - that\'s the standard path, not a setback'
       ]
     };
   }
   if (rec === 'BEG/FF') {
     return {
-      title: 'Best-fit options: Beginner or Foundation Focus',
+      title: 'Recommended: Beginner Skills Clinic',
       bullets: [
-        'Choose Beginner for broader instruction across all fundamental skills',
-        'Choose Foundation Focus if you understand gameplay but mainly need cleaner passing and overhead contacts',
-        'Beginner includes more rally learning; Foundation Focus includes more repetitive technical drills'
+        'Best for building fundamentals, rally flow, and consistent contacts',
+        'Most FTLOers train Beginner for 2-3 seasons before considering Foundation Focus - that\'s the standard path, not a setback',
+        'Foundation Focus is only a fit once you already have real prior playing experience and mainly need cleaner passing and overhead contacts - it\'s not a starting point'
       ]
     };
   }
