@@ -28,10 +28,24 @@
 // WHAT THIS DOES:
 //  - doPost(e): runs when someone submits the application form. Writes a row to
 //    the "Applications" tab (created automatically if it doesn't exist yet) and
-//    emails the applicant a confirmation.
-//  - doGet(e): handles the "already applied?" duplicate-email check the form
-//    does before letting someone continue past Step 1, and records when
-//    someone starts an application (see below).
+//    emails the applicant a confirmation. Rejected (no row, no email) if their
+//    email was never verified - see EMAIL VERIFICATION below.
+//  - doGet(e): handles the "already applied?" duplicate-email check and the
+//    email verification code send/check the form does before letting someone
+//    continue past Step 1, and records when someone starts an application
+//    (see below).
+//
+// EMAIL VERIFICATION:
+//  Before an applicant can move past Step 1 (Contact Info), the form sends a
+//  6-digit code to the email address they typed and makes them enter it back
+//  in. This is the main defense against fake/typo'd addresses (e.g.
+//  "test@gmail.com") cluttering the sheet and triggering confirmation/reminder
+//  emails nobody reads. Codes (and the "verified" flag once one is entered
+//  correctly) live in CacheService, not the sheet - they're short-lived by
+//  design and never need to be looked up by a human. doPost() independently
+//  re-checks that the submitted email was actually verified before writing
+//  anything, so this can't be bypassed by skipping the browser UI and calling
+//  the script directly.
 //
 // ABANDONED APPLICATION REMINDERS:
 //  When an applicant gets past Step 1 (Contact Info), the form pings this
@@ -60,6 +74,15 @@ var BACKUP_SHEET_NAME = 'backup'; // mirror of every submission; never edited by
 var STARTED_SHEET_NAME = 'Started Applications'; // tracks who began but hasn't submitted, for the abandoned-application reminder
 var REMINDER_DELAY_HOURS = 48;
 var TIMEZONE = 'America/Vancouver';
+
+// How long a verification code stays valid once emailed, how long the
+// resulting "verified" flag stays valid (must cover however long it takes an
+// applicant to finish the rest of the form), and the minimum gap between
+// resend requests for the same address. All well under CacheService's 6-hour
+// (21600s) max.
+var VERIFY_CODE_TTL_SECONDS = 600;        // 10 minutes to enter the code
+var VERIFY_OK_TTL_SECONDS = 3600;         // 1 hour to finish the rest of the form after verifying
+var VERIFY_RESEND_COOLDOWN_SECONDS = 30;  // minimum gap between resend requests
 
 // ── PROGRAM CATALOG ───────────────────────────────────────────────────────
 // One entry per selectable time slot (matches the `data-code` / checkbox
@@ -98,8 +121,8 @@ function doPost(e) {
   }
 
   var ss = SpreadsheetApp.openById(SHEET_ID);
-  handleApplicationSubmit(data, ss);
-  return ContentService.createTextOutput(JSON.stringify({ status: 'ok' }))
+  var result = handleApplicationSubmit(data, ss);
+  return ContentService.createTextOutput(JSON.stringify(result))
                         .setMimeType(ContentService.MimeType.JSON);
 }
 
@@ -110,6 +133,21 @@ function doGet(e) {
     var email = (e.parameter.email || '').toLowerCase().trim();
     var exists = emailAlreadyApplied(email);
     return ContentService.createTextOutput(JSON.stringify({ exists: exists }))
+                          .setMimeType(ContentService.MimeType.JSON);
+  }
+
+  if (action === 'sendVerificationCode') {
+    var sendEmail = (e.parameter.email || '').toLowerCase().trim();
+    var sendResult = sendVerificationCode(sendEmail);
+    return ContentService.createTextOutput(JSON.stringify(sendResult))
+                          .setMimeType(ContentService.MimeType.JSON);
+  }
+
+  if (action === 'verifyCode') {
+    var vEmail = (e.parameter.email || '').toLowerCase().trim();
+    var vCode = (e.parameter.code || '').trim();
+    var vResult = verifyEmailCode(vEmail, vCode);
+    return ContentService.createTextOutput(JSON.stringify(vResult))
                           .setMimeType(ContentService.MimeType.JSON);
   }
 
@@ -141,8 +179,16 @@ var HEADER_ROW = [
 ]);
 
 // ── Writes the application row (to both Applications and its Backup mirror)
-//    and sends the confirmation email ────────────────────────────────────
+//    and sends the confirmation email. Refuses to do either if the submitted
+//    email was never verified (see EMAIL VERIFICATION at the top of this
+//    file) - this is what actually stops fake/typo'd addresses from landing
+//    in the sheet, independent of whatever the browser UI does. ───────────
 function handleApplicationSubmit(data, ss) {
+  var email = (data.email || '').toLowerCase().trim();
+  if (!emailIsVerified(email)) {
+    return { status: 'error', reason: 'not_verified' };
+  }
+
   var serverTimestamp = Utilities.formatDate(new Date(), TIMEZONE, 'yyyy-MM-dd HH:mm:ss');
 
   var row = [
@@ -172,6 +218,8 @@ function handleApplicationSubmit(data, ss) {
   if (data.email) {
     sendApplicationConfirmationEmail(data, serverTimestamp);
   }
+
+  return { status: 'ok' };
 }
 
 // Appends a row to the named tab, creating the tab and/or header row first
@@ -203,6 +251,90 @@ function emailAlreadyApplied(email) {
     if (String(emails[i][0]).toLowerCase().trim() === email) return true;
   }
   return false;
+}
+
+// ── EMAIL VERIFICATION ─────────────────────────────────────────────────────
+// See the file header comment for the overall design. Everything here lives
+// in CacheService, keyed by lowercased/trimmed email - nothing is written to
+// the sheet until (and unless) handleApplicationSubmit() confirms
+// emailIsVerified() for the address being submitted.
+
+// Generates and emails a 6-digit code, unless one was already sent to this
+// address within VERIFY_RESEND_COOLDOWN_SECONDS (basic abuse guard against a
+// script hammering this endpoint with someone else's real address).
+function sendVerificationCode(email) {
+  if (!email || email.indexOf('@') === -1) {
+    return { status: 'error', reason: 'invalid_email' };
+  }
+
+  var cache = CacheService.getScriptCache();
+  var cooldownKey = 'vcooldown_' + email;
+  if (cache.get(cooldownKey)) {
+    return { status: 'cooldown' };
+  }
+
+  var code = String(Math.floor(100000 + Math.random() * 900000)); // always 6 digits
+  cache.put('vcode_' + email, code, VERIFY_CODE_TTL_SECONDS);
+  cache.put(cooldownKey, '1', VERIFY_RESEND_COOLDOWN_SECONDS);
+
+  sendVerificationCodeEmail(email, code);
+  return { status: 'sent' };
+}
+
+// Checks a submitted code against what's cached for that address. On a
+// match, clears the one-time code and raises the longer-lived "verified"
+// flag that handleApplicationSubmit() checks at final submission.
+function verifyEmailCode(email, code) {
+  if (!email || !code) return { verified: false, reason: 'missing' };
+
+  var cache = CacheService.getScriptCache();
+  var key = 'vcode_' + email;
+  var stored = cache.get(key);
+
+  if (!stored) return { verified: false, reason: 'expired' };
+  if (stored !== code) return { verified: false, reason: 'mismatch' };
+
+  cache.remove(key);
+  cache.put('vok_' + email, '1', VERIFY_OK_TTL_SECONDS);
+  return { verified: true };
+}
+
+function emailIsVerified(email) {
+  if (!email) return false;
+  var cache = CacheService.getScriptCache();
+  return !!cache.get('vok_' + email.toLowerCase().trim());
+}
+
+function sendVerificationCodeEmail(toEmail, code) {
+  var subject = 'Your FTLO verification code: ' + code;
+
+  var html = [
+    '<div style="font-family:Arial,sans-serif;max-width:480px;margin:0 auto;color:#222;">',
+
+    '<div style="background:#1F4049;padding:22px 28px;border-radius:8px 8px 0 0;">',
+      '<p style="margin:0 0 4px;font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#F8BA44;">FTLO Volleyball</p>',
+      '<h1 style="margin:0;font-size:19px;line-height:1.3;color:#FFF9F5;">Verify Your Email</h1>',
+    '</div>',
+
+    '<div style="background:#fff;border:1px solid #e0e0e0;border-top:none;padding:26px 28px;">',
+      '<p style="margin:0 0 18px;font-size:15px;line-height:1.6;color:#333;">Enter this code on the Fall 2026 clinic application to confirm this is your email address:</p>',
+      '<div style="text-align:center;margin:22px 0;">',
+        '<span style="display:inline-block;font-family:\'Barlow Condensed\',Arial,sans-serif;font-size:38px;font-weight:900;letter-spacing:0.15em;color:#1F4049;background:#f7f7f7;border:1px solid #e0e0e0;border-radius:8px;padding:14px 26px;">' + code + '</span>',
+      '</div>',
+      '<p style="margin:0;font-size:13px;line-height:1.6;color:#777;">This code expires in 10 minutes. If you didn\'t request this, you can safely ignore this email.</p>',
+    '</div>',
+
+    '<div style="background:#1F4049;padding:14px 28px;border-radius:0 0 8px 8px;text-align:center;">',
+      '<p style="margin:0;font-size:12px;color:rgba(255,249,245,0.55);">FTLO Volleyball Association &middot; <a href="https://www.ftlovolleyball.ca" style="color:#F8BA44;text-decoration:none;">ftlovolleyball.ca</a></p>',
+    '</div>',
+
+    '</div>'
+  ].join('');
+
+  GmailApp.sendEmail(toEmail, subject, '', {
+    htmlBody: html,
+    name: 'FTLO Volleyball'
+  });
 }
 
 // ── Records that someone got past Contact Info, so a reminder can go out later

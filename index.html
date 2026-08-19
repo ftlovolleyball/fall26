@@ -850,10 +850,29 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
 
   <div class="nav-row">
     <div></div>
-    <button type="button" class="btn-next" onclick="checkEmailThenNext()">
+    <button type="button" class="btn-next" id="step1ContinueBtn" onclick="checkEmailThenNext()">
       Continue to Clinic Quiz
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
     </button>
+  </div>
+
+  <div class="card" id="verifyEmailCard" style="display:none;margin-top:1rem;">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Verify Your Email</div>
+        <div class="card-sub">We sent a 6-digit code to <strong id="verifyEmailAddr"></strong>. Enter it below to continue &mdash; this keeps fake or mistyped emails off our list.</div>
+      </div>
+    </div>
+    <div class="field" id="f-verifyCode">
+      <label class="lbl">Verification Code <span class="req">*</span></label>
+      <input type="text" id="verifyCodeInput" inputmode="numeric" maxlength="6" placeholder="123456" autocomplete="one-time-code" oninput="this.value=this.value.replace(/\D/g,'')" />
+      <div class="err-msg">That code doesn't match. Please try again.</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:0.9rem;">
+      <button type="button" class="btn-next" onclick="submitVerifyCode()">Verify &amp; Continue</button>
+      <button type="button" class="btn-back" id="resendCodeBtn" onclick="resendVerificationCode()">Resend Code</button>
+      <a href="#" onclick="cancelVerification();return false;" style="font-size:13px;color:var(--gray-500);">Wrong email? Edit it</a>
+    </div>
   </div>
 </section>
 
@@ -2058,31 +2077,125 @@ function showSuccess() {
   scrollFormIntoView();
 }
 
+var STEP1_BTN_LABEL = 'Continue to Clinic Quiz <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>';
+
 function checkEmailThenNext() {
   var valid = validateStep(1);
   if (!valid) return;
   var email = getVal('email').toLowerCase();
-  var btn = document.querySelector('.btn-next');
+  var btn = document.getElementById('step1ContinueBtn');
   btn.disabled = true;
   btn.innerHTML = 'Checking...';
   fetch(APPS_SCRIPT_URL + '?action=checkEmail&email=' + encodeURIComponent(email) + '&v=' + Date.now(), { cache: 'no-store' })
     .then(function(r) { return r.json(); })
     .then(function(json) {
-      btn.disabled = false;
-      btn.innerHTML = 'Continue to Clinic Quiz <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>';
       if (json.exists) {
+        btn.disabled = false;
+        btn.innerHTML = STEP1_BTN_LABEL;
         markErr('f-email', 'This email has already been submitted. Each person may only apply once. Please contact info@ftlovolleyball.ca if you need help.');
       } else {
-        markApplicationStarted();
-        showStep(2);
+        startEmailVerification(email);
       }
     })
     .catch(function() {
+      // Duplicate check itself failed to reach the server - still require
+      // verification below rather than silently letting an unverified
+      // email straight through.
+      startEmailVerification(email);
+    });
+}
+
+// Sends the 6-digit code and opens the verification panel. If the send
+// request can't even reach the server (network hiccup), we don't hard-block
+// a legitimate applicant on that - let them through, same fallback the rest
+// of this form already uses for network failures.
+function startEmailVerification(email) {
+  var btn = document.getElementById('step1ContinueBtn');
+  btn.innerHTML = 'Sending code...';
+  fetch(APPS_SCRIPT_URL + '?action=sendVerificationCode&email=' + encodeURIComponent(email) + '&v=' + Date.now(), { cache: 'no-store' })
+    .then(function(r) { return r.json(); })
+    .then(function() {
+      showVerificationPanel(email);
+    })
+    .catch(function() {
       btn.disabled = false;
-      btn.innerHTML = 'Continue to Clinic Quiz <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>';
+      btn.innerHTML = STEP1_BTN_LABEL;
       markApplicationStarted();
       showStep(2);
     });
+}
+
+function showVerificationPanel(email) {
+  document.getElementById('verifyEmailAddr').textContent = email;
+  document.getElementById('verifyEmailCard').style.display = 'block';
+  document.getElementById('verifyCodeInput').value = '';
+  clearErr('f-verifyCode');
+  document.getElementById('verifyCodeInput').focus();
+  startResendCooldown();
+}
+
+// "Wrong email? Edit it" - backs out of verification entirely so they can
+// fix a typo and re-submit Step 1 from scratch.
+function cancelVerification() {
+  document.getElementById('verifyEmailCard').style.display = 'none';
+  clearInterval(resendCooldownTimer);
+  var btn = document.getElementById('step1ContinueBtn');
+  btn.disabled = false;
+  btn.innerHTML = STEP1_BTN_LABEL;
+}
+
+function submitVerifyCode() {
+  var email = getVal('email').toLowerCase();
+  var code = document.getElementById('verifyCodeInput').value.trim();
+  if (!/^\d{6}$/.test(code)) {
+    markErr('f-verifyCode', 'Please enter the 6-digit code from your email.');
+    return;
+  }
+  fetch(APPS_SCRIPT_URL + '?action=verifyCode&email=' + encodeURIComponent(email) + '&code=' + encodeURIComponent(code) + '&v=' + Date.now(), { cache: 'no-store' })
+    .then(function(r) { return r.json(); })
+    .then(function(json) {
+      if (json.verified) {
+        clearErr('f-verifyCode');
+        clearInterval(resendCooldownTimer);
+        markApplicationStarted();
+        showStep(2);
+      } else if (json.reason === 'expired') {
+        markErr('f-verifyCode', 'That code has expired. Click "Resend Code" for a new one.');
+      } else {
+        markErr('f-verifyCode', "That code doesn't match. Please try again.");
+      }
+    })
+    .catch(function() {
+      markErr('f-verifyCode', "Couldn't reach the server. Please try again.");
+    });
+}
+
+var resendCooldownTimer = null;
+function startResendCooldown() {
+  var resendBtn = document.getElementById('resendCodeBtn');
+  var seconds = 30;
+  resendBtn.disabled = true;
+  resendBtn.textContent = 'Resend Code (' + seconds + 's)';
+  clearInterval(resendCooldownTimer);
+  resendCooldownTimer = setInterval(function() {
+    seconds--;
+    if (seconds <= 0) {
+      clearInterval(resendCooldownTimer);
+      resendBtn.disabled = false;
+      resendBtn.textContent = 'Resend Code';
+    } else {
+      resendBtn.textContent = 'Resend Code (' + seconds + 's)';
+    }
+  }, 1000);
+}
+
+function resendVerificationCode() {
+  var email = getVal('email').toLowerCase();
+  document.getElementById('resendCodeBtn').disabled = true;
+  fetch(APPS_SCRIPT_URL + '?action=sendVerificationCode&email=' + encodeURIComponent(email) + '&v=' + Date.now(), { cache: 'no-store' })
+    .then(function(r) { return r.json(); })
+    .then(function() { startResendCooldown(); })
+    .catch(function() { startResendCooldown(); });
 }
 
 // Fire-and-forget: lets Apps Script know this applicant got past Contact Info,
