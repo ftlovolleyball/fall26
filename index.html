@@ -752,11 +752,6 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
 <!-- ════════════ SECTION 1: CONTACT ════════════ -->
 <section class="section active" id="section-1">
 
-  <div class="notice danger">
-    <span class="notice-icon">&#9888;</span>
-    <div><strong>September 12, 2026:</strong> The Wednesday Beginner clinic has moved to South Central Richmond (previously Burnaby). A few spots remain for this clinic, which starts September 16. Prorated registrations for other clinics are also available, please apply as soon as possible.</div>
-  </div>
-
   <div class="notice warn" id="registrationRoundsNotice">
     <span class="notice-icon">&#128197;</span>
     <div>
@@ -765,7 +760,6 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
         <li>First Round applicants will be contacted after <strong>July 20</strong> to pay and accept their training spot.</li>
         <li>Public invitation to apply opens after <strong>July 23</strong>.</li>
         <li>Second Round registration payment invites go out after <strong>July 24, 2026</strong>.</li>
-        <li>As of <strong>September 12, 2026</strong>, the Wednesday Beginner clinic has moved to South Central Richmond (previously Burnaby), with a few spots remaining for this clinic starting September 16. Prorated registrations for other clinics are also available, please apply as soon as possible.</li>
         <li>Waitlisted applicants will be contacted when a spot becomes available.</li>
       </ul>
     </div>
@@ -807,8 +801,9 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
 
     <div class="field" id="f-phone">
       <label class="lbl">Phone Number <span class="req">*</span></label>
-      <input type="tel" name="phone" id="phoneInput" placeholder="604-555-0100" autocomplete="tel" inputmode="numeric" maxlength="12" oninput="formatPhone(this)" />
-      <div class="err-msg">Please enter your phone number.</div>
+      <input type="tel" name="phone" id="phoneInput" placeholder="604-555-0100" autocomplete="tel" inputmode="tel" maxlength="16" oninput="formatPhone(this)" />
+      <div style="font-size:12.5px;color:var(--gray-500);margin-top:6px;">Outside North America? Start with a "+" and your country code.</div>
+      <div class="err-msg">Please enter a complete phone number (at least 10 digits, or a "+" country code and your full number).</div>
     </div>
 
     <div class="field-row">
@@ -1050,11 +1045,6 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
       <div>FTLO's Fall 2026 clinic programs are currently <strong>about 90% full</strong> overall. Apply soon to improve your chances of securing your preferred session(s).</div>
     </div>
 
-    <div class="notice danger">
-      <span class="notice-icon">&#9888;</span>
-      <div><strong>September 12, 2026:</strong> The Wednesday Beginner clinic has moved to South Central Richmond (previously Burnaby). A few spots remain for this clinic, which starts September 16. Prorated registrations for other clinics are also available, please apply as soon as possible.</div>
-    </div>
-
     <div class="card" style="background:var(--gray-100);border:1px solid var(--gray-200);box-shadow:none;margin-bottom:1.5rem;">
       <div class="card-title" style="font-size:18px;margin-bottom:6px;">FTLO Program Overview</div>
       <div style="font-size:14px;color:var(--gray-700);line-height:1.6;margin-bottom:1.1rem;">FTLOers are encouraged to train at least 2&ndash;3 seasons of Beginner before registering for Intermediate, unless communicated with FTLO Coaches. Players who do not closely match the correct group training skill level will be asked to switch programs or be given a refund.</div>
@@ -1146,7 +1136,7 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
             <div class="acc-tag">BEG</div>
             <div class="acc-meta">
               <div class="acc-title-row"><span class="acc-title">Wednesday &middot; Beginner</span></div>
-              <div class="acc-subdesc">Bridge Elementary, Richmond, BC &middot; $255 GST Included</div>
+              <div class="acc-subdesc">Bridge Elementary, Richmond, BC &middot; $295 GST Included</div>
             </div>
             <div class="acc-right">
               <span class="acc-pill">2 time slots</span>
@@ -1605,7 +1595,6 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
       <li>First Round applicants will be contacted after <strong>July 20</strong> to pay and accept their training spot.</li>
       <li>Public invitation to apply opens after <strong>July 23</strong>.</li>
       <li>Second Round registration payment invites go out after <strong>July 24, 2026</strong>.</li>
-      <li>As of <strong>September 12, 2026</strong>, the Wednesday Beginner clinic has moved to South Central Richmond (previously Burnaby), with a few spots remaining for this clinic starting September 16. Prorated registrations for other clinics are also available, please apply as soon as possible.</li>
       <li>Waitlisted applicants will be contacted when a spot becomes available.</li>
     </ul>
   </div>
@@ -1617,8 +1606,18 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
 </main>
 
 <script>
+// Domestic numbers auto-format to XXX-XXX-XXXX (10 digits). A leading "+"
+// signals an international number, e.g. "+44 7911 123456" - those are left
+// as typed (just capped at a sane length) rather than forced into the
+// domestic dash pattern. Either way, validateStep(1) below requires at
+// least 10 digits total; it will never accept fewer.
 function formatPhone(input) {
-  var digits = input.value.replace(/\D/g, '').slice(0, 10);
+  var raw = input.value;
+  if (raw.trim().charAt(0) === '+') {
+    input.value = '+' + raw.replace(/[^\d]/g, '').slice(0, 15);
+    return;
+  }
+  var digits = raw.replace(/\D/g, '').slice(0, 10);
   var formatted = '';
   if (digits.length <= 3) {
     formatted = digits;
@@ -1783,7 +1782,8 @@ function validateStep(step) {
     }
     var emailConfirm = getVal('emailConfirm');
     if (!emailInvalid && emailConfirm.toLowerCase() !== emailLower) { markErr('f-emailConfirm'); ok = false; } else clearErr('f-emailConfirm');
-    if (getVal('phone') === '') { markErr('f-phone'); ok = false; } else clearErr('f-phone');
+    var phoneDigitCount = getVal('phone').replace(/\D/g, '').length;
+    if (phoneDigitCount < 10) { markErr('f-phone'); ok = false; } else clearErr('f-phone');
     if (getVal('city') === '') { markErr('f-city'); ok = false; } else clearErr('f-city');
     if (getVal('gender') === '') { markErr('f-gender'); ok = false; } else clearErr('f-gender');
   }
