@@ -66,6 +66,17 @@
 //  no matter what device, browser, or clock the applicant's phone/computer has:
 //  YYYY-MM-DD HH:MM:SS, 24-hour time.
 //
+// CONCURRENT SUBMISSIONS:
+//  Every write to the Applications/backup/Started Applications tabs happens
+//  inside a LockService lock. Without this, two applicants submitting within
+//  moments of each other can race: both executions read the same "next empty
+//  row" before either finishes writing, and one submission silently
+//  overwrites the other's row. No exception gets thrown either way, which is
+//  why this kind of data loss doesn't show up in Executions history - it was
+//  traced back to a handful of applicants (Sept 2026) whose rows existed in
+//  backup but never appeared in Applications. Locking forces concurrent
+//  submissions to write one at a time instead of stepping on each other.
+//
 // ─────────────────────────────────────────────────────────────────────────────
 
 var SHEET_ID = '1QAXakjHOKh3pvCH7IXMXExRSrjYfWWnR0xcd-80zAkc'; // "2026 Fall Clinic Programs"
@@ -212,8 +223,21 @@ function handleApplicationSubmit(data, ss) {
     ''  // Payment Invite Sent, blank until you send it
   ]);
 
-  appendRowToSheet(ss, SHEET_NAME, row);
-  appendRowToSheet(ss, BACKUP_SHEET_NAME, row);
+  // Without this lock, two applicants submitting within moments of each
+  // other can race: both executions read the same "last row" before either
+  // finishes writing, and one submission's row silently overwrites the
+  // other's. No exception gets thrown either way - appendRow() succeeds
+  // from each execution's own point of view - which is exactly why this
+  // kind of data loss doesn't show up in Executions history. Locking
+  // forces concurrent submissions to write one at a time instead.
+  var lock = LockService.getScriptLock();
+  lock.waitLock(30000);
+  try {
+    appendRowToSheet(ss, SHEET_NAME, row);
+    appendRowToSheet(ss, BACKUP_SHEET_NAME, row);
+  } finally {
+    lock.releaseLock();
+  }
 
   if (data.email) {
     sendApplicationConfirmationEmail(data, serverTimestamp);
@@ -343,25 +367,36 @@ function sendVerificationCodeEmail(toEmail, code) {
 // again), this does nothing, so the original started time is preserved. ─────
 function markApplicationStarted(email, firstName, lastName) {
   if (!email) return;
-  var ss = SpreadsheetApp.openById(SHEET_ID);
-  var sheet = ss.getSheetByName(STARTED_SHEET_NAME);
-  if (!sheet) {
-    sheet = ss.insertSheet(STARTED_SHEET_NAME);
-  }
-  if (sheet.getLastRow() === 0) {
-    sheet.appendRow(['Started Timestamp', 'First Name', 'Last Name', 'Email', 'Reminder Sent']);
-  }
 
-  var lastRow = sheet.getLastRow();
-  if (lastRow >= 2) {
-    var emails = sheet.getRange(2, 4, lastRow - 1, 1).getValues();
-    for (var i = 0; i < emails.length; i++) {
-      if (String(emails[i][0]).toLowerCase().trim() === email) return;
+  // Same concurrency risk as appendRowToSheet(), plus this function also
+  // reads existing rows before deciding whether to append - without a
+  // lock, two near-simultaneous calls for the same email could both pass
+  // the duplicate check before either has appended, producing two rows.
+  var lock = LockService.getScriptLock();
+  lock.waitLock(30000);
+  try {
+    var ss = SpreadsheetApp.openById(SHEET_ID);
+    var sheet = ss.getSheetByName(STARTED_SHEET_NAME);
+    if (!sheet) {
+      sheet = ss.insertSheet(STARTED_SHEET_NAME);
     }
-  }
+    if (sheet.getLastRow() === 0) {
+      sheet.appendRow(['Started Timestamp', 'First Name', 'Last Name', 'Email', 'Reminder Sent']);
+    }
 
-  var serverTimestamp = Utilities.formatDate(new Date(), TIMEZONE, 'yyyy-MM-dd HH:mm:ss');
-  sheet.appendRow([serverTimestamp, firstName || '', lastName || '', email, '']);
+    var lastRow = sheet.getLastRow();
+    if (lastRow >= 2) {
+      var emails = sheet.getRange(2, 4, lastRow - 1, 1).getValues();
+      for (var i = 0; i < emails.length; i++) {
+        if (String(emails[i][0]).toLowerCase().trim() === email) return;
+      }
+    }
+
+    var serverTimestamp = Utilities.formatDate(new Date(), TIMEZONE, 'yyyy-MM-dd HH:mm:ss');
+    sheet.appendRow([serverTimestamp, firstName || '', lastName || '', email, '']);
+  } finally {
+    lock.releaseLock();
+  }
 }
 
 // ── Time-driven (see installReminderTrigger() below): finds anyone who
