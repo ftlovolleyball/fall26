@@ -454,6 +454,8 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
 }
 .acc-prog { display: flex; align-items: center; gap: 12px; padding: 13px 15px; border-radius: 8px; border: 2px solid rgba(0,0,0,0.07); background: #fff; cursor: pointer; transition: all .15s; -webkit-tap-highlight-color: transparent; }
 .acc-prog:active { transform: scale(0.99); }
+.acc-prog.full { cursor: not-allowed; pointer-events: none; opacity: 0.55; background: var(--gray-100); }
+.acc-prog-full-tag { display: inline-block; margin-left: 8px; font-size: 10px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--red); background: var(--red-light); padding: 2px 8px; border-radius: 100px; vertical-align: middle; }
 .beg-acc   .acc-prog:hover, .beg-acc   .acc-prog.sel { border-color: var(--teal); background: #eef6f2; }
 .ff-acc    .acc-prog:hover, .ff-acc    .acc-prog.sel { border-color: #6a4a9c; background: #f1eaf9; }
 .int-acc   .acc-prog:hover, .int-acc   .acc-prog.sel { border-color: #c8860a; background: #fdf5e6; }
@@ -1044,7 +1046,7 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
 
     <div class="notice danger">
       <span class="notice-icon">&#9888;</span>
-      <div><strong>September 18, 2026:</strong> The only session with space remaining is Wednesday Beginner (Richmond), 7:45&ndash;9:30 PM. Prorated registrations for other clinics are also available, please apply as soon as possible.</div>
+      <div><strong>September 18, 2026:</strong> The only sessions with space remaining are Wednesday Beginner (Richmond) 7:45&ndash;9:30 PM and Thursday Women's Intermediate. Prorated registrations for other clinics are also available, please apply as soon as possible.</div>
     </div>
 
     <div class="card" style="background:var(--gray-100);border:1px solid var(--gray-200);box-shadow:none;margin-bottom:1.5rem;">
@@ -1151,11 +1153,11 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
               <div class="acc-note">Training for this clinic will be on 3 smaller-sized courts, appropriate for 3v3 or 4v4, co-ed height of 2.35m.</div>
               <div class="acc-dates">9 Wednesdays &middot; Sep 16 &ndash; Nov 25 &middot; <span class="acc-skip">No clinic Sep 30 &amp; Nov 11.</span> Ext to Dec 9 if needed</div>
               <div class="acc-slots-grid">
-                <label class="acc-prog" onclick="accProg(this)">
-                  <input type="checkbox" name="programs" value="Wednesday BEG (Richmond) 6:00-7:45 PM" data-code="Wed B 6" data-label="Wednesday &middot; Beginner &middot; 6:00&ndash;7:45 PM" style="display:none;" />
+                <label class="acc-prog full">
+                  <input type="checkbox" name="programs" value="Wednesday BEG (Richmond) 6:00-7:45 PM" data-code="Wed B 6" data-label="Wednesday &middot; Beginner &middot; 6:00&ndash;7:45 PM" style="display:none;" disabled />
                   <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
                   <div class="acc-prog-body">
-                    <div class="acc-prog-title"><span class="acc-slot-label">Time Slot 1</span>6:00 &ndash; 7:45 PM</div>
+                    <div class="acc-prog-title"><span class="acc-slot-label">Time Slot 1</span>6:00 &ndash; 7:45 PM<span class="acc-prog-full-tag">Full</span></div>
                   </div>
                 </label>
                 <label class="acc-prog" onclick="accProg(this)">
@@ -1179,7 +1181,7 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
               <div class="acc-subdesc">Richmond, BC &amp; South Burnaby, BC &middot; <em>South Burnaby exact location to be confirmed</em> &middot; $255 to $295 GST Included</div>
             </div>
             <div class="acc-right">
-              <span class="acc-pill">4 time slots</span>
+              <span class="acc-pill" style="background:var(--red-light);color:var(--red);">Full</span>
               <div class="acc-chev"><svg viewBox="0 0 12 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 1l5 5 5-5"/></svg></div>
             </div>
           </div>
@@ -1203,36 +1205,36 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
 
               <div style="font-size:12.5px;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;color:#5a3a8c;margin:4px 0 2px;">Richmond, BC &middot; $295 GST Included</div>
               <div class="acc-slots-grid">
-                <label class="acc-prog" onclick="accProg(this)">
-                  <input type="checkbox" name="programs" value="Tuesday FF (Richmond) 6:00-7:45 PM" data-code="Tue FF R 6" data-label="Tuesday &middot; Foundation Focus &middot; Richmond &middot; 6:00&ndash;7:45 PM" style="display:none;" />
+                <label class="acc-prog full">
+                  <input type="checkbox" name="programs" value="Tuesday FF (Richmond) 6:00-7:45 PM" data-code="Tue FF R 6" data-label="Tuesday &middot; Foundation Focus &middot; Richmond &middot; 6:00&ndash;7:45 PM" style="display:none;" disabled />
                   <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
                   <div class="acc-prog-body">
-                    <div class="acc-prog-title"><span class="acc-slot-label">Time Slot 1</span>6:00 &ndash; 7:45 PM</div>
+                    <div class="acc-prog-title"><span class="acc-slot-label">Time Slot 1</span>6:00 &ndash; 7:45 PM<span class="acc-prog-full-tag">Full</span></div>
                   </div>
                 </label>
-                <label class="acc-prog" onclick="accProg(this)">
-                  <input type="checkbox" name="programs" value="Tuesday FF (Richmond) 7:45-9:30 PM" data-code="Tue FF R 745" data-label="Tuesday &middot; Foundation Focus &middot; Richmond &middot; 7:45&ndash;9:30 PM" style="display:none;" />
+                <label class="acc-prog full">
+                  <input type="checkbox" name="programs" value="Tuesday FF (Richmond) 7:45-9:30 PM" data-code="Tue FF R 745" data-label="Tuesday &middot; Foundation Focus &middot; Richmond &middot; 7:45&ndash;9:30 PM" style="display:none;" disabled />
                   <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
                   <div class="acc-prog-body">
-                    <div class="acc-prog-title"><span class="acc-slot-label">Time Slot 2</span>7:45 &ndash; 9:30 PM</div>
+                    <div class="acc-prog-title"><span class="acc-slot-label">Time Slot 2</span>7:45 &ndash; 9:30 PM<span class="acc-prog-full-tag">Full</span></div>
                   </div>
                 </label>
               </div>
 
               <div style="font-size:12.5px;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;color:#5a3a8c;margin:10px 0 2px;">South Burnaby, BC &middot; Location TBD &middot; $255 GST Included</div>
               <div class="acc-slots-grid">
-                <label class="acc-prog" onclick="accProg(this)">
-                  <input type="checkbox" name="programs" value="Tuesday FF (South Burnaby) 6:00-7:30 PM" data-code="Tue FF B 6" data-label="Tuesday &middot; Foundation Focus &middot; South Burnaby &middot; 6:00&ndash;7:30 PM" style="display:none;" />
+                <label class="acc-prog full">
+                  <input type="checkbox" name="programs" value="Tuesday FF (South Burnaby) 6:00-7:30 PM" data-code="Tue FF B 6" data-label="Tuesday &middot; Foundation Focus &middot; South Burnaby &middot; 6:00&ndash;7:30 PM" style="display:none;" disabled />
                   <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
                   <div class="acc-prog-body">
-                    <div class="acc-prog-title"><span class="acc-slot-label">Time Slot 1</span>6:00 &ndash; 7:30 PM</div>
+                    <div class="acc-prog-title"><span class="acc-slot-label">Time Slot 1</span>6:00 &ndash; 7:30 PM<span class="acc-prog-full-tag">Full</span></div>
                   </div>
                 </label>
-                <label class="acc-prog" onclick="accProg(this)">
-                  <input type="checkbox" name="programs" value="Tuesday FF (South Burnaby) 7:30-9:00 PM" data-code="Tue FF B 730" data-label="Tuesday &middot; Foundation Focus &middot; South Burnaby &middot; 7:30&ndash;9:00 PM" style="display:none;" />
+                <label class="acc-prog full">
+                  <input type="checkbox" name="programs" value="Tuesday FF (South Burnaby) 7:30-9:00 PM" data-code="Tue FF B 730" data-label="Tuesday &middot; Foundation Focus &middot; South Burnaby &middot; 7:30&ndash;9:00 PM" style="display:none;" disabled />
                   <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
                   <div class="acc-prog-body">
-                    <div class="acc-prog-title"><span class="acc-slot-label">Time Slot 2</span>7:30 &ndash; 9:00 PM</div>
+                    <div class="acc-prog-title"><span class="acc-slot-label">Time Slot 2</span>7:30 &ndash; 9:00 PM<span class="acc-prog-full-tag">Full</span></div>
                   </div>
                 </label>
               </div>
@@ -1249,7 +1251,7 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
               <div class="acc-subdesc">Lochdale Community School, Burnaby, BC &middot; $255 GST Included</div>
             </div>
             <div class="acc-right">
-              <span class="acc-pill">2 time slots</span>
+              <span class="acc-pill" style="background:var(--red-light);color:var(--red);">Full</span>
               <div class="acc-chev"><svg viewBox="0 0 12 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 1l5 5 5-5"/></svg></div>
             </div>
           </div>
@@ -1271,18 +1273,18 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
               <div class="acc-note">Training for this clinic will be on 3 smaller-sized courts, appropriate for 3v3 or 4v4, co-ed height of 2.35m.</div>
               <div class="acc-dates">9 Wednesdays &middot; Sep 16 &ndash; Nov 25 &middot; <span class="acc-skip">No clinic Sep 30 &amp; Nov 11.</span> Ext to Dec 9 if needed</div>
               <div class="acc-slots-grid">
-                <label class="acc-prog" onclick="accProg(this)">
-                  <input type="checkbox" name="programs" value="Wednesday INT (Lochdale) 6:00-7:30 PM" data-code="Wed I 6" data-label="Wednesday &middot; Intermediate &middot; 6:00&ndash;7:30 PM" style="display:none;" />
+                <label class="acc-prog full">
+                  <input type="checkbox" name="programs" value="Wednesday INT (Lochdale) 6:00-7:30 PM" data-code="Wed I 6" data-label="Wednesday &middot; Intermediate &middot; 6:00&ndash;7:30 PM" style="display:none;" disabled />
                   <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
                   <div class="acc-prog-body">
-                    <div class="acc-prog-title"><span class="acc-slot-label">Time Slot 1</span>6:00 &ndash; 7:30 PM</div>
+                    <div class="acc-prog-title"><span class="acc-slot-label">Time Slot 1</span>6:00 &ndash; 7:30 PM<span class="acc-prog-full-tag">Full</span></div>
                   </div>
                 </label>
-                <label class="acc-prog" onclick="accProg(this)">
-                  <input type="checkbox" name="programs" value="Wednesday INT (Lochdale) 7:30-9:00 PM" data-code="Wed I 730" data-label="Wednesday &middot; Intermediate &middot; 7:30&ndash;9:00 PM" style="display:none;" />
+                <label class="acc-prog full">
+                  <input type="checkbox" name="programs" value="Wednesday INT (Lochdale) 7:30-9:00 PM" data-code="Wed I 730" data-label="Wednesday &middot; Intermediate &middot; 7:30&ndash;9:00 PM" style="display:none;" disabled />
                   <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
                   <div class="acc-prog-body">
-                    <div class="acc-prog-title"><span class="acc-slot-label">Time Slot 2</span>7:30 &ndash; 9:00 PM</div>
+                    <div class="acc-prog-title"><span class="acc-slot-label">Time Slot 2</span>7:30 &ndash; 9:00 PM<span class="acc-prog-full-tag">Full</span></div>
                   </div>
                 </label>
               </div>
@@ -1299,7 +1301,7 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
               <div class="acc-subdesc">Lochdale Community School, Burnaby, BC &middot; $255 GST Included</div>
             </div>
             <div class="acc-right">
-              <span class="acc-pill">2 time slots</span>
+              <span class="acc-pill" style="background:var(--red-light);color:var(--red);">Full</span>
               <div class="acc-chev"><svg viewBox="0 0 12 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 1l5 5 5-5"/></svg></div>
             </div>
           </div>
@@ -1321,18 +1323,18 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
               <div class="acc-note">Training for this clinic will be on 3 smaller-sized courts, appropriate for 3v3 or 4v4, co-ed height of 2.35m.</div>
               <div class="acc-dates">9 Thursdays &middot; Sep 17 &ndash; Nov 12 &middot; Ext to Nov 26 if needed</div>
               <div class="acc-slots-grid">
-                <label class="acc-prog" onclick="accProg(this)">
-                  <input type="checkbox" name="programs" value="Thursday INT (Lochdale) 6:00-7:30 PM" data-code="Thu I 6" data-label="Thursday &middot; Intermediate &middot; 6:00&ndash;7:30 PM" style="display:none;" />
+                <label class="acc-prog full">
+                  <input type="checkbox" name="programs" value="Thursday INT (Lochdale) 6:00-7:30 PM" data-code="Thu I 6" data-label="Thursday &middot; Intermediate &middot; 6:00&ndash;7:30 PM" style="display:none;" disabled />
                   <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
                   <div class="acc-prog-body">
-                    <div class="acc-prog-title"><span class="acc-slot-label">Time Slot 1</span>6:00 &ndash; 7:30 PM</div>
+                    <div class="acc-prog-title"><span class="acc-slot-label">Time Slot 1</span>6:00 &ndash; 7:30 PM<span class="acc-prog-full-tag">Full</span></div>
                   </div>
                 </label>
-                <label class="acc-prog" onclick="accProg(this)">
-                  <input type="checkbox" name="programs" value="Thursday INT (Lochdale) 7:30-9:00 PM" data-code="Thu I 730" data-label="Thursday &middot; Intermediate &middot; 7:30&ndash;9:00 PM" style="display:none;" />
+                <label class="acc-prog full">
+                  <input type="checkbox" name="programs" value="Thursday INT (Lochdale) 7:30-9:00 PM" data-code="Thu I 730" data-label="Thursday &middot; Intermediate &middot; 7:30&ndash;9:00 PM" style="display:none;" disabled />
                   <div class="acc-cb"><span class="acc-cb-tick">&#10003;</span></div>
                   <div class="acc-prog-body">
-                    <div class="acc-prog-title"><span class="acc-slot-label">Time Slot 2</span>7:30 &ndash; 9:00 PM</div>
+                    <div class="acc-prog-title"><span class="acc-slot-label">Time Slot 2</span>7:30 &ndash; 9:00 PM<span class="acc-prog-full-tag">Full</span></div>
                   </div>
                 </label>
               </div>
@@ -1602,8 +1604,8 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
   </div>
 
   <div style="background:#fff;border:2px solid var(--gray-300);border-radius:var(--radius-sm);padding:1rem 1.25rem;max-width:520px;margin:1.25rem auto 0;text-align:left;">
-    <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--teal);margin-bottom:8px;">Haven't Heard Back?</div>
-    <p style="font-size:15px;color:var(--gray-700);line-height:1.6;margin:0;">If you haven't heard from us within <strong>2&ndash;3 weeks before your selected clinic's start date</strong>, it likely means that session is full, or your application may have slipped through. Please email <strong>info@ftlovolleyball.ca</strong> for a status update. Thank you!</p>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--teal);margin-bottom:8px;">One Last Step</div>
+    <p style="font-size:15px;color:var(--gray-700);line-height:1.6;margin:0;">Please email <strong>info@ftlovolleyball.ca</strong> right after applying to confirm your application was received. If you haven't heard back from us within <strong>2&ndash;3 weeks before your selected clinic's start date</strong>, it likely means that session is full. Thank you!</p>
   </div>
 
   <p style="margin-top:1.75rem;font-size:14px;color:var(--gray-500);">See you on the court!</p>
