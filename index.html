@@ -1550,6 +1550,14 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
     <div>By submitting this application, you confirm all details are accurate and that you have read and agreed to the FTLO Code of Conduct, all Policies, and the General Agreements of Participation. Submitting does not guarantee a spot. FTLO will follow up by email with payment instructions if a spot is available.</div>
   </div>
 
+  <div class="notice danger" id="submitErrorNotice" style="display:none;">
+    <span class="notice-icon">&#9888;</span>
+    <div>
+      <strong>Your email verification expired before you finished the form.</strong> Nothing has been submitted yet, so no need to worry. Please go back to Step 1 and verify your email again, then return here to submit.
+      <div style="margin-top:8px;"><button type="button" class="btn-back" onclick="showStep(1)">Back to Step 1</button></div>
+    </div>
+  </div>
+
   <div class="nav-row">
     <button type="button" class="btn-back" onclick="prevStep(4)">Back</button>
     <button type="button" class="btn-submit" id="submitBtn" onclick="submitForm()">Submit Application</button>
@@ -2044,6 +2052,7 @@ function submitForm() {
   var btn = document.getElementById('submitBtn');
   btn.disabled = true;
   btn.innerHTML = 'Submitting...';
+  document.getElementById('submitErrorNotice').style.display = 'none';
 
   var data = collectData();
 
@@ -2052,25 +2061,58 @@ function submitForm() {
   xhr.open('POST', APPS_SCRIPT_URL, true);
   xhr.setRequestHeader('Content-Type', 'text/plain');
 
+  var settled = false;
+
   xhr.onload = function() {
-    showSuccess();
+    if (settled) return;
+    settled = true;
+    handleSubmitResponse(xhr.responseText);
   };
   xhr.onerror = function() {
-    // no-cors means we won't get a response back, so we show success anyway
-    // if the request was sent (onerror only fires on network failure)
+    // A true network failure gives us no response to check, so unlike
+    // onload below, we can't know whether it landed - show success rather
+    // than scare the applicant over a connectivity blip we can't diagnose.
+    if (settled) return;
+    settled = true;
     showSuccess();
   };
 
   try {
     xhr.send(JSON.stringify(data));
-    // For no-cors situations, show success after short delay
+    // Fallback if the server never responds at all (e.g. blocked request) -
+    // same "assume success" reasoning as onerror above.
     setTimeout(function() {
+      if (settled) return;
+      settled = true;
       showSuccess();
-    }, 2000);
+    }, 4000);
   }
   catch(e) {
-    showSuccess();
+    if (!settled) { settled = true; showSuccess(); }
   }
+}
+
+// The server can respond with an explicit error - most notably
+// {status:'error', reason:'not_verified'} when the applicant's email
+// verification (valid ~1 hour) expired before they finished the rest of
+// the form. Previously this response was never even read, so the
+// applicant saw "Thank you for applying!" while nothing was actually
+// saved and no confirmation email went out. Now we check first.
+function handleSubmitResponse(responseText) {
+  var result = null;
+  try { result = JSON.parse(responseText); } catch (e) {}
+
+  if (result && result.status === 'error') {
+    var btn = document.getElementById('submitBtn');
+    btn.disabled = false;
+    btn.innerHTML = 'Submit Application';
+    var notice = document.getElementById('submitErrorNotice');
+    notice.style.display = 'flex';
+    notice.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  showSuccess();
 }
 
 function showSuccess() {

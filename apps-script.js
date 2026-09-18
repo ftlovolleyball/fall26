@@ -92,7 +92,7 @@ var TIMEZONE = 'America/Vancouver';
 // resend requests for the same address. All well under CacheService's 6-hour
 // (21600s) max.
 var VERIFY_CODE_TTL_SECONDS = 600;        // 10 minutes to enter the code
-var VERIFY_OK_TTL_SECONDS = 3600;         // 1 hour to finish the rest of the form after verifying
+var VERIFY_OK_TTL_SECONDS = 10800;        // 3 hours to finish the rest of the form after verifying
 var VERIFY_RESEND_COOLDOWN_SECONDS = 30;  // minimum gap between resend requests
 
 // ── PROGRAM CATALOG ───────────────────────────────────────────────────────
