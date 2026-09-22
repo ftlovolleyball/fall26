@@ -1553,7 +1553,7 @@ textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
   <div class="notice danger" id="submitErrorNotice" style="display:none;">
     <span class="notice-icon">&#9888;</span>
     <div>
-      <strong>Your email verification expired before you finished the form.</strong> Nothing has been submitted yet, so no need to worry. Please go back to Step 1 and verify your email again, then return here to submit.
+      <span id="submitErrorMessage"><strong>Your email verification expired before you finished the form.</strong> Nothing has been submitted yet, so no need to worry. Please go back to Step 1 and verify your email again, then return here to submit.</span>
       <div style="margin-top:8px;"><button type="button" class="btn-back" onclick="showStep(1)">Back to Step 1</button></div>
     </div>
   </div>
@@ -2069,9 +2069,11 @@ function submitForm() {
     handleSubmitResponse(xhr.responseText);
   };
   xhr.onerror = function() {
-    // A true network failure gives us no response to check, so unlike
-    // onload below, we can't know whether it landed - show success rather
-    // than scare the applicant over a connectivity blip we can't diagnose.
+    // A true network failure gives us no response to check at all, so
+    // unlike onload below (which DID get a response, even a bad one) we
+    // genuinely have no way to know whether the server saw this request.
+    // Showing success here is a real, accepted blind spot - not a bug we
+    // can fix client-side.
     if (settled) return;
     settled = true;
     showSuccess();
@@ -2079,13 +2081,18 @@ function submitForm() {
 
   try {
     xhr.send(JSON.stringify(data));
-    // Fallback if the server never responds at all (e.g. blocked request) -
-    // same "assume success" reasoning as onerror above.
+    // Fallback only for a request that never gets *any* response at all
+    // within a generous window - not the normal path. doPost() now
+    // acquires a lock before writing (see apps-script.js), which can add
+    // a few seconds under concurrent load, so this needs real headroom:
+    // too short and a slow-but-genuinely-successful (or failing) response
+    // gets ignored below via the settled check, and we'd never know either
+    // way.
     setTimeout(function() {
       if (settled) return;
       settled = true;
       showSuccess();
-    }, 4000);
+    }, 20000);
   }
   catch(e) {
     if (!settled) { settled = true; showSuccess(); }
@@ -2094,25 +2101,38 @@ function submitForm() {
 
 // The server can respond with an explicit error - most notably
 // {status:'error', reason:'not_verified'} when the applicant's email
-// verification (valid ~1 hour) expired before they finished the rest of
-// the form. Previously this response was never even read, so the
-// applicant saw "Thank you for applying!" while nothing was actually
-// saved and no confirmation email went out. Now we check first.
+// verification (valid ~3 hours) expired before they finished the rest of
+// the form. It can also fail in ways that don't come back as clean JSON
+// at all (an Apps Script exception renders as an HTML error page, for
+// instance) - a JSON.parse failure is itself a signal something went
+// wrong server-side, not evidence of nothing. So unlike the original
+// version of this function, success is only shown when the response
+// positively confirms it - everything else (an explicit error, or a
+// response we can't make sense of) shows the error notice instead of
+// silently assuming the best.
 function handleSubmitResponse(responseText) {
   var result = null;
   try { result = JSON.parse(responseText); } catch (e) {}
 
-  if (result && result.status === 'error') {
-    var btn = document.getElementById('submitBtn');
-    btn.disabled = false;
-    btn.innerHTML = 'Submit Application';
-    var notice = document.getElementById('submitErrorNotice');
-    notice.style.display = 'flex';
-    notice.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  if (result && result.status === 'ok') {
+    showSuccess();
     return;
   }
 
-  showSuccess();
+  var btn = document.getElementById('submitBtn');
+  btn.disabled = false;
+  btn.innerHTML = 'Submit Application';
+
+  var messageEl = document.getElementById('submitErrorMessage');
+  if (result && result.status === 'error' && result.reason === 'not_verified') {
+    messageEl.innerHTML = '<strong>Your email verification expired before you finished the form.</strong> Nothing has been submitted yet, so no need to worry. Please go back to Step 1 and verify your email again, then return here to submit.';
+  } else {
+    messageEl.innerHTML = '<strong>Something went wrong submitting your application, and we can\'t confirm it was received.</strong> Please go back to Step 1 and try again. If this keeps happening, email <strong>info@ftlovolleyball.ca</strong> for help.';
+  }
+
+  var notice = document.getElementById('submitErrorNotice');
+  notice.style.display = 'flex';
+  notice.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
 function showSuccess() {
