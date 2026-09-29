@@ -246,6 +246,21 @@ function handleApplicationSubmit(data, ss) {
   return { status: 'ok' };
 }
 
+// sheet.appendRow() decides where to write based on sheet.getLastRow(),
+// which looks at the LAST ROW WITH ANYTHING IN IT, IN ANY COLUMN - not just
+// the applications data block. A single stray value or formula pasted or
+// dragged into some far-off column, even accidentally, makes every future
+// submission jump down to sit right after it. This checks column A
+// (Timestamp) only, so applications always land right after the real last
+// application no matter what's sitting elsewhere in the sheet.
+function lastRowInColumnA(sheet) {
+  var values = sheet.getRange(1, 1, sheet.getMaxRows(), 1).getValues();
+  for (var i = values.length - 1; i >= 0; i--) {
+    if (values[i][0] !== '') return i + 1;
+  }
+  return 0;
+}
+
 // Appends a row to the named tab, creating the tab and/or header row first
 // if needed (covers a brand-new tab and one you already created by hand).
 function appendRowToSheet(ss, sheetName, row) {
@@ -253,10 +268,12 @@ function appendRowToSheet(ss, sheetName, row) {
   if (!sheet) {
     sheet = ss.insertSheet(sheetName);
   }
-  if (sheet.getLastRow() === 0) {
+  var lastRow = lastRowInColumnA(sheet);
+  if (lastRow === 0) {
     sheet.appendRow(HEADER_ROW);
+    lastRow = 1;
   }
-  sheet.appendRow(row);
+  sheet.getRange(lastRow + 1, 1, 1, row.length).setValues([row]);
 }
 
 // ── Checks the Applications sheet for a matching email (case-insensitive) ────
@@ -380,11 +397,12 @@ function markApplicationStarted(email, firstName, lastName) {
     if (!sheet) {
       sheet = ss.insertSheet(STARTED_SHEET_NAME);
     }
-    if (sheet.getLastRow() === 0) {
+    var lastRow = lastRowInColumnA(sheet);
+    if (lastRow === 0) {
       sheet.appendRow(['Started Timestamp', 'First Name', 'Last Name', 'Email', 'Reminder Sent']);
+      lastRow = 1;
     }
 
-    var lastRow = sheet.getLastRow();
     if (lastRow >= 2) {
       var emails = sheet.getRange(2, 4, lastRow - 1, 1).getValues();
       for (var i = 0; i < emails.length; i++) {
@@ -393,7 +411,7 @@ function markApplicationStarted(email, firstName, lastName) {
     }
 
     var serverTimestamp = Utilities.formatDate(new Date(), TIMEZONE, 'yyyy-MM-dd HH:mm:ss');
-    sheet.appendRow([serverTimestamp, firstName || '', lastName || '', email, '']);
+    sheet.getRange(lastRow + 1, 1, 1, 5).setValues([[serverTimestamp, firstName || '', lastName || '', email, '']]);
   } finally {
     lock.releaseLock();
   }
